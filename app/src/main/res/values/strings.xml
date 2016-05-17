@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">СиСчётчик</string>
+
+    <!--menu-->
+    <string name="mi_save">Сохранить результаты в файл</string>
+    <string name="mi_new">Сбросить результаты</string>
 </resources>
