@@ -11,4 +11,8 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.atanana.sicounter.MainActivity"
     tools:showIn="@layout/activity_main">
+
+    <com.atanana.sicounter.view.PriceSelector
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

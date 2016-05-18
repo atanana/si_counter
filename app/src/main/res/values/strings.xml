@@ -4,4 +4,11 @@
     <!--menu-->
     <string name="mi_save">Сохранить результаты в файл</string>
     <string name="mi_new">Сбросить результаты</string>
+
+    <!--prices-->
+    <string name="price_10">10</string>
+    <string name="price_20">20</string>
+    <string name="price_30">30</string>
+    <string name="price_40">40</string>
+    <string name="price_50">50</string>
 </resources>
