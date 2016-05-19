@@ -8,8 +8,10 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.atanana.sicounter.view.PriceSelector
 
 class MainActivity : AppCompatActivity() {
+    private val priceSelector: PriceSelector by lazy { findViewById(R.id.price_selector) as PriceSelector }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
