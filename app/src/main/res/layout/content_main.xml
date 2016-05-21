@@ -17,10 +17,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <View
+        android:id="@+id/price_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/price_selector"
+        android:layout_marginBottom="@dimen/price_separator_margin"
+        android:layout_marginTop="@dimen/price_separator_margin"
+        android:background="@android:color/white" />
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/price_selector">
+        android:layout_below="@id/price_separator">
 
         <LinearLayout
             android:id="@+id/scores_container"

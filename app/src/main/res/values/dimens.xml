@@ -3,4 +3,13 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="price_separator_margin">10dp</dimen>
+
+    <dimen name="player_name_size">32sp</dimen>
+    <dimen name="player_score_size">24sp</dimen>
+
+    <!--player control-->
+    <dimen name="player_control_padding">10dp</dimen>
+    <dimen name="player_control_score_button_size">75dp</dimen>
 </resources>

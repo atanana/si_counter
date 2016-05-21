@@ -28,7 +28,11 @@ class MainActivity : AppCompatActivity() {
                 .setTitle(R.string.player_name_title)
                 .setCancelable(true)
                 .setView(playerName)
-                .setPositiveButton(R.string.ok, { dialogInterface, i -> addPlayer.onNext(playerName.text.toString()) })
+                .setPositiveButton(R.string.ok, { dialogInterface, i ->
+                    addPlayer.onNext(playerName.text.toString())
+                    playerName.text.clear()
+                    (playerName.parent as? ViewGroup)?.removeView(playerName)
+                })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
