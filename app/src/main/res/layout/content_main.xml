@@ -16,4 +16,17 @@
         android:id="@+id/price_selector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/price_selector">
+
+        <LinearLayout
+            android:id="@+id/scores_container"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" />
+
+    </HorizontalScrollView>
 </RelativeLayout>

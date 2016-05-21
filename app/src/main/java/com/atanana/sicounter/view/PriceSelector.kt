@@ -10,7 +10,7 @@ import com.atanana.sicounter.exceptions.SiCounterException
 import com.google.common.collect.ImmutableBiMap
 
 class PriceSelector(context: Context?, attrs: AttributeSet?) : FrameLayout(context, attrs) {
-    val BUTTONS_TO_VALUES: ImmutableBiMap<Int, Int> = ImmutableBiMap.of(
+    private val BUTTONS_TO_VALUES: ImmutableBiMap<Int, Int> = ImmutableBiMap.of(
             R.id.price_10, 10,
             R.id.price_20, 20,
             R.id.price_30, 30,

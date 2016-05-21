@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">СиСчётчик</string>
 
+    <!--buttons-->
+    <string name="ok">Готово</string>
+
     <!--menu-->
     <string name="mi_save">Сохранить результаты в файл</string>
     <string name="mi_new">Сбросить результаты</string>
@@ -11,4 +14,12 @@
     <string name="price_30">30</string>
     <string name="price_40">40</string>
     <string name="price_50">50</string>
+
+    <!--player control-->
+    <string name="add_score">+</string>
+    <string name="subtract_score">-</string>
+    <string name="initial_score">0</string>
+
+    <!--add player-->
+    <string name="player_name_title">Введите имя нового игрока</string>
 </resources>
