@@ -8,7 +8,7 @@ class ScoresPresenter(private val model: ScoresModel, private val scoresContaine
     init {
         model.newPlayers.subscribe({ newPlayer ->
             val playerControl = PlayerControl(scoresContainer.context, null)
-            playerControl.update(newPlayer)
+            playerControl.update(newPlayer.first, newPlayer.second)
             scoresContainer.addView(playerControl)
         })
     }

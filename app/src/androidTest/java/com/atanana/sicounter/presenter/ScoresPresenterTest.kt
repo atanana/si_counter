@@ -14,12 +14,12 @@ class ScoresPresenterTest {
     @Test
     fun newPlayers() {
         val scoresModel = Mockito.mock(ScoresModel::class.java)
-        val newPlayers = PublishSubject<Score>()
+        val newPlayers = PublishSubject<Pair<Score, Int>>()
         `when`(scoresModel.newPlayers).thenReturn(newPlayers)
         val container = Mockito.mock(ViewGroup::class.java)
         ScoresPresenter(scoresModel, container)
 
-        newPlayers.onNext(Score("test", 0))
+        newPlayers.onNext(Pair(Score("test", 0), 0))
         Mockito.verify(container).addView(argThat(PlayerControlMatcher("test", 0)))
     }
 }
