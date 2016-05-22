@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import com.atanana.sicounter.model.ScoresModel
+import com.atanana.sicounter.presenter.ScoreActionPriceTransformer.transform
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.player_control.DefaultPlayerControlFabric
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private val addPlayer: Subject<String, String> = PublishSubject()
     private val scoresModel: ScoresModel = ScoresModel(addPlayer)
     private val scoresPresenter: ScoresPresenter by lazy {
-        ScoresPresenter(scoresModel, scoresContainer, DefaultPlayerControlFabric(this), priceSelector)
+        ScoresPresenter(scoresModel, scoresContainer, DefaultPlayerControlFabric(this))
     }
     private val addPlayerDialog: AlertDialog.Builder by lazy {
         val playerName = EditText(this)
@@ -48,7 +49,8 @@ class MainActivity : AppCompatActivity() {
         fab!!.setOnClickListener { view ->
             addPlayerDialog.show()
         }
-        scoresPresenter
+
+        scoresModel.subscribeToScoreActions(transform(scoresPresenter.scoreActions, priceSelector))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
