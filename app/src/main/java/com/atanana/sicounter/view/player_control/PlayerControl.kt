@@ -29,10 +29,13 @@ open class PlayerControl(context: Context?, attrs: AttributeSet?) : FrameLayout(
         LayoutInflater.from(context).inflate(R.layout.player_control, this)
     }
 
-    fun update(score: Score, id: Int) {
+    fun update(score: Score, id: Int? = null) {
         playerName.text = score.name
         playerScore.text = score.score.toString()
-        addScore.setOnClickListener { _scoreActions.onNext(ScoreAction(PLUS, id)) }
-        subtractScore.setOnClickListener { _scoreActions.onNext(ScoreAction(MINUS, id)) }
+
+        if (id != null) {
+            addScore.setOnClickListener { _scoreActions.onNext(ScoreAction(PLUS, id)) }
+            subtractScore.setOnClickListener { _scoreActions.onNext(ScoreAction(MINUS, id)) }
+        }
     }
 }

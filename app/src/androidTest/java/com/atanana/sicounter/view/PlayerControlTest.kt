@@ -9,7 +9,6 @@ import com.atanana.sicounter.data.ScoreActionType.MINUS
 import com.atanana.sicounter.data.ScoreActionType.PLUS
 import com.atanana.sicounter.view.player_control.PlayerControl
 import org.junit.Before
-import org.junit.Test
 import rx.observers.TestSubscriber
 
 class PlayerControlTest : AndroidTestCase() {
@@ -20,7 +19,6 @@ class PlayerControlTest : AndroidTestCase() {
         playerControl = PlayerControl(context, null)
     }
 
-    @Test
     fun testLayout() {
         playerControl.update(Score("test", 30), 123)
         val playerName = playerControl.findViewById(R.id.player_name) as TextView
@@ -30,7 +28,6 @@ class PlayerControlTest : AndroidTestCase() {
         assertEquals(30, playerScore.text.toString().toInt())
     }
 
-    @Test
     fun testScoreActions() {
         playerControl.update(Score("test", 0), 123)
         val subscriber = TestSubscriber<ScoreAction>()
@@ -41,5 +38,17 @@ class PlayerControlTest : AndroidTestCase() {
 
         subscriber.assertNoErrors()
         subscriber.assertReceivedOnNext(mutableListOf(ScoreAction(PLUS, 123), ScoreAction(MINUS, 123)))
+    }
+
+    fun testScoreActionsAfterPartialUpdate() {
+        playerControl.update(Score("test", 0), 123)
+        playerControl.update(Score("test", 0))
+        val subscriber = TestSubscriber<ScoreAction>()
+        playerControl.scoreActions.subscribe(subscriber)
+
+        playerControl.findViewById(R.id.add_score).performClick()
+
+        subscriber.assertNoErrors()
+        subscriber.assertReceivedOnNext(mutableListOf(ScoreAction(PLUS, 123)))
     }
 }

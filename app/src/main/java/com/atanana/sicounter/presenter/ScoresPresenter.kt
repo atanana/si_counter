@@ -2,8 +2,10 @@ package com.atanana.sicounter.presenter
 
 import android.view.ViewGroup
 import com.atanana.sicounter.data.ScoreAction
+import com.atanana.sicounter.exceptions.UnknownId
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.view.PriceSelector
+import com.atanana.sicounter.view.player_control.PlayerControl
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import rx.Observable
 import rx.lang.kotlin.PublishSubject
@@ -13,11 +15,14 @@ class ScoresPresenter(private val model: ScoresModel,
                       private val scoresContainer: ViewGroup,
                       private val playerControlFabric: PlayerControlFabric,
                       private val priceSelector: PriceSelector) {
+    private val scoreViews: MutableMap<Int, PlayerControl> = hashMapOf()
     private val _scoreActions: Subject<ScoreAction, ScoreAction> = PublishSubject()
     val scoreActions: Observable<ScoreAction>
         get() = _scoreActions
 
     init {
+        model.subscribeToScoreActions(scoreActions)
+
         model.newPlayers.subscribe({ newPlayer ->
             val playerControl = playerControlFabric.build()
             playerControl.update(newPlayer.first, newPlayer.second)
@@ -25,6 +30,12 @@ class ScoresPresenter(private val model: ScoresModel,
                 _scoreActions.onNext(scoreAction.copy(price = priceSelector.price))
             })
             scoresContainer.addView(playerControl)
+            scoreViews[newPlayer.second] = playerControl
+        })
+
+        model.updatedPlayers.subscribe({ updatedPlayer ->
+            val playerControl = scoreViews[updatedPlayer.second] ?: throw UnknownId(updatedPlayer.second)
+            playerControl.update(updatedPlayer.first)
         })
     }
 }

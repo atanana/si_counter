@@ -2,7 +2,7 @@ package com.atanana.sicounter.model
 
 import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.ScoreAction
-import com.atanana.sicounter.exceptions.SiCounterException
+import com.atanana.sicounter.exceptions.UnknownId
 import rx.Observable
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
@@ -28,7 +28,7 @@ open class ScoresModel(private val newPlayersNames: Observable<String>) {
 
     fun subscribeToScoreActions(actions: Observable<ScoreAction>) {
         actions.subscribe({ action ->
-            val oldScore = playerScores[action.id] ?: throw SiCounterException("Unknown id ${action.id}!")
+            val oldScore = playerScores[action.id] ?: throw UnknownId(action.id)
             val newScore = oldScore.copy(score = oldScore.score + action.absolutePrice)
             playerScores[action.id] = newScore
             updated.onNext(Pair(newScore, action.id))
