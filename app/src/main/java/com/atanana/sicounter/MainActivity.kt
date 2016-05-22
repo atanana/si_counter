@@ -13,6 +13,7 @@ import android.widget.Toast
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.atanana.sicounter.view.PriceSelector
+import com.atanana.sicounter.view.player_control.DefaultPlayerControlFabric
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
 
@@ -21,7 +22,9 @@ class MainActivity : AppCompatActivity() {
     private val scoresContainer: ViewGroup by lazy { findViewById(R.id.scores_container) as ViewGroup }
     private val addPlayer: Subject<String, String> = PublishSubject()
     private val scoresModel: ScoresModel = ScoresModel(addPlayer)
-    private val scoresPresenter: ScoresPresenter by lazy { ScoresPresenter(scoresModel, scoresContainer) }
+    private val scoresPresenter: ScoresPresenter by lazy {
+        ScoresPresenter(scoresModel, scoresContainer, DefaultPlayerControlFabric(this), priceSelector)
+    }
     private val addPlayerDialog: AlertDialog.Builder by lazy {
         val playerName = EditText(this)
         AlertDialog.Builder(this)

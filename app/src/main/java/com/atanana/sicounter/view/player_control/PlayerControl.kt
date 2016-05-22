@@ -1,4 +1,4 @@
-package com.atanana.sicounter.view
+package com.atanana.sicounter.view.player_control
 
 import android.content.Context
 import android.util.AttributeSet
@@ -15,7 +15,7 @@ import rx.Observable
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
 
-class PlayerControl(context: Context?, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+open class PlayerControl(context: Context?, attrs: AttributeSet?) : FrameLayout(context, attrs) {
     private val playerName: TextView by lazy { findViewById(R.id.player_name) as TextView }
     private val playerScore: TextView by lazy { findViewById(R.id.player_score) as TextView }
     private val addScore: View by lazy { findViewById(R.id.add_score) }

@@ -9,7 +9,7 @@ import com.atanana.sicounter.R
 import com.atanana.sicounter.exceptions.SiCounterException
 import com.google.common.collect.ImmutableBiMap
 
-class PriceSelector(context: Context?, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+open class PriceSelector(context: Context?, attrs: AttributeSet?) : FrameLayout(context, attrs) {
     private val BUTTONS_TO_VALUES: ImmutableBiMap<Int, Int> = ImmutableBiMap.of(
             R.id.price_10, 10,
             R.id.price_20, 20,
@@ -24,7 +24,7 @@ class PriceSelector(context: Context?, attrs: AttributeSet?) : FrameLayout(conte
         LayoutInflater.from(context).inflate(R.layout.price_selector, this)
     }
 
-    var price: Int
+    open var price: Int
         get() = BUTTONS_TO_VALUES[selector.checkedRadioButtonId] ?: throw SiCounterException("Incorrect button selected!")
         set(price: Int) = selector.check(BUTTONS_TO_VALUES.inverse()[price] ?: throw SiCounterException("Incorrect price selected"))
 }
