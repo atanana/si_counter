@@ -1,5 +1,7 @@
 package com.atanana.sicounter.data
 
+import com.atanana.sicounter.data.action.ScoreAction
+import com.atanana.sicounter.data.action.ScoreActionType
 import com.atanana.sicounter.exceptions.SiCounterException
 import org.junit.Test
 import org.junit.Assert.*

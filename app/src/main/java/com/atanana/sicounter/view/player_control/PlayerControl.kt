@@ -8,14 +8,14 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import com.atanana.sicounter.R
 import com.atanana.sicounter.data.Score
-import com.atanana.sicounter.data.ScoreAction
-import com.atanana.sicounter.data.ScoreActionType.MINUS
-import com.atanana.sicounter.data.ScoreActionType.PLUS
+import com.atanana.sicounter.data.action.ScoreAction
+import com.atanana.sicounter.data.action.ScoreActionType.MINUS
+import com.atanana.sicounter.data.action.ScoreActionType.PLUS
 import rx.Observable
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
 
-open class PlayerControl(context: Context?, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+class PlayerControl(context: Context?, attrs: AttributeSet?) : FrameLayout(context, attrs) {
     private val playerName: TextView by lazy { findViewById(R.id.player_name) as TextView }
     private val playerScore: TextView by lazy { findViewById(R.id.player_score) as TextView }
     private val addScore: View by lazy { findViewById(R.id.add_score) }

@@ -1,7 +1,7 @@
 package com.atanana.sicounter.presenter
 
-import com.atanana.sicounter.data.ScoreAction
-import com.atanana.sicounter.data.ScoreActionType
+import com.atanana.sicounter.data.action.ScoreAction
+import com.atanana.sicounter.data.action.ScoreActionType
 import com.atanana.sicounter.presenter.ScoreActionPriceTransformer.transform
 import com.atanana.sicounter.view.PriceSelector
 import org.junit.Test

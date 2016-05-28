@@ -4,9 +4,9 @@ import android.test.AndroidTestCase
 import android.widget.TextView
 import com.atanana.sicounter.R
 import com.atanana.sicounter.data.Score
-import com.atanana.sicounter.data.ScoreAction
-import com.atanana.sicounter.data.ScoreActionType.MINUS
-import com.atanana.sicounter.data.ScoreActionType.PLUS
+import com.atanana.sicounter.data.action.ScoreAction
+import com.atanana.sicounter.data.action.ScoreActionType.MINUS
+import com.atanana.sicounter.data.action.ScoreActionType.PLUS
 import com.atanana.sicounter.view.player_control.PlayerControl
 import org.junit.Before
 import rx.observers.TestSubscriber

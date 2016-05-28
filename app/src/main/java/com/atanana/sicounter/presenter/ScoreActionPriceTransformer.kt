@@ -1,6 +1,6 @@
 package com.atanana.sicounter.presenter
 
-import com.atanana.sicounter.data.ScoreAction
+import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.view.PriceSelector
 import rx.Observable
 

@@ -13,6 +13,7 @@ import android.widget.Toast
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.ScoreActionPriceTransformer.transform
+import com.atanana.sicounter.presenter.ScoreHistoryFormatter
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.ScoresLog
@@ -24,13 +25,13 @@ class MainActivity : AppCompatActivity() {
     private val priceSelector: PriceSelector by lazy { findViewById(R.id.price_selector) as PriceSelector }
     private val scoresContainer: ViewGroup by lazy { findViewById(R.id.scores_container) as ViewGroup }
     private val addPlayer: Subject<String, String> = PublishSubject()
-    private val scoresModel: ScoresModel = ScoresModel(addPlayer)
+    lateinit private var scoresModel: ScoresModel
     private val scoresPresenter: ScoresPresenter by lazy {
         ScoresPresenter(scoresModel, scoresContainer, DefaultPlayerControlFabric(this))
     }
     private val logsView: ScoresLog by lazy { findViewById(R.id.log_view) as ScoresLog }
     private val logsPresenter: LogsPresenter by lazy {
-        LogsPresenter(scoresModel, transform(scoresPresenter.scoreActions, priceSelector), logsView)
+        LogsPresenter(scoresModel.historyChanges, logsView)
     }
     private val addPlayerDialog: AlertDialog.Builder by lazy {
         val playerName = EditText(this)
@@ -56,6 +57,7 @@ class MainActivity : AppCompatActivity() {
             addPlayerDialog.show()
         }
 
+        scoresModel = ScoresModel(addPlayer, ScoreHistoryFormatter(this))
         scoresModel.subscribeToScoreActions(transform(scoresPresenter.scoreActions, priceSelector))
         logsPresenter
     }
