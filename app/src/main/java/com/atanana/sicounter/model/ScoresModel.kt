@@ -34,4 +34,8 @@ open class ScoresModel(private val newPlayersNames: Observable<String>) {
             updated.onNext(Pair(newScore, action.id))
         })
     }
+
+    fun playerNameById(id: Int): String {
+        return playerScores[id]?.name ?: throw UnknownId(id)
+    }
 }

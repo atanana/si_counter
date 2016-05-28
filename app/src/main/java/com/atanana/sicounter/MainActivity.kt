@@ -9,8 +9,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.atanana.sicounter.model.ScoresModel
+import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.ScoreActionPriceTransformer.transform
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.atanana.sicounter.view.PriceSelector
@@ -25,6 +27,10 @@ class MainActivity : AppCompatActivity() {
     private val scoresModel: ScoresModel = ScoresModel(addPlayer)
     private val scoresPresenter: ScoresPresenter by lazy {
         ScoresPresenter(scoresModel, scoresContainer, DefaultPlayerControlFabric(this))
+    }
+    private val logsView: TextView by lazy { findViewById(R.id.log_view) as TextView }
+    private val logsPresenter: LogsPresenter by lazy {
+        LogsPresenter(scoresModel, transform(scoresPresenter.scoreActions, priceSelector), logsView)
     }
     private val addPlayerDialog: AlertDialog.Builder by lazy {
         val playerName = EditText(this)
@@ -51,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         scoresModel.subscribeToScoreActions(transform(scoresPresenter.scoreActions, priceSelector))
+        logsPresenter
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

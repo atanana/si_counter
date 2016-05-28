@@ -27,8 +27,9 @@
         android:background="@android:color/white" />
 
     <HorizontalScrollView
+        android:id="@+id/scores_scroll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/price_separator">
 
         <LinearLayout
@@ -38,4 +39,17 @@
             android:orientation="horizontal" />
 
     </HorizontalScrollView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/scores_scroll">
+
+        <TextView
+            android:id="@+id/log_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="false" />
+
+    </ScrollView>
 </RelativeLayout>
