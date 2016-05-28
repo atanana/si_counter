@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     }
     private val addPlayerDialog: AlertDialog.Builder by lazy {
         val playerName = EditText(this)
+        playerName.setSingleLine(true)
         AlertDialog.Builder(this)
                 .setTitle(R.string.player_name_title)
                 .setCancelable(true)
