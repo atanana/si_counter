@@ -40,16 +40,9 @@
 
     </HorizontalScrollView>
 
-    <ScrollView
+    <com.atanana.sicounter.view.ScoresLog
+        android:id="@+id/log_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/scores_scroll">
-
-        <TextView
-            android:id="@+id/log_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="false" />
-
-    </ScrollView>
+        android:layout_below="@id/scores_scroll" />
 </RelativeLayout>

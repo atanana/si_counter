@@ -9,13 +9,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.ScoreActionPriceTransformer.transform
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.atanana.sicounter.view.PriceSelector
+import com.atanana.sicounter.view.ScoresLog
 import com.atanana.sicounter.view.player_control.DefaultPlayerControlFabric
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private val scoresPresenter: ScoresPresenter by lazy {
         ScoresPresenter(scoresModel, scoresContainer, DefaultPlayerControlFabric(this))
     }
-    private val logsView: TextView by lazy { findViewById(R.id.log_view) as TextView }
+    private val logsView: ScoresLog by lazy { findViewById(R.id.log_view) as ScoresLog }
     private val logsPresenter: LogsPresenter by lazy {
         LogsPresenter(scoresModel, transform(scoresPresenter.scoreActions, priceSelector), logsView)
     }
