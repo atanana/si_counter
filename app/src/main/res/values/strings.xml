@@ -3,6 +3,8 @@
 
     <!--buttons-->
     <string name="ok">Готово</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 
     <!--menu-->
     <string name="mi_save">Сохранить результаты в файл</string>
@@ -25,4 +27,8 @@
 
     <!--logs-->
     <string name="new_player_log"><b>%s</b> присоединился к игре</string>
+
+    <!--close-->
+    <string name="close_title">Выход</string>
+    <string name="close_message">Вы действительно хотите выйти?</string>
 </resources>

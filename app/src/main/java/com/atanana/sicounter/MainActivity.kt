@@ -46,6 +46,14 @@ class MainActivity : AppCompatActivity() {
                     (playerName.parent as? ViewGroup)?.removeView(playerName)
                 })
     }
+    private val exitDialog by lazy {
+        AlertDialog.Builder(this)
+                .setTitle(R.string.close_title)
+                .setCancelable(true)
+                .setMessage(R.string.close_message)
+                .setPositiveButton(R.string.yes, { dialogInterface, i -> finish() })
+                .setNegativeButton(R.string.no, null)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,5 +88,9 @@ class MainActivity : AppCompatActivity() {
             }
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onBackPressed() {
+        exitDialog.show()
     }
 }
