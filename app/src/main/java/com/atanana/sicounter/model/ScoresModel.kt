@@ -10,8 +10,8 @@ import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
 import java.util.*
 
-private const val KEY_HISTORY:String = "scores_model_history"
-private const val KEY_SCORES:String = "scores_model_scores"
+const val KEY_HISTORY:String = "scores_model_history"
+const val KEY_SCORES:String = "scores_model_scores"
 
 class ScoresModel(private val newPlayersNames: Observable<String>, private val scoreHistoryFormatter: ScoreHistoryFormatter) {
     private var playerScores: HashMap<Int, Score> = hashMapOf()
