@@ -27,8 +27,13 @@
 
     <!--logs-->
     <string name="new_player_log"><b>%s</b> присоединился к игре</string>
+    <string name="reset_log">Сброс результатов</string>
 
     <!--close-->
     <string name="close_title">Выход</string>
     <string name="close_message">Вы действительно хотите выйти?</string>
+
+    <!--reset-->
+    <string name="reset_title">Сброс</string>
+    <string name="reset_message">Вы действительно хотите сбросить все результаты?</string>
 </resources>

@@ -29,10 +29,12 @@ class MainActivity : AppCompatActivity() {
     private val scoresPresenter: ScoresPresenter by lazy {
         ScoresPresenter(scoresModel, scoresContainer, DefaultPlayerControlFabric(this))
     }
+
     private val logsView: ScoresLog by lazy { findViewById(R.id.log_view) as ScoresLog }
     private val logsPresenter: LogsPresenter by lazy {
         LogsPresenter(scoresModel.historyChanges, logsView)
     }
+
     private val addPlayerDialog: AlertDialog.Builder by lazy {
         val playerName = EditText(this)
         playerName.setSingleLine(true)
@@ -46,12 +48,22 @@ class MainActivity : AppCompatActivity() {
                     (playerName.parent as? ViewGroup)?.removeView(playerName)
                 })
     }
+
     private val exitDialog by lazy {
         AlertDialog.Builder(this)
                 .setTitle(R.string.close_title)
                 .setCancelable(true)
                 .setMessage(R.string.close_message)
                 .setPositiveButton(R.string.yes, { dialogInterface, i -> finish() })
+                .setNegativeButton(R.string.no, null)
+    }
+
+    private val resetDialog by lazy {
+        AlertDialog.Builder(this)
+                .setTitle(R.string.reset_title)
+                .setCancelable(true)
+                .setMessage(R.string.reset_message)
+                .setPositiveButton(R.string.yes, { dialogInterface, i -> scoresModel.reset() })
                 .setNegativeButton(R.string.no, null)
     }
 
@@ -79,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.mi_new -> {
-                Toast.makeText(this, "New player", Toast.LENGTH_SHORT).show()
+                resetDialog.show()
                 return true
             }
             R.id.mi_save -> {

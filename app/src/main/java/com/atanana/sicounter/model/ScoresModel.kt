@@ -82,4 +82,13 @@ class ScoresModel(private val newPlayersNames: Observable<String>, private val s
             }
         }
     }
+
+    fun reset() {
+        for (playerScore in playerScores) {
+            val newScore = playerScore.value.copy(score = 0)
+            playerScores.put(playerScore.key, newScore)
+            updated.onNext(Pair(newScore, playerScore.key))
+        }
+        addHistory(scoreHistoryFormatter.resetMessage)
+    }
 }
