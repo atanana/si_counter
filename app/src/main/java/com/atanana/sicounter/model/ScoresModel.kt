@@ -1,5 +1,6 @@
 package com.atanana.sicounter.model
 
+import android.os.Bundle
 import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.exceptions.UnknownId
@@ -7,10 +8,14 @@ import com.atanana.sicounter.presenter.ScoreHistoryFormatter
 import rx.Observable
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
+import java.util.*
+
+private const val KEY_HISTORY:String = "scores_model_history"
+private const val KEY_SCORES:String = "scores_model_scores"
 
 class ScoresModel(private val newPlayersNames: Observable<String>, private val scoreHistoryFormatter: ScoreHistoryFormatter) {
-    private val playerScores: MutableMap<Int, Score> = hashMapOf()
-    private val history: MutableList<String> = arrayListOf()
+    private var playerScores: HashMap<Int, Score> = hashMapOf()
+    private var history: ArrayList<String> = arrayListOf()
     private val new: Subject<Pair<Score, Int>, Pair<Score, Int>> = PublishSubject()
     private val updated: Subject<Pair<Score, Int>, Pair<Score, Int>> = PublishSubject()
     private val historyChangesSubject: Subject<String, String> = PublishSubject()
@@ -50,5 +55,31 @@ class ScoresModel(private val newPlayersNames: Observable<String>, private val s
     private fun addHistory(item: String) {
         history.add(item)
         historyChangesSubject.onNext(item)
+    }
+
+    fun save(bundle: Bundle) {
+        bundle.putStringArrayList(KEY_HISTORY, history)
+        bundle.putSerializable(KEY_SCORES, playerScores)
+    }
+
+    fun restore(bundle: Bundle?) {
+        val newHistory = bundle?.getStringArrayList(KEY_HISTORY)
+        if (newHistory != null) {
+            history = newHistory
+
+            for (item in history) {
+                historyChangesSubject.onNext(item)
+            }
+        }
+
+        @Suppress("UNCHECKED_CAST")
+        val newScores = bundle?.getSerializable(KEY_SCORES) as? HashMap<Int, Score>
+        if (newScores != null) {
+            playerScores = newScores
+
+            for (playerScore in playerScores) {
+                new.onNext(Pair(playerScore.value, playerScore.key))
+            }
+        }
     }
 }

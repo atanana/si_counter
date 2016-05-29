@@ -93,4 +93,14 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         exitDialog.show()
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        scoresModel.save(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        scoresModel.restore(savedInstanceState)
+    }
 }
