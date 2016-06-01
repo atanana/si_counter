@@ -10,6 +10,8 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import com.atanana.sicounter.logging.LoggerConfiguration
+import com.atanana.sicounter.logging.LogsWriter
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.ScoreActionPriceTransformer.transform
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private val logsPresenter: LogsPresenter by lazy {
         LogsPresenter(scoresModel.historyChanges, logsView)
     }
+    private val logsWriter: LogsWriter by lazy { LogsWriter(scoresModel.historyChanges) }
 
     private val addPlayerDialog: AlertDialog.Builder by lazy {
         val playerName = EditText(this)
@@ -69,6 +72,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LoggerConfiguration.configureLogbackDirectly(applicationContext)
+
         setContentView(R.layout.activity_main)
         val toolbar = findViewById(R.id.toolbar) as Toolbar?
         setSupportActionBar(toolbar)
@@ -81,6 +86,7 @@ class MainActivity : AppCompatActivity() {
         scoresModel = ScoresModel(addPlayer, ScoreHistoryFormatter(this))
         scoresModel.subscribeToScoreActions(transform(scoresPresenter.scoreActions, priceSelector))
         logsPresenter
+        logsWriter
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
