@@ -36,4 +36,7 @@
     <!--reset-->
     <string name="reset_title">Сброс</string>
     <string name="reset_message">Вы действительно хотите сбросить все результаты?</string>
+
+    <!--save results-->
+    <string name="save_results_title">Сохранить ход игры в файл</string>
 </resources>

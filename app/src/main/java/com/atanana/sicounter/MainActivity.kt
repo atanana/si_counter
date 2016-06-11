@@ -17,6 +17,7 @@ import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.ScoreActionPriceTransformer.transform
 import com.atanana.sicounter.presenter.ScoreHistoryFormatter
 import com.atanana.sicounter.presenter.ScoresPresenter
+import com.atanana.sicounter.view.FoldersView
 import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.ScoresLog
 import com.atanana.sicounter.view.player_control.DefaultPlayerControlFabric
@@ -70,6 +71,17 @@ class MainActivity : AppCompatActivity() {
                 .setNegativeButton(R.string.no, null)
     }
 
+    private val saveResultsDialog by lazy {
+        val foldersView = FoldersView(this, null)
+        AlertDialog.Builder(this)
+                .setTitle(R.string.save_results_title)
+                .setCancelable(true)
+                .setView(foldersView)
+                .setPositiveButton(R.string.ok, { dialogInterface, i ->
+                    Toast.makeText(this, "Save results", Toast.LENGTH_SHORT).show()
+                })
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LoggerConfiguration.configureLogbackDirectly(applicationContext)
@@ -101,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             R.id.mi_save -> {
-                Toast.makeText(this, "Save results", Toast.LENGTH_SHORT).show()
+                saveResultsDialog.show()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
