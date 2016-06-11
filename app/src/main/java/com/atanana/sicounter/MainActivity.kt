@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import com.atanana.sicounter.logging.LoggerConfiguration
 import com.atanana.sicounter.logging.LogsWriter
 import com.atanana.sicounter.model.ScoresModel
@@ -97,6 +98,10 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.mi_new -> {
                 resetDialog.show()
+                return true
+            }
+            R.id.mi_save -> {
+                Toast.makeText(this, "Save results", Toast.LENGTH_SHORT).show()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

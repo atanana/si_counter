@@ -6,4 +6,9 @@
         android:icon="@drawable/ic_new_game"
         android:title="@string/mi_new"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mi_save"
+        android:icon="@drawable/ic_save"
+        android:title="@string/mi_save"
+        app:showAsAction="ifRoom" />
 </menu>
