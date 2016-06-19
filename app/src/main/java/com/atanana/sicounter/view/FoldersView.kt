@@ -18,9 +18,7 @@ class FoldersView(context: Context, attrs: AttributeSet?) : RecyclerView(context
     private val foldersAdapter = FoldersAdapter()
     private val _selectedFolders = PublishSubject<SelectedFolder>()
     val selectedFolders: Observable<SelectedFolder>
-        get() {
-            return _selectedFolders
-        }
+        get() = _selectedFolders
 
     init {
         layoutManager = LinearLayoutManager(context)
@@ -28,7 +26,10 @@ class FoldersView(context: Context, attrs: AttributeSet?) : RecyclerView(context
     }
 
     fun setFoldersProvider(observable: Observable<List<String>>) {
-        observable.subscribe({ folders -> foldersAdapter.setFolders(folders) })
+        observable.subscribe({ folders ->
+            foldersAdapter.setFolders(folders)
+            foldersAdapter.notifyDataSetChanged()
+        })
     }
 
     inner class FoldersAdapter : RecyclerView.Adapter<FoldersAdapter.ViewHolder>() {

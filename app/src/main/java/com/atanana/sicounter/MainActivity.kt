@@ -10,8 +10,10 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import com.atanana.sicounter.fs.FileSystemConfiguration
 import com.atanana.sicounter.logging.LoggerConfiguration
 import com.atanana.sicounter.logging.LogsWriter
+import com.atanana.sicounter.model.SaveFileModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.ScoreActionPriceTransformer.transform
@@ -23,6 +25,7 @@ import com.atanana.sicounter.view.ScoresLog
 import com.atanana.sicounter.view.player_control.DefaultPlayerControlFabric
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private val priceSelector: PriceSelector by lazy { findViewById(R.id.price_selector) as PriceSelector }
@@ -72,7 +75,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val saveResultsDialog by lazy {
+        val saveFileModel = SaveFileModel(File(FileSystemConfiguration.externalAppFolder(this)), this)
+        saveFileModel.errors.subscribe { Toast.makeText(this, it, Toast.LENGTH_SHORT).show() }
         val foldersView = FoldersView(this, null)
+        foldersView.setFoldersProvider(saveFileModel.folders)
+        saveFileModel.setFileProvider(foldersView.selectedFolders)
         AlertDialog.Builder(this)
                 .setTitle(R.string.save_results_title)
                 .setCancelable(true)

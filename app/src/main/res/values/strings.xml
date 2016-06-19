@@ -39,4 +39,8 @@
 
     <!--save results-->
     <string name="save_results_title">Сохранить ход игры в файл</string>
+
+    <!--exceptions-->
+    <string name="parent_list_exception">Не получилось перейти в родительскую папку!</string>
+    <string name="folder_list_exception">Не получилось перейти в папку!</string>
 </resources>
