@@ -1,4 +1,4 @@
-package com.atanana.sicounter.view
+package com.atanana.sicounter.view.save
 
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
@@ -32,7 +32,7 @@ class FoldersView(context: Context, attrs: AttributeSet?) : RecyclerView(context
         })
     }
 
-    inner class FoldersAdapter : RecyclerView.Adapter<FoldersAdapter.ViewHolder>() {
+    inner class FoldersAdapter : Adapter<FoldersAdapter.ViewHolder>() {
         private val TYPE_PARENT_FOLDER: Int = 0;
         private val TYPE_FOLDER: Int = 1;
 

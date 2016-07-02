@@ -7,22 +7,25 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import com.atanana.sicounter.fs.FileProvider
 import com.atanana.sicounter.fs.FileSystemConfiguration
 import com.atanana.sicounter.logging.LoggerConfiguration
 import com.atanana.sicounter.logging.LogsWriter
 import com.atanana.sicounter.model.SaveFileModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.LogsPresenter
+import com.atanana.sicounter.presenter.SaveFilePresenter
 import com.atanana.sicounter.presenter.ScoreActionPriceTransformer.transform
 import com.atanana.sicounter.presenter.ScoreHistoryFormatter
 import com.atanana.sicounter.presenter.ScoresPresenter
-import com.atanana.sicounter.view.FoldersView
 import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.ScoresLog
 import com.atanana.sicounter.view.player_control.DefaultPlayerControlFabric
+import com.atanana.sicounter.view.save.SaveToFileView
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
 import java.io.File
@@ -52,8 +55,13 @@ class MainActivity : AppCompatActivity() {
                 .setPositiveButton(R.string.ok, { dialogInterface, i ->
                     addPlayer.onNext(playerName.text.toString())
                     playerName.text.clear()
-                    (playerName.parent as? ViewGroup)?.removeView(playerName)
+                    clearViewFromParent(playerName)
                 })
+                .setOnCancelListener { clearViewFromParent(playerName) }
+    }
+
+    private fun clearViewFromParent(view: View) {
+        (view.parent as? ViewGroup)?.removeView(view)
     }
 
     private val exitDialog by lazy {
@@ -75,18 +83,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val saveResultsDialog by lazy {
-        val saveFileModel = SaveFileModel(File(FileSystemConfiguration.externalAppFolder(this)), this)
-        saveFileModel.errors.subscribe { Toast.makeText(this, it, Toast.LENGTH_SHORT).show() }
-        val foldersView = FoldersView(this, null)
-        foldersView.setFoldersProvider(saveFileModel.folders)
-        saveFileModel.setFileProvider(foldersView.selectedFolders)
+        val saveFileModel = SaveFileModel(File(FileSystemConfiguration.externalAppFolder(this)), FileProvider(), this)
+        val saveToFileView = SaveToFileView(this, null)
+        SaveFilePresenter(this, saveFileModel, saveToFileView)
         AlertDialog.Builder(this)
                 .setTitle(R.string.save_results_title)
                 .setCancelable(true)
-                .setView(foldersView)
+                .setView(saveToFileView)
                 .setPositiveButton(R.string.ok, { dialogInterface, i ->
                     Toast.makeText(this, "Save results", Toast.LENGTH_SHORT).show()
+                    clearViewFromParent(saveToFileView)
                 })
+                .setOnCancelListener { clearViewFromParent(saveToFileView) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

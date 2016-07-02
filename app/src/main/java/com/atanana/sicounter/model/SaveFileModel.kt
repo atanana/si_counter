@@ -6,41 +6,49 @@ import com.atanana.sicounter.R
 import com.atanana.sicounter.data.Folder
 import com.atanana.sicounter.data.ParentFolder
 import com.atanana.sicounter.data.SelectedFolder
+import com.atanana.sicounter.fs.FileProvider
 import rx.Observable
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.PublishSubject
 import java.io.File
 
-class SaveFileModel(var file: File, context: Context) {
+class SaveFileModel(private var file: File, private val fileProvider: FileProvider, context: Context) {
     private val cannotListParentException: String by lazy { context.resources.getString(R.string.parent_list_exception) }
     private val cannotListSubfolderException: String by lazy { context.resources.getString(R.string.folder_list_exception) }
 
     private val _folders: PublishSubject<List<String>> = PublishSubject()
-    val folders: Observable<List<String>>
-        get() = _folders
+    val folders: Observable<List<String>> = _folders
 
     private val _errors: PublishSubject<String> = PublishSubject()
-    val errors: Observable<String>
-        get() = _errors
+    val errors: Observable<String> = _errors
+
+    private val _currentFolder: PublishSubject<String> = PublishSubject()
+    val currentFolder: Observable<String> = _currentFolder
+
+    init {
+        _currentFolder.onNext(file.absolutePath)
+    }
 
     fun setFileProvider(folderProvider: Observable<SelectedFolder>) {
         folderProvider.subscribe { folder ->
             when (folder) {
                 is ParentFolder -> {
                     try {
-                        val parent = file.parentFile
-                        _folders.onNext(getDirectories(parent))
+                        val parent = fileProvider.parent(file)
+                        _folders.onNext(fileProvider.directories(parent))
                         file = parent
+                        updateCurrentFolder()
                     } catch(e: Exception) {
                         Log.e(javaClass.simpleName, "Cannot list parent of ${file.absolutePath}!", e)
                         _errors.onNext(cannotListParentException)
                     }
                 }
                 is Folder -> {
-                    val subfolder = File(listOf(file.absolutePath, folder.name).joinToString(File.separator))
+                    val subfolder = fileProvider.subfolder(file, folder.name)
                     try {
-                        _folders.onNext(getDirectories(subfolder))
+                        _folders.onNext(fileProvider.directories(subfolder))
                         file = subfolder
+                        updateCurrentFolder()
                     } catch(e: Exception) {
                         Log.e(javaClass.simpleName, "Cannot list subfolder ${subfolder.absolutePath}!", e)
                         _errors.onNext(cannotListSubfolderException)
@@ -50,9 +58,7 @@ class SaveFileModel(var file: File, context: Context) {
         }
     }
 
-    private fun getDirectories(file: File) = file.listFiles()
-            ?.asList()
-            ?.filter { it.isDirectory }
-            ?.map { it.name }
-            ?: emptyList()
+    private fun updateCurrentFolder() {
+        _currentFolder.onNext(file.absolutePath)
+    }
 }

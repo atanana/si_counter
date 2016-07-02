@@ -43,4 +43,7 @@
     <!--exceptions-->
     <string name="parent_list_exception">Не получилось перейти в родительскую папку!</string>
     <string name="folder_list_exception">Не получилось перейти в папку!</string>
+
+    <!--files-->
+    <string name="folder_label">Папка</string>
 </resources>
