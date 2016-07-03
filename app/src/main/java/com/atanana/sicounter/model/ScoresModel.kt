@@ -13,7 +13,7 @@ import java.util.*
 const val KEY_HISTORY:String = "scores_model_history"
 const val KEY_SCORES:String = "scores_model_scores"
 
-class ScoresModel(private val newPlayersNames: Observable<String>, private val scoreHistoryFormatter: ScoreHistoryFormatter) {
+class ScoresModel(newPlayersNames: Observable<String>, private val scoreHistoryFormatter: ScoreHistoryFormatter) {
     private var playerScores: HashMap<Int, Score> = hashMapOf()
     private var history: ArrayList<String> = arrayListOf()
     private val new: Subject<Pair<Score, Int>, Pair<Score, Int>> = PublishSubject()
@@ -77,17 +77,17 @@ class ScoresModel(private val newPlayersNames: Observable<String>, private val s
         if (newScores != null) {
             playerScores = newScores
 
-            for (playerScore in playerScores) {
-                new.onNext(Pair(playerScore.value, playerScore.key))
+            for ((id, score) in playerScores) {
+                new.onNext(Pair(score, id))
             }
         }
     }
 
     fun reset() {
-        for (playerScore in playerScores) {
-            val newScore = playerScore.value.copy(score = 0)
-            playerScores.put(playerScore.key, newScore)
-            updated.onNext(Pair(newScore, playerScore.key))
+        for ((id, score) in playerScores) {
+            val newScore = score.copy(score = 0)
+            playerScores.put(id, newScore)
+            updated.onNext(Pair(newScore, id))
         }
         addHistory(scoreHistoryFormatter.resetMessage)
     }

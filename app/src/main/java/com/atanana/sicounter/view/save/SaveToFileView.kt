@@ -11,6 +11,7 @@ import rx.Observable
 class SaveToFileView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
     private val foldersView: FoldersView by lazy { findViewById(R.id.folders) as FoldersView }
     private val currentFolderView: CurrentFolderView by lazy { findViewById(R.id.current_folder) as CurrentFolderView }
+    private val filenameView: FilenameView by lazy { findViewById(R.id.filename) as FilenameView }
 
     val selectedFolder: Observable<SelectedFolder>
         get() = foldersView.selectedFolders
@@ -25,5 +26,9 @@ class SaveToFileView(context: Context, attrs: AttributeSet?) : FrameLayout(conte
 
     fun setCurrentFolderProvider(provider: Observable<String>) {
         currentFolderView.setCurrentFolderProvider(provider)
+    }
+
+    fun setFilenameProvider(provider: Observable<String>) {
+        filenameView.setFilenameProvider(provider)
     }
 }

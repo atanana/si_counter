@@ -28,4 +28,9 @@
         <item name="android:drawableLeft">@drawable/ic_arrow_upward</item>
         <item name="android:text">..</item>
     </style>
+
+    <!--save file-->
+    <style name="save_file_hint">
+        <item name="android:textColor">@android:color/darker_gray</item>
+    </style>
 </resources>

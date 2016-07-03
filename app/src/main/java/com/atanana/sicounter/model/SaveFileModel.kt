@@ -13,7 +13,11 @@ import rx.subjects.PublishSubject
 import rx.subjects.ReplaySubject
 import java.io.File
 
-class SaveFileModel(private var _file: File, private val fileProvider: FileProvider, context: Context) {
+const val DEFAULT_FILE_NAME = "empty"
+const val EXTENSION = ".txt"
+
+class SaveFileModel(private var _folder: File, private val fileProvider: FileProvider,
+                    newPlayersNameProvider: Observable<String>, context: Context) {
     private val cannotListParentException: String by lazy { context.resources.getString(R.string.parent_list_exception) }
     private val cannotListSubfolderException: String by lazy { context.resources.getString(R.string.folder_list_exception) }
 
@@ -26,35 +30,56 @@ class SaveFileModel(private var _file: File, private val fileProvider: FileProvi
     private val _currentFolder: ReplaySubject<String> = ReplaySubject.createWithSize<String>(1)
     val currentFolder: Observable<String> = _currentFolder
 
-    val file: File
-        get() {
-            return _file
-        }
+    private val _filenameSubject: ReplaySubject<String> = ReplaySubject.createWithSize(1)
+    val filenameProvider: Observable<String> = _filenameSubject
+
+    private var filename: String = "empty"
 
     init {
-        _currentFolder.onNext(_file.absolutePath)
-        _folders.onNext(fileProvider.directories(file))
+        _currentFolder.onNext(_folder.absolutePath)
+        _folders.onNext(fileProvider.directories(_folder))
+        _filenameSubject.onNext(fullFilename)
+
+        newPlayersNameProvider.subscribe {
+            if (filename == DEFAULT_FILE_NAME) {
+                filename = it
+            } else {
+                filename += "-" + it
+            }
+
+            _filenameSubject.onNext(fullFilename)
+        }
     }
+
+    val fileToSave: File
+        get() {
+            return File(_folder, fullFilename)
+        }
+
+    private val fullFilename: String
+        get() {
+            return filename + EXTENSION
+        }
 
     fun setFileProvider(folderProvider: Observable<SelectedFolder>) {
         folderProvider.subscribe { folder ->
             when (folder) {
                 is ParentFolder -> {
                     try {
-                        val parent = fileProvider.parent(_file)
+                        val parent = fileProvider.parent(_folder)
                         _folders.onNext(fileProvider.directories(parent))
-                        _file = parent
+                        _folder = parent
                         updateCurrentFolder()
                     } catch(e: Exception) {
-                        Log.e(javaClass.simpleName, "Cannot list parent of ${_file.absolutePath}!", e)
+                        Log.e(javaClass.simpleName, "Cannot list parent of ${_folder.absolutePath}!", e)
                         _errors.onNext(cannotListParentException)
                     }
                 }
                 is Folder -> {
-                    val subfolder = fileProvider.subfolder(_file, folder.name)
+                    val subfolder = fileProvider.subfolder(_folder, folder.name)
                     try {
                         _folders.onNext(fileProvider.directories(subfolder))
-                        _file = subfolder
+                        _folder = subfolder
                         updateCurrentFolder()
                     } catch(e: Exception) {
                         Log.e(javaClass.simpleName, "Cannot list subfolder ${subfolder.absolutePath}!", e)
@@ -66,6 +91,6 @@ class SaveFileModel(private var _file: File, private val fileProvider: FileProvi
     }
 
     private fun updateCurrentFolder() {
-        _currentFolder.onNext(_file.absolutePath)
+        _currentFolder.onNext(_folder.absolutePath)
     }
 }

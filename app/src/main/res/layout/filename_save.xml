@@ -9,10 +9,10 @@
         style="@style/save_file_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/folder_label" />
+        android:text="@string/file_label" />
 
     <TextView
-        android:id="@+id/folder_text"
+        android:id="@+id/filename_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"

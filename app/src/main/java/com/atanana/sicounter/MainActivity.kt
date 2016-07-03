@@ -82,8 +82,9 @@ class MainActivity : AppCompatActivity() {
                 .setNegativeButton(R.string.no, null)
     }
 
+    lateinit private var saveFileModel: SaveFileModel
+
     private val saveResultsDialog by lazy {
-        val saveFileModel = SaveFileModel(File(FileSystemConfiguration.externalAppFolder(this)), FileProvider(), this)
         val saveToFileView = SaveToFileView(this, null)
         SaveFilePresenter(this, saveFileModel, saveToFileView)
         AlertDialog.Builder(this)
@@ -114,6 +115,9 @@ class MainActivity : AppCompatActivity() {
         scoresModel.subscribeToScoreActions(transform(scoresPresenter.scoreActions, priceSelector))
         logsPresenter
         logsWriter
+
+        val newPlayerNames = scoresModel.newPlayers.map { it.first.name }
+        saveFileModel = SaveFileModel(File(FileSystemConfiguration.externalAppFolder(this)), FileProvider(), newPlayerNames, this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

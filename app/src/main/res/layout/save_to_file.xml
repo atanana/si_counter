@@ -15,4 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <com.atanana.sicounter.view.save.FilenameView
+        android:id="@+id/filename"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
