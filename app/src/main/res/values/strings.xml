@@ -47,4 +47,5 @@
     <!--files-->
     <string name="folder_label">Папка</string>
     <string name="file_label">Файл</string>
+    <string name="file_saved_message">Файл сохранён!</string>
 </resources>

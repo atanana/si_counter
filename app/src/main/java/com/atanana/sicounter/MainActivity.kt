@@ -26,6 +26,7 @@ import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.ScoresLog
 import com.atanana.sicounter.view.player_control.DefaultPlayerControlFabric
 import com.atanana.sicounter.view.save.SaveToFileView
+import org.apache.commons.io.FileUtils
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
 import java.io.File
@@ -92,7 +93,8 @@ class MainActivity : AppCompatActivity() {
                 .setCancelable(true)
                 .setView(saveToFileView)
                 .setPositiveButton(R.string.ok, { dialogInterface, i ->
-                    Toast.makeText(this, "Save results", Toast.LENGTH_SHORT).show()
+                    FileUtils.writeLines(saveFileModel.fileToSave, scoresModel.history)
+                    Toast.makeText(this, R.string.file_saved_message, Toast.LENGTH_SHORT).show()
                     clearViewFromParent(saveToFileView)
                 })
                 .setOnCancelListener { clearViewFromParent(saveToFileView) }
