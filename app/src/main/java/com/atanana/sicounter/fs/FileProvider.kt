@@ -7,7 +7,7 @@ open class FileProvider {
         return file.parentFile
     }
 
-    fun subfolder(file: File, folder: String) :File {
+    fun subfolder(file: File, folder: String): File {
         return File(listOf(file.absolutePath, folder).joinToString(File.separator))
     }
 

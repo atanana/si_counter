@@ -15,8 +15,10 @@ import com.atanana.sicounter.fs.FileProvider
 import com.atanana.sicounter.fs.FileSystemConfiguration
 import com.atanana.sicounter.logging.LoggerConfiguration
 import com.atanana.sicounter.logging.LogsWriter
-import com.atanana.sicounter.model.SaveFileModel
+import com.atanana.sicounter.model.log.LogFolderModel
 import com.atanana.sicounter.model.ScoresModel
+import com.atanana.sicounter.model.log.LogNameModel
+import com.atanana.sicounter.model.log.SaveLogModel
 import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.SaveFilePresenter
 import com.atanana.sicounter.presenter.ScoreActionPriceTransformer.transform
@@ -83,17 +85,17 @@ class MainActivity : AppCompatActivity() {
                 .setNegativeButton(R.string.no, null)
     }
 
-    lateinit private var saveFileModel: SaveFileModel
+    lateinit private var saveLogModel: SaveLogModel
 
     private val saveResultsDialog by lazy {
         val saveToFileView = SaveToFileView(this, null)
-        SaveFilePresenter(this, saveFileModel, saveToFileView)
+        SaveFilePresenter(this, saveLogModel, saveToFileView)
         AlertDialog.Builder(this)
                 .setTitle(R.string.save_results_title)
                 .setCancelable(true)
                 .setView(saveToFileView)
-                .setPositiveButton(R.string.ok, { dialogInterface, i ->
-                    FileUtils.writeLines(saveFileModel.fileToSave, scoresModel.history)
+                .setPositiveButton(R.string.ok, { _, _ ->
+                    FileUtils.writeLines(saveLogModel.logFile, scoresModel.history)
                     Toast.makeText(this, R.string.file_saved_message, Toast.LENGTH_SHORT).show()
                     clearViewFromParent(saveToFileView)
                 })
@@ -119,7 +121,10 @@ class MainActivity : AppCompatActivity() {
         logsWriter
 
         val newPlayerNames = scoresModel.newPlayers.map { it.first.name }
-        saveFileModel = SaveFileModel(File(FileSystemConfiguration.externalAppFolder(this)), FileProvider(), newPlayerNames, this)
+        val logFolder = File(FileSystemConfiguration.externalAppFolder(this))
+        val logNameModel = LogNameModel(newPlayerNames)
+        val logFolderModel = LogFolderModel(logFolder, FileProvider(), this)
+        saveLogModel = SaveLogModel(logNameModel, logFolderModel)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
