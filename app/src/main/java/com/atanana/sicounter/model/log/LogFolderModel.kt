@@ -31,7 +31,7 @@ class LogFolderModel(private var _currentFolder: File, private val fileProvider:
         _foldersSubject.onNext(fileProvider.directories(_currentFolder))
     }
 
-    fun setFileProvider(folderProvider: Observable<SelectedFolder>) {
+    fun setFolderProvider(folderProvider: Observable<SelectedFolder>) {
         folderProvider.subscribe { folder ->
             when (folder) {
                 is ParentFolder -> {
@@ -50,15 +50,11 @@ class LogFolderModel(private var _currentFolder: File, private val fileProvider:
         try {
             _foldersSubject.onNext(fileProvider.directories(folder))
             _currentFolder = folder
-            updateCurrentFolder()
+            _currentFolderSubject.onNext(_currentFolder.absolutePath)
         } catch(e: Exception) {
             Log.e(javaClass.simpleName, logMessage, e)
             _errorsSubject.onNext(exception)
         }
-    }
-
-    private fun updateCurrentFolder() {
-        _currentFolderSubject.onNext(_currentFolder.absolutePath)
     }
 
     val currentFolder get() = _currentFolder

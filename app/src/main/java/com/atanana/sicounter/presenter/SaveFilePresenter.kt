@@ -11,6 +11,6 @@ class SaveFilePresenter(private val context: Context, model: SaveLogModel, view:
         view.setCurrentFolderProvider(model.currentFolderObservable)
         view.setFilenameProvider(model.logName)
         model.errorsObservable.subscribe { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
-        model.setFileProvider(view.selectedFolder)
+        model.setFolderProvider(view.selectedFolder)
     }
 }

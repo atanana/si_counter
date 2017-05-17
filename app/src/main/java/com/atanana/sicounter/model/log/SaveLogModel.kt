@@ -10,7 +10,7 @@ class SaveLogModel(private val logNameModel: LogNameModel, private val logFolder
     val foldersObservable = logFolderModel.foldersObservable
     val errorsObservable = logFolderModel.errorsObservable
     val currentFolderObservable = logFolderModel.currentFolderObservable
-    fun setFileProvider(folderProvider: Observable<SelectedFolder>) {
-        logFolderModel.setFileProvider(folderProvider)
+    fun setFolderProvider(folderProvider: Observable<SelectedFolder>) {
+        logFolderModel.setFolderProvider(folderProvider)
     }
 }
