@@ -7,20 +7,29 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
+import com.atanana.sicounter.fs.FileProvider
+import com.atanana.sicounter.fs.FileSystemConfiguration
 import com.atanana.sicounter.logging.LoggerConfiguration
 import com.atanana.sicounter.logging.LogsWriter
+import com.atanana.sicounter.model.SaveFileModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.LogsPresenter
+import com.atanana.sicounter.presenter.SaveFilePresenter
 import com.atanana.sicounter.presenter.ScoreActionPriceTransformer.transform
 import com.atanana.sicounter.presenter.ScoreHistoryFormatter
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.ScoresLog
 import com.atanana.sicounter.view.player_control.DefaultPlayerControlFabric
+import com.atanana.sicounter.view.save.SaveToFileView
+import org.apache.commons.io.FileUtils
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private val priceSelector: PriceSelector by lazy { findViewById(R.id.price_selector) as PriceSelector }
@@ -47,8 +56,13 @@ class MainActivity : AppCompatActivity() {
                 .setPositiveButton(R.string.ok, { _, _ ->
                     addPlayer.onNext(playerName.text.toString())
                     playerName.text.clear()
-                    (playerName.parent as? ViewGroup)?.removeView(playerName)
+                    clearViewFromParent(playerName)
                 })
+                .setOnCancelListener { clearViewFromParent(playerName) }
+    }
+
+    private fun clearViewFromParent(view: View) {
+        (view.parent as? ViewGroup)?.removeView(view)
     }
 
     private val exitDialog by lazy {
@@ -69,6 +83,23 @@ class MainActivity : AppCompatActivity() {
                 .setNegativeButton(R.string.no, null)
     }
 
+    lateinit private var saveFileModel: SaveFileModel
+
+    private val saveResultsDialog by lazy {
+        val saveToFileView = SaveToFileView(this, null)
+        SaveFilePresenter(this, saveFileModel, saveToFileView)
+        AlertDialog.Builder(this)
+                .setTitle(R.string.save_results_title)
+                .setCancelable(true)
+                .setView(saveToFileView)
+                .setPositiveButton(R.string.ok, { dialogInterface, i ->
+                    FileUtils.writeLines(saveFileModel.fileToSave, scoresModel.history)
+                    Toast.makeText(this, R.string.file_saved_message, Toast.LENGTH_SHORT).show()
+                    clearViewFromParent(saveToFileView)
+                })
+                .setOnCancelListener { clearViewFromParent(saveToFileView) }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LoggerConfiguration.configureLogbackDirectly(applicationContext)
@@ -86,6 +117,9 @@ class MainActivity : AppCompatActivity() {
         scoresModel.subscribeToScoreActions(transform(scoresPresenter.scoreActions, priceSelector))
         logsPresenter
         logsWriter
+
+        val newPlayerNames = scoresModel.newPlayers.map { it.first.name }
+        saveFileModel = SaveFileModel(File(FileSystemConfiguration.externalAppFolder(this)), FileProvider(), newPlayerNames, this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -97,6 +131,10 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.mi_new -> {
                 resetDialog.show()
+                return true
+            }
+            R.id.mi_save -> {
+                saveResultsDialog.show()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

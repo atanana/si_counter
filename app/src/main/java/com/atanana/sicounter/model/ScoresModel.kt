@@ -15,7 +15,7 @@ const val KEY_SCORES: String = "scores_model_scores"
 
 class ScoresModel(newPlayersNames: Observable<String>, private val scoreHistoryFormatter: ScoreHistoryFormatter) {
     private var playerScores: HashMap<Int, Score> = hashMapOf()
-    private var history: ArrayList<String> = arrayListOf()
+    private var _history: ArrayList<String> = arrayListOf()
     private val new: Subject<Pair<Score, Int>, Pair<Score, Int>> = PublishSubject()
     private val updated: Subject<Pair<Score, Int>, Pair<Score, Int>> = PublishSubject()
     private val historyChangesSubject: Subject<String, String> = PublishSubject()
@@ -38,6 +38,11 @@ class ScoresModel(newPlayersNames: Observable<String>, private val scoreHistoryF
         })
     }
 
+    val history: List<String>
+        get() {
+            return Collections.unmodifiableList(_history)
+        }
+
     fun subscribeToScoreActions(actions: Observable<ScoreAction>) {
         actions.subscribe({ action ->
             val oldScore = playerScores[action.id] ?: throw UnknownId(action.id)
@@ -53,21 +58,21 @@ class ScoresModel(newPlayersNames: Observable<String>, private val scoreHistoryF
     }
 
     private fun addHistory(item: String) {
-        history.add(item)
+        _history.add(item)
         historyChangesSubject.onNext(item)
     }
 
     fun save(bundle: Bundle) {
-        bundle.putStringArrayList(KEY_HISTORY, history)
+        bundle.putStringArrayList(KEY_HISTORY, _history)
         bundle.putSerializable(KEY_SCORES, playerScores)
     }
 
     fun restore(bundle: Bundle?) {
         val newHistory = bundle?.getStringArrayList(KEY_HISTORY)
         if (newHistory != null) {
-            history = newHistory
+            _history = newHistory
 
-            for (item in history) {
+            for (item in _history) {
                 historyChangesSubject.onNext(item)
             }
         }
