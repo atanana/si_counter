@@ -13,7 +13,7 @@ import rx.Observable.just
 import rx.lang.kotlin.PublishSubject
 import rx.observers.TestSubscriber
 
-class ScoresModelTest : AndroidTestCase() {
+class ScoresModelTest2 : AndroidTestCase() {
     lateinit var formatter: ScoreHistoryFormatter
 
     override fun setUp() {
@@ -25,9 +25,9 @@ class ScoresModelTest : AndroidTestCase() {
         val newPlayer = PublishSubject<String>()
         val model = ScoresModel(newPlayer, formatter)
         val subscriber = TestSubscriber<Pair<Score, Int>>()
-        model.newPlayers.subscribe(subscriber)
+        model.newPlayersObservable.subscribe(subscriber)
         val historySubscriber = TestSubscriber<String>()
-        model.historyChanges.subscribe(historySubscriber)
+        model.historyChangesObservable.subscribe(historySubscriber)
 
         newPlayer.onNext("test 1")
         newPlayer.onNext("test 2")
@@ -44,9 +44,9 @@ class ScoresModelTest : AndroidTestCase() {
     fun testUpdatePlayers() {
         val model = ScoresModel(just("test 1", "test 2"), formatter)
         val subscriber = TestSubscriber<Pair<Score, Int>>()
-        model.updatedPlayers.subscribe(subscriber)
+        model.updatedPlayersObservable.subscribe(subscriber)
         val historySubscriber = TestSubscriber<String>()
-        model.historyChanges.subscribe(historySubscriber)
+        model.historyChangesObservable.subscribe(historySubscriber)
 
         model.subscribeToScoreActions(just(
                 ScoreAction(PLUS, 10, 0),
@@ -75,9 +75,9 @@ class ScoresModelTest : AndroidTestCase() {
                 ScoreAction(MINUS, 50, 1)
         ))
         val playersSubscriber = TestSubscriber<Pair<Score, Int>>()
-        model.updatedPlayers.subscribe(playersSubscriber)
+        model.updatedPlayersObservable.subscribe(playersSubscriber)
         val historySubscriber = TestSubscriber<String>()
-        model.historyChanges.subscribe(historySubscriber)
+        model.historyChangesObservable.subscribe(historySubscriber)
 
         model.reset()
 

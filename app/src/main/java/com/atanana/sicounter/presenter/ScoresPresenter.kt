@@ -19,7 +19,7 @@ class ScoresPresenter(model: ScoresModel,
         get() = _scoreActions
 
     init {
-        model.newPlayers.subscribe({ (score, id) ->
+        model.newPlayersObservable.subscribe({ (score, id) ->
             val playerControl = playerControlFabric.build()
             playerControl.update(score, id)
             playerControl.scoreActions.subscribe({ scoreAction ->
@@ -29,7 +29,7 @@ class ScoresPresenter(model: ScoresModel,
             scoreViews[id] = playerControl
         })
 
-        model.updatedPlayers.subscribe({ (score, id) ->
+        model.updatedPlayersObservable.subscribe({ (score, id) ->
             val playerControl = scoreViews[id] ?: throw UnknownId(id)
             playerControl.update(score)
         })

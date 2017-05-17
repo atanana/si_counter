@@ -42,9 +42,9 @@ class ScoresModelBundleTest : AndroidTestCase() {
     fun testRestoreInformation() {
         val model = ScoresModel(empty(), ScoreHistoryFormatter(context))
         val playersSubscriber = TestSubscriber<Pair<Score, Int>>()
-        model.newPlayers.subscribe(playersSubscriber)
+        model.newPlayersObservable.subscribe(playersSubscriber)
         val historySubscriber = TestSubscriber<String>()
-        model.historyChanges.subscribe(historySubscriber)
+        model.historyChangesObservable.subscribe(historySubscriber)
 
         val bundle = Bundle()
         bundle.putSerializable(KEY_SCORES, hashMapOf(

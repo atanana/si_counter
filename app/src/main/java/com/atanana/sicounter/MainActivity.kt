@@ -44,9 +44,9 @@ class MainActivity : AppCompatActivity() {
 
     private val logsView: ScoresLog by lazy { findViewById(R.id.log_view) as ScoresLog }
     private val logsPresenter: LogsPresenter by lazy {
-        LogsPresenter(scoresModel.historyChanges, logsView)
+        LogsPresenter(scoresModel.historyChangesObservable, logsView)
     }
-    private val logsWriter: LogsWriter by lazy { LogsWriter(scoresModel.historyChanges) }
+    private val logsWriter: LogsWriter by lazy { LogsWriter(scoresModel.historyChangesObservable) }
 
     private val addPlayerDialog: AlertDialog.Builder by lazy {
         val playerName = EditText(this)
@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         logsPresenter
         logsWriter
 
-        val newPlayerNames = scoresModel.newPlayers.map { it.first.name }
+        val newPlayerNames = scoresModel.newPlayersObservable.map { it.first.name }
         val logFolder = File(FileSystemConfiguration.externalAppFolder(this))
         val logNameModel = LogNameModel(newPlayerNames)
         val logFolderModel = LogFolderModel(logFolder, FileProvider(), this)

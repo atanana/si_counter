@@ -16,17 +16,15 @@ const val KEY_SCORES: String = "scores_model_scores"
 class ScoresModel(newPlayersNames: Observable<String>, private val scoreHistoryFormatter: ScoreHistoryFormatter) {
     private var playerScores: HashMap<Int, Score> = hashMapOf()
     private var _history: ArrayList<String> = arrayListOf()
-    private val new: Subject<Pair<Score, Int>, Pair<Score, Int>> = PublishSubject()
-    private val updated: Subject<Pair<Score, Int>, Pair<Score, Int>> = PublishSubject()
-    private val historyChangesSubject: Subject<String, String> = PublishSubject()
-    val newPlayers: Observable<Pair<Score, Int>>
-        get() = new
+    private val newPlayers: Subject<Pair<Score, Int>, Pair<Score, Int>> = PublishSubject()
+    private val updatedPlayers: Subject<Pair<Score, Int>, Pair<Score, Int>> = PublishSubject()
+    private val historyChanges: Subject<String, String> = PublishSubject()
 
-    val updatedPlayers: Observable<Pair<Score, Int>>
-        get() = updated
+    val newPlayersObservable get() = newPlayers
 
-    val historyChanges: Observable<String>
-        get() = historyChangesSubject
+    val updatedPlayersObservable get() = updatedPlayers
+
+    val historyChangesObservable get() = historyChanges
 
     init {
         newPlayersNames.subscribe({ newPlayer ->
@@ -34,7 +32,7 @@ class ScoresModel(newPlayersNames: Observable<String>, private val scoreHistoryF
             val newId = playerScores.size
             playerScores.put(newId, newScore)
             addHistory(scoreHistoryFormatter.formatNewPlayer(newPlayer))
-            new.onNext(Pair(newScore, newId))
+            newPlayers.onNext(Pair(newScore, newId))
         })
     }
 
@@ -49,7 +47,7 @@ class ScoresModel(newPlayersNames: Observable<String>, private val scoreHistoryF
             val newScore = oldScore.copy(score = oldScore.score + action.absolutePrice)
             playerScores[action.id] = newScore
             addHistory(scoreHistoryFormatter.formatScoreAction(action, playerNameById(action.id)))
-            updated.onNext(Pair(newScore, action.id))
+            updatedPlayers.onNext(Pair(newScore, action.id))
         })
     }
 
@@ -59,7 +57,7 @@ class ScoresModel(newPlayersNames: Observable<String>, private val scoreHistoryF
 
     private fun addHistory(item: String) {
         _history.add(item)
-        historyChangesSubject.onNext(item)
+        historyChanges.onNext(item)
     }
 
     fun save(bundle: Bundle) {
@@ -73,7 +71,7 @@ class ScoresModel(newPlayersNames: Observable<String>, private val scoreHistoryF
             _history = newHistory
 
             for (item in _history) {
-                historyChangesSubject.onNext(item)
+                historyChanges.onNext(item)
             }
         }
 
@@ -83,7 +81,7 @@ class ScoresModel(newPlayersNames: Observable<String>, private val scoreHistoryF
             playerScores = newScores
 
             for ((id, score) in playerScores) {
-                new.onNext(Pair(score, id))
+                newPlayers.onNext(Pair(score, id))
             }
         }
     }
@@ -92,7 +90,7 @@ class ScoresModel(newPlayersNames: Observable<String>, private val scoreHistoryF
         for ((id, score) in playerScores) {
             val newScore = score.copy(score = 0)
             playerScores.put(id, newScore)
-            updated.onNext(Pair(newScore, id))
+            updatedPlayers.onNext(Pair(newScore, id))
         }
         addHistory(scoreHistoryFormatter.resetMessage)
     }
