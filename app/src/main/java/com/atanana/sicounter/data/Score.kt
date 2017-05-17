@@ -18,7 +18,7 @@ data class Score(val name: String, val score: Int) : Parcelable {
     companion object {
         @Suppress("unused")
         @JvmField
-        final val CREATOR: Parcelable.Creator<Score> = object : Parcelable.Creator<Score> {
+        val CREATOR: Parcelable.Creator<Score> = object : Parcelable.Creator<Score> {
             override fun createFromParcel(parcel: Parcel): Score {
                 return Score(parcel)
             }

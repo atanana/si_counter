@@ -10,7 +10,7 @@ import rx.Observable
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
 
-class ScoresPresenter(private val model: ScoresModel,
+class ScoresPresenter(model: ScoresModel,
                       private val scoresContainer: ViewGroup,
                       private val playerControlFabric: PlayerControlFabric) {
     private val scoreViews: MutableMap<Int, PlayerControl> = hashMapOf()
@@ -19,19 +19,19 @@ class ScoresPresenter(private val model: ScoresModel,
         get() = _scoreActions
 
     init {
-        model.newPlayers.subscribe({ newPlayer ->
+        model.newPlayers.subscribe({ (score, id) ->
             val playerControl = playerControlFabric.build()
-            playerControl.update(newPlayer.first, newPlayer.second)
+            playerControl.update(score, id)
             playerControl.scoreActions.subscribe({ scoreAction ->
                 _scoreActions.onNext(scoreAction)
             })
             scoresContainer.addView(playerControl)
-            scoreViews[newPlayer.second] = playerControl
+            scoreViews[id] = playerControl
         })
 
-        model.updatedPlayers.subscribe({ updatedPlayer ->
-            val playerControl = scoreViews[updatedPlayer.second] ?: throw UnknownId(updatedPlayer.second)
-            playerControl.update(updatedPlayer.first)
+        model.updatedPlayers.subscribe({ (score, id) ->
+            val playerControl = scoreViews[id] ?: throw UnknownId(id)
+            playerControl.update(score)
         })
     }
 }

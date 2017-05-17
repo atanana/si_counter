@@ -26,5 +26,5 @@ open class PriceSelector(context: Context?, attrs: AttributeSet?) : FrameLayout(
 
     open var price: Int
         get() = BUTTONS_TO_VALUES[selector.checkedRadioButtonId] ?: throw SiCounterException("Incorrect button selected!")
-        set(price: Int) = selector.check(BUTTONS_TO_VALUES.inverse()[price] ?: throw SiCounterException("Incorrect price selected"))
+        set(price) = selector.check(BUTTONS_TO_VALUES.inverse()[price] ?: throw SiCounterException("Incorrect price selected"))
 }
