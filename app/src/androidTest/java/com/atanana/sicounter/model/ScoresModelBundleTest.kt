@@ -14,7 +14,7 @@ import rx.Observable.just
 import rx.observers.TestSubscriber
 import java.util.*
 
-class ScoresModelBundleTest :AndroidTestCase() {
+class ScoresModelBundleTest : AndroidTestCase() {
     fun testSaveInformation() {
         val formatter = ScoreHistoryFormatter(context)
         val model = ScoresModel(just("test 1", "test 2"), formatter)

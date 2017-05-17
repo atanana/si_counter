@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
                 .setTitle(R.string.player_name_title)
                 .setCancelable(true)
                 .setView(playerName)
-                .setPositiveButton(R.string.ok, { dialogInterface, i ->
+                .setPositiveButton(R.string.ok, { _, _ ->
                     addPlayer.onNext(playerName.text.toString())
                     playerName.text.clear()
                     (playerName.parent as? ViewGroup)?.removeView(playerName)
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 .setTitle(R.string.close_title)
                 .setCancelable(true)
                 .setMessage(R.string.close_message)
-                .setPositiveButton(R.string.yes, { dialogInterface, i -> finish() })
+                .setPositiveButton(R.string.yes, { _, _ -> finish() })
                 .setNegativeButton(R.string.no, null)
     }
 
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                 .setTitle(R.string.reset_title)
                 .setCancelable(true)
                 .setMessage(R.string.reset_message)
-                .setPositiveButton(R.string.yes, { dialogInterface, i -> scoresModel.reset() })
+                .setPositiveButton(R.string.yes, { _, _ -> scoresModel.reset() })
                 .setNegativeButton(R.string.no, null)
     }
 
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val fab = findViewById(R.id.add_player) as FloatingActionButton?
-        fab!!.setOnClickListener { view ->
+        fab!!.setOnClickListener {
             addPlayerDialog.show()
         }
 
