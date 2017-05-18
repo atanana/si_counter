@@ -57,6 +57,9 @@ dependencies {
         exclude group: 'com.google.android', module: 'android'
     }
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
+
+    compile 'com.google.dagger:dagger:2.10'
+    kapt 'com.google.dagger:dagger-compiler:2.10'
 }
 repositories {
     mavenCentral()

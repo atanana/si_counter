@@ -11,13 +11,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import com.atanana.sicounter.fs.FileProvider
+import com.atanana.sicounter.di.LogModule
 import com.atanana.sicounter.fs.FileSystemConfiguration
 import com.atanana.sicounter.logging.LoggerConfiguration
 import com.atanana.sicounter.logging.LogsWriter
-import com.atanana.sicounter.model.log.LogFolderModel
 import com.atanana.sicounter.model.ScoresModel
-import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.model.log.SaveLogModel
 import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.SaveFilePresenter
@@ -32,6 +30,7 @@ import org.apache.commons.io.FileUtils
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
 import java.io.File
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
     private val priceSelector: PriceSelector by lazy { findViewById(R.id.price_selector) as PriceSelector }
@@ -85,7 +84,8 @@ class MainActivity : AppCompatActivity() {
                 .setNegativeButton(R.string.no, null)
     }
 
-    lateinit private var saveLogModel: SaveLogModel
+    @Inject
+    lateinit var saveLogModel: SaveLogModel
 
     private val saveResultsDialog by lazy {
         val saveToFileView = SaveToFileView(this, null)
@@ -122,9 +122,7 @@ class MainActivity : AppCompatActivity() {
 
         val newPlayerNames = scoresModel.newPlayersObservable.map { it.first.name }
         val logFolder = File(FileSystemConfiguration.externalAppFolder(this))
-        val logNameModel = LogNameModel(newPlayerNames)
-        val logFolderModel = LogFolderModel(logFolder, FileProvider(), this)
-        saveLogModel = SaveLogModel(logNameModel, logFolderModel)
+        App.graph.mainComponent(LogModule(logFolder, newPlayerNames)).inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
