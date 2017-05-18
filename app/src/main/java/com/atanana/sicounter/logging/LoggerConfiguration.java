@@ -1,9 +1,5 @@
 package com.atanana.sicounter.logging;
 
-import android.content.Context;
-
-import com.atanana.sicounter.fs.FileSystemConfiguration;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +11,7 @@ import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import ch.qos.logback.core.util.StatusPrinter;
 
 public class LoggerConfiguration {
-    public static void configureLogbackDirectly(Context context) {
+    public static void configureLogbackDirectly(String logsDir) {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         loggerContext.reset();
 
@@ -24,7 +20,6 @@ public class LoggerConfiguration {
         rollingFileAppender.setContext(loggerContext);
 
         TimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new TimeBasedRollingPolicy<>();
-        final String logsDir = FileSystemConfiguration.INSTANCE.externalAppFolder(context);
         rollingPolicy.setFileNamePattern(logsDir + "/game_log.%d{dd-MM-yyyy}.txt");
         rollingPolicy.setMaxHistory(7);
         rollingPolicy.setParent(rollingFileAppender);

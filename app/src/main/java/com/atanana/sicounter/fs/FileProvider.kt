@@ -1,5 +1,6 @@
 package com.atanana.sicounter.fs
 
+import android.os.Environment
 import java.io.File
 
 open class FileProvider {
@@ -16,4 +17,6 @@ open class FileProvider {
             ?.filter { it.isDirectory }
             ?.map { it.name }
             ?: emptyList()
+
+    open val externalStorage get() = Environment.getExternalStorageDirectory()
 }

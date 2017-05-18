@@ -12,8 +12,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import com.atanana.sicounter.di.LogModule
-import com.atanana.sicounter.fs.FileSystemConfiguration
-import com.atanana.sicounter.logging.LoggerConfiguration
 import com.atanana.sicounter.logging.LogsWriter
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.SaveLogModel
@@ -29,7 +27,6 @@ import com.atanana.sicounter.view.save.SaveToFileView
 import org.apache.commons.io.FileUtils
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
-import java.io.File
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -104,7 +101,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LoggerConfiguration.configureLogbackDirectly(applicationContext)
 
         setContentView(R.layout.activity_main)
         val toolbar = findViewById(R.id.toolbar) as Toolbar?
@@ -121,8 +117,7 @@ class MainActivity : AppCompatActivity() {
         logsWriter
 
         val newPlayerNames = scoresModel.newPlayersObservable.map { it.first.name }
-        val logFolder = File(FileSystemConfiguration.externalAppFolder(this))
-        App.graph.mainComponent(LogModule(logFolder, newPlayerNames)).inject(this)
+        App.graph.mainComponent(LogModule(newPlayerNames)).inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
