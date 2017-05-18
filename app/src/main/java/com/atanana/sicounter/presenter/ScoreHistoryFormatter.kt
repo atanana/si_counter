@@ -6,8 +6,8 @@ import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType
 
 open class ScoreHistoryFormatter(context: Context) {
-    private val newPlayerTemplate: String = context.resources.getText(R.string.new_player_log).toString()
-    open val resetMessage: String = context.resources.getText(R.string.reset_log).toString() + "\n"
+    private val newPlayerTemplate by lazy { context.resources.getString(R.string.new_player_log) }
+    open val resetMessage by lazy { context.resources.getText(R.string.reset_log).toString() + "\n" }
 
     open fun formatScoreAction(scoreAction: ScoreAction, playerName: String): String {
         val sign: String = when (scoreAction.type) {
