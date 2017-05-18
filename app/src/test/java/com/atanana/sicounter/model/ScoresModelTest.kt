@@ -132,4 +132,39 @@ class ScoresModelTest {
 
         assertThat(model.history).contains("10test 1", "20test 1", "-20test 2")
     }
+
+    @Test
+    fun shouldNotifyAboutScoresReset() {
+        model = ScoresModel(just("test 1", "test 2"), formatter)
+
+        val subscriber = TestSubscriber<Pair<Score, Int>>()
+        model.updatedPlayersObservable.subscribe(subscriber)
+
+        model.subscribeToScoreActions(just(
+                ScoreAction(PLUS, 10, 0),
+                ScoreAction(PLUS, 20, 0),
+                ScoreAction(MINUS, 20, 1)
+        ))
+        model.reset()
+
+        assertThat(subscriber.onNextEvents).endsWith(Pair(Score("test 1", 0), 0), Pair(Score("test 2", 0), 1))
+    }
+
+    @Test
+    fun shouldNotifyAboutResetScoresHistory() {
+        val subscriber = TestSubscriber<String>()
+        model.historyChangesObservable.subscribe(subscriber)
+        `when`(formatter.resetMessage).thenReturn("reset message")
+
+        model.reset()
+
+        subscriber.assertValue("reset message")
+    }
+
+    @Test
+    fun shouldWriteResetScoresToHistory() {
+        `when`(formatter.resetMessage).thenReturn("reset message")
+        model.reset()
+        assertThat(model.history).isEqualTo(listOf("reset message"))
+    }
 }
