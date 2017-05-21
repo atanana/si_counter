@@ -9,6 +9,8 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogFolderModel
 import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.model.log.SaveLogModel
+import com.atanana.sicounter.presenter.LogsPresenter
+import com.atanana.sicounter.view.ScoresLog
 import dagger.Module
 import dagger.Provides
 import java.io.File
@@ -41,5 +43,11 @@ class LogModule {
         val path = listOf(fileProvider.externalStorage.absolutePath, appName)
                 .joinToString(File.separator)
         return File(path)
+    }
+
+    @Provides
+    @MainScope
+    fun provideLogsPresenter(scoresModel: ScoresModel, scoresLog: ScoresLog): LogsPresenter {
+        return LogsPresenter(scoresModel.historyChangesObservable, scoresLog)
     }
 }

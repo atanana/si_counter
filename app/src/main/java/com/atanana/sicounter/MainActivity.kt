@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import com.atanana.sicounter.di.LogModule
+import com.atanana.sicounter.di.MainUiModule
 import com.atanana.sicounter.di.ScoresModule
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.SaveLogModel
@@ -21,7 +22,6 @@ import com.atanana.sicounter.presenter.ScoreActionPriceTransformer.transform
 import com.atanana.sicounter.presenter.ScoreHistoryFormatter
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.atanana.sicounter.view.PriceSelector
-import com.atanana.sicounter.view.ScoresLog
 import com.atanana.sicounter.view.player_control.DefaultPlayerControlFabric
 import com.atanana.sicounter.view.save.SaveToFileView
 import org.apache.commons.io.FileUtils
@@ -38,10 +38,6 @@ class MainActivity : AppCompatActivity() {
         ScoresPresenter(scoresModel, scoresContainer, DefaultPlayerControlFabric(this))
     }
 
-    private val logsView: ScoresLog by lazy { findViewById(R.id.log_view) as ScoresLog }
-    private val logsPresenter: LogsPresenter by lazy {
-        LogsPresenter(scoresModel.historyChangesObservable, logsView)
-    }
     private val addPlayerDialog: AlertDialog.Builder by lazy {
         val playerName = EditText(this)
         playerName.setSingleLine(true)
@@ -82,6 +78,10 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var saveLogModel: SaveLogModel
 
+    @Suppress("unused")
+    @Inject
+    lateinit var logsPresenter: LogsPresenter
+
     private val saveResultsDialog by lazy {
         val saveToFileView = SaveToFileView(this, null)
         SaveFilePresenter(this, saveLogModel, saveToFileView)
@@ -111,10 +111,11 @@ class MainActivity : AppCompatActivity() {
 
         scoresModel = ScoresModel(addPlayer, ScoreHistoryFormatter(this))
         scoresModel.subscribeToScoreActions(transform(scoresPresenter.scoreActions, priceSelector))
-        logsPresenter
 
+        val mainUiModule = MainUiModule(findViewById(android.R.id.content))
+        val scoresModule = ScoresModule(scoresModel)
         App.graph
-                .mainComponent(LogModule(), ScoresModule(scoresModel))
+                .mainComponent(LogModule(), scoresModule, mainUiModule)
                 .inject(this)
     }
 
