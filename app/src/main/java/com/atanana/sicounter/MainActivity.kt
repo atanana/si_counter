@@ -13,7 +13,6 @@ import android.widget.EditText
 import android.widget.Toast
 import com.atanana.sicounter.di.LogModule
 import com.atanana.sicounter.di.ScoresModule
-import com.atanana.sicounter.logging.LogsWriter
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.SaveLogModel
 import com.atanana.sicounter.presenter.LogsPresenter
@@ -43,8 +42,6 @@ class MainActivity : AppCompatActivity() {
     private val logsPresenter: LogsPresenter by lazy {
         LogsPresenter(scoresModel.historyChangesObservable, logsView)
     }
-    private val logsWriter: LogsWriter by lazy { LogsWriter(scoresModel.historyChangesObservable) }
-
     private val addPlayerDialog: AlertDialog.Builder by lazy {
         val playerName = EditText(this)
         playerName.setSingleLine(true)
@@ -115,7 +112,6 @@ class MainActivity : AppCompatActivity() {
         scoresModel = ScoresModel(addPlayer, ScoreHistoryFormatter(this))
         scoresModel.subscribeToScoreActions(transform(scoresPresenter.scoreActions, priceSelector))
         logsPresenter
-        logsWriter
 
         App.graph
                 .mainComponent(LogModule(), ScoresModule(scoresModel))
