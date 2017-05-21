@@ -6,5 +6,5 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(AppModule::class))
 @Singleton
 interface AppComponent {
-    fun mainComponent(logModule: LogModule): MainComponent
+    fun mainComponent(logModule: LogModule, scoresModule: ScoresModule): MainComponent
 }

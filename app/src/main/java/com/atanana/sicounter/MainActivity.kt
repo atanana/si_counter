@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import com.atanana.sicounter.di.LogModule
+import com.atanana.sicounter.di.ScoresModule
 import com.atanana.sicounter.logging.LogsWriter
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.SaveLogModel
@@ -116,8 +117,9 @@ class MainActivity : AppCompatActivity() {
         logsPresenter
         logsWriter
 
-        val newPlayerNames = scoresModel.newPlayersObservable.map { it.first.name }
-        App.graph.mainComponent(LogModule(newPlayerNames)).inject(this)
+        App.graph
+                .mainComponent(LogModule(), ScoresModule(scoresModel))
+                .inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

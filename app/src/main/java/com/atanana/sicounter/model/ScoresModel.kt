@@ -13,18 +13,18 @@ import java.util.*
 const val KEY_HISTORY: String = "scores_model_history"
 const val KEY_SCORES: String = "scores_model_scores"
 
-class ScoresModel(newPlayersNames: Observable<String>, private val scoreHistoryFormatter: ScoreHistoryFormatter) {
+open class ScoresModel(newPlayersNames: Observable<String>, private val scoreHistoryFormatter: ScoreHistoryFormatter) {
     private var playerScores: HashMap<Int, Score> = hashMapOf()
     private var _history: ArrayList<String> = arrayListOf()
     private val newPlayers: Subject<Pair<Score, Int>, Pair<Score, Int>> = PublishSubject()
     private val updatedPlayers: Subject<Pair<Score, Int>, Pair<Score, Int>> = PublishSubject()
     private val historyChanges: Subject<String, String> = PublishSubject()
 
-    val newPlayersObservable get() = newPlayers
+    open val newPlayersObservable: Observable<Pair<Score, Int>> get() = newPlayers
 
-    val updatedPlayersObservable get() = updatedPlayers
+    val updatedPlayersObservable: Observable<Pair<Score, Int>> get() = updatedPlayers
 
-    val historyChangesObservable get() = historyChanges
+    val historyChangesObservable: Observable<String> get() = historyChanges
 
     init {
         newPlayersNames.subscribe({ newPlayer ->

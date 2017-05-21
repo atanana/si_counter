@@ -4,25 +4,30 @@ import android.content.Context
 import com.atanana.sicounter.R
 import com.atanana.sicounter.fs.FileProvider
 import com.atanana.sicounter.logging.LoggerConfiguration
+import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogFolderModel
 import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.model.log.SaveLogModel
 import dagger.Module
 import dagger.Provides
-import rx.Observable
 import java.io.File
 
 @Module
-class LogModule(private val newPlayers: Observable<String>) {
+class LogModule {
     @Provides
     @MainScope
-    fun provideSaveLogModel(context: Context, fileProvider: FileProvider): SaveLogModel {
+    fun provideSaveLogModel(context: Context, fileProvider: FileProvider, scoresModel: ScoresModel): SaveLogModel {
         val logFolder = externalAppFolder(context, fileProvider)
         LoggerConfiguration.configureLogbackDirectly(logFolder.absolutePath)
 
-        val logNameModel = LogNameModel(newPlayers)
+        val logNameModel = createLogNameModel(scoresModel)
         val logFolderModel = LogFolderModel(logFolder, fileProvider, context)
         return SaveLogModel(logNameModel, logFolderModel)
+    }
+
+    fun createLogNameModel(scoresModel: ScoresModel):LogNameModel {
+        val newPlayerNames = scoresModel.newPlayersObservable.map { it.first.name }
+        return LogNameModel(newPlayerNames)
     }
 
     fun externalAppFolder(context: Context, fileProvider: FileProvider): File {
