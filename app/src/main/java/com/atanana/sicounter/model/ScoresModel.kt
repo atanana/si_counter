@@ -22,7 +22,7 @@ open class ScoresModel(newPlayersNames: Observable<String>, private val scoreHis
 
     open val newPlayersObservable: Observable<Pair<Score, Int>> get() = newPlayers
 
-    val updatedPlayersObservable: Observable<Pair<Score, Int>> get() = updatedPlayers
+    open val updatedPlayersObservable: Observable<Pair<Score, Int>> get() = updatedPlayers
 
     val historyChangesObservable: Observable<String> get() = historyChanges
 
@@ -41,7 +41,7 @@ open class ScoresModel(newPlayersNames: Observable<String>, private val scoreHis
             return Collections.unmodifiableList(_history)
         }
 
-    fun subscribeToScoreActions(actions: Observable<ScoreAction>) {
+    open fun subscribeToScoreActions(actions: Observable<ScoreAction>) {
         actions.subscribe({ action ->
             val oldScore = playerScores[action.id] ?: throw UnknownId(action.id)
             val newScore = oldScore.copy(score = oldScore.score + action.absolutePrice)

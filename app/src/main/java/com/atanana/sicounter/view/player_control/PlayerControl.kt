@@ -15,21 +15,21 @@ import rx.Observable
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
 
-class PlayerControl(context: Context?, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+open class PlayerControl(context: Context?, attrs: AttributeSet?) : FrameLayout(context, attrs) {
     private val playerName: TextView by lazy { findViewById(R.id.player_name) as TextView }
     private val playerScore: TextView by lazy { findViewById(R.id.player_score) as TextView }
     private val addScore: View by lazy { findViewById(R.id.add_score) }
     private val subtractScore: View by lazy { findViewById(R.id.subtract_score) }
     private val _scoreActions: Subject<ScoreAction, ScoreAction> = PublishSubject()
 
-    val scoreActions: Observable<ScoreAction>
+    open val scoreActions: Observable<ScoreAction>
         get() = _scoreActions
 
     init {
         LayoutInflater.from(context).inflate(R.layout.player_control, this)
     }
 
-    fun update(score: Score, id: Int? = null) {
+    open fun update(score: Score, id: Int? = null) {
         playerName.text = score.name
         playerScore.text = score.score.toString()
 

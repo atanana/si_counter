@@ -18,11 +18,7 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.SaveLogModel
 import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.SaveFilePresenter
-import com.atanana.sicounter.presenter.ScoreActionPriceTransformer.transform
-import com.atanana.sicounter.presenter.ScoreHistoryFormatter
 import com.atanana.sicounter.presenter.ScoresPresenter
-import com.atanana.sicounter.view.PriceSelector
-import com.atanana.sicounter.view.player_control.DefaultPlayerControlFabric
 import com.atanana.sicounter.view.save.SaveToFileView
 import org.apache.commons.io.FileUtils
 import rx.lang.kotlin.PublishSubject
@@ -30,13 +26,7 @@ import rx.subjects.Subject
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
-    private val priceSelector: PriceSelector by lazy { findViewById(R.id.price_selector) as PriceSelector }
-    private val scoresContainer: ViewGroup by lazy { findViewById(R.id.scores_container) as ViewGroup }
     private val addPlayer: Subject<String, String> = PublishSubject()
-    lateinit private var scoresModel: ScoresModel
-    private val scoresPresenter: ScoresPresenter by lazy {
-        ScoresPresenter(scoresModel, scoresContainer, DefaultPlayerControlFabric(this))
-    }
 
     private val addPlayerDialog: AlertDialog.Builder by lazy {
         val playerName = EditText(this)
@@ -82,6 +72,13 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var logsPresenter: LogsPresenter
 
+    @Inject
+    lateinit var scoresModel: ScoresModel
+
+    @Suppress("unused")
+    @Inject
+    lateinit var scoresPresenter: ScoresPresenter
+
     private val saveResultsDialog by lazy {
         val saveToFileView = SaveToFileView(this, null)
         SaveFilePresenter(this, saveLogModel, saveToFileView)
@@ -109,13 +106,9 @@ class MainActivity : AppCompatActivity() {
             addPlayerDialog.show()
         }
 
-        scoresModel = ScoresModel(addPlayer, ScoreHistoryFormatter(this))
-        scoresModel.subscribeToScoreActions(transform(scoresPresenter.scoreActions, priceSelector))
-
         val mainUiModule = MainUiModule(findViewById(android.R.id.content))
-        val scoresModule = ScoresModule(scoresModel)
         App.graph
-                .mainComponent(LogModule(), scoresModule, mainUiModule)
+                .mainComponent(LogModule(), ScoresModule(addPlayer), mainUiModule)
                 .inject(this)
     }
 
