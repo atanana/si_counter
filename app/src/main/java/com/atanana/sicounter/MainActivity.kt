@@ -24,8 +24,9 @@ import org.apache.commons.io.FileUtils
 import rx.lang.kotlin.PublishSubject
 import rx.subjects.Subject
 import javax.inject.Inject
+import javax.inject.Named
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
     private val addPlayer: Subject<String, String> = PublishSubject()
 
     private val addPlayerDialog: AlertDialog.Builder by lazy {
@@ -47,23 +48,11 @@ class MainActivity : AppCompatActivity() {
         (view.parent as? ViewGroup)?.removeView(view)
     }
 
-    private val exitDialog by lazy {
-        AlertDialog.Builder(this)
-                .setTitle(R.string.close_title)
-                .setCancelable(true)
-                .setMessage(R.string.close_message)
-                .setPositiveButton(R.string.yes, { _, _ -> finish() })
-                .setNegativeButton(R.string.no, null)
-    }
+    @field:[Inject Named("exitDialog")]
+    lateinit var exitDialog: AlertDialog.Builder
 
-    private val resetDialog by lazy {
-        AlertDialog.Builder(this)
-                .setTitle(R.string.reset_title)
-                .setCancelable(true)
-                .setMessage(R.string.reset_message)
-                .setPositiveButton(R.string.yes, { _, _ -> scoresModel.reset() })
-                .setNegativeButton(R.string.no, null)
-    }
+    @field:[Inject Named("resetDialog")]
+    lateinit var resetDialog: AlertDialog.Builder
 
     @Inject
     lateinit var saveLogModel: SaveLogModel
@@ -106,7 +95,7 @@ class MainActivity : AppCompatActivity() {
             addPlayerDialog.show()
         }
 
-        val mainUiModule = MainUiModule(findViewById(android.R.id.content))
+        val mainUiModule = MainUiModule(this)
         App.graph
                 .mainComponent(LogModule(), ScoresModule(addPlayer), mainUiModule)
                 .inject(this)

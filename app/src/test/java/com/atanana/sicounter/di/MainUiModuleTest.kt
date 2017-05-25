@@ -1,6 +1,7 @@
 package com.atanana.sicounter.di
 
 import android.view.View
+import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.R
 import com.atanana.sicounter.view.ScoresLog
 import org.assertj.core.api.Assertions.assertThat
@@ -17,10 +18,14 @@ class MainUiModuleTest {
     @Mock
     lateinit var view: View
 
+    @Mock
+    lateinit var activity: MainActivity
+
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        module = MainUiModule(view)
+        `when`(activity.findViewById(android.R.id.content)).thenReturn(view)
+        module = MainUiModule(activity)
     }
 
     @Test
