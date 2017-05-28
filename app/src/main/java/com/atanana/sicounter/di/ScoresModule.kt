@@ -13,11 +13,11 @@ import rx.Observable
 import javax.inject.Named
 
 @Module
-class ScoresModule(private val addPlayer: Observable<String>) {
+class ScoresModule {
     @Provides
     @MainScope
-    fun provideScoresModel(context: Context): ScoresModel {
-        return ScoresModel(addPlayer, ScoreHistoryFormatter(context))
+    fun provideScoresModel(context: Context, @Named("newPlayers") newPlayers: Observable<String>): ScoresModel {
+        return ScoresModel(newPlayers, ScoreHistoryFormatter(context))
     }
 
     @Provides

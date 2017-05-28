@@ -7,46 +7,19 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.Toast
 import com.atanana.sicounter.di.LogModule
 import com.atanana.sicounter.di.MainUiModule
 import com.atanana.sicounter.di.ScoresModule
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.SaveLogModel
 import com.atanana.sicounter.presenter.LogsPresenter
-import com.atanana.sicounter.presenter.SaveFilePresenter
 import com.atanana.sicounter.presenter.ScoresPresenter
-import com.atanana.sicounter.view.save.SaveToFileView
-import org.apache.commons.io.FileUtils
-import rx.lang.kotlin.PublishSubject
-import rx.subjects.Subject
 import javax.inject.Inject
 import javax.inject.Named
 
 open class MainActivity : AppCompatActivity() {
-    private val addPlayer: Subject<String, String> = PublishSubject()
-
-    private val addPlayerDialog: AlertDialog.Builder by lazy {
-        val playerName = EditText(this)
-        playerName.setSingleLine(true)
-        AlertDialog.Builder(this)
-                .setTitle(R.string.player_name_title)
-                .setCancelable(true)
-                .setView(playerName)
-                .setPositiveButton(R.string.ok, { _, _ ->
-                    addPlayer.onNext(playerName.text.toString())
-                    playerName.text.clear()
-                    clearViewFromParent(playerName)
-                })
-                .setOnCancelListener { clearViewFromParent(playerName) }
-    }
-
-    private fun clearViewFromParent(view: View) {
-        (view.parent as? ViewGroup)?.removeView(view)
-    }
+    @field:[Inject Named("addPlayerDialog")]
+    lateinit var addPlayerDialog: AlertDialog.Builder
 
     @field:[Inject Named("exitDialog")]
     lateinit var exitDialog: AlertDialog.Builder
@@ -68,20 +41,8 @@ open class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var scoresPresenter: ScoresPresenter
 
-    private val saveResultsDialog by lazy {
-        val saveToFileView = SaveToFileView(this, null)
-        SaveFilePresenter(this, saveLogModel, saveToFileView)
-        AlertDialog.Builder(this)
-                .setTitle(R.string.save_results_title)
-                .setCancelable(true)
-                .setView(saveToFileView)
-                .setPositiveButton(R.string.ok, { _, _ ->
-                    FileUtils.writeLines(saveLogModel.logFile, scoresModel.history)
-                    Toast.makeText(this, R.string.file_saved_message, Toast.LENGTH_SHORT).show()
-                    clearViewFromParent(saveToFileView)
-                })
-                .setOnCancelListener { clearViewFromParent(saveToFileView) }
-    }
+    @field:[Inject Named("saveResultsDialog")]
+    lateinit var saveResultsDialog: AlertDialog.Builder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,7 +58,7 @@ open class MainActivity : AppCompatActivity() {
 
         val mainUiModule = MainUiModule(this)
         App.graph
-                .mainComponent(LogModule(), ScoresModule(addPlayer), mainUiModule)
+                .mainComponent(LogModule(), ScoresModule(), mainUiModule)
                 .inject(this)
     }
 

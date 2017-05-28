@@ -4,19 +4,29 @@ import android.content.Context
 import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
 import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.R
 import com.atanana.sicounter.model.ScoresModel
+import com.atanana.sicounter.model.log.SaveLogModel
+import com.atanana.sicounter.presenter.SaveFilePresenter
 import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.ScoresLog
 import com.atanana.sicounter.view.player_control.DefaultPlayerControlFabric
+import com.atanana.sicounter.view.save.SaveToFileView
 import dagger.Module
 import dagger.Provides
+import org.apache.commons.io.FileUtils
+import rx.Observable
+import rx.lang.kotlin.PublishSubject
+import rx.subjects.Subject
 import javax.inject.Named
 
 @Module
 class MainUiModule(private val activity: MainActivity) {
     private val mainView: View = activity.findViewById(android.R.id.content)
+    private val newPlayers: Subject<String, String> = PublishSubject()
 
     @Provides
     @MainScope
@@ -65,5 +75,52 @@ class MainUiModule(private val activity: MainActivity) {
                 .setMessage(R.string.close_message)
                 .setPositiveButton(R.string.yes, { _, _ -> activity.finish() })
                 .setNegativeButton(R.string.no, null)
+    }
+
+    @Provides
+    @MainScope
+    @Named("addPlayerDialog")
+    fun provideAddPlayerDialog(): AlertDialog.Builder {
+        val playerName = EditText(activity)
+        playerName.setSingleLine(true)
+        return AlertDialog.Builder(activity)
+                .setTitle(R.string.player_name_title)
+                .setCancelable(true)
+                .setView(playerName)
+                .setPositiveButton(R.string.ok, { _, _ ->
+                    newPlayers.onNext(playerName.text.toString())
+                    playerName.text.clear()
+                    clearViewFromParent(playerName)
+                })
+                .setOnCancelListener { clearViewFromParent(playerName) }
+    }
+
+    @Provides
+    @MainScope
+    @Named("saveResultsDialog")
+    fun provideSaveResultsDialog(scoresModel: ScoresModel, saveLogModel: SaveLogModel): AlertDialog.Builder {
+        val saveToFileView = SaveToFileView(activity, null)
+        SaveFilePresenter(activity, saveLogModel, saveToFileView)
+        return AlertDialog.Builder(activity)
+                .setTitle(R.string.save_results_title)
+                .setCancelable(true)
+                .setView(saveToFileView)
+                .setPositiveButton(R.string.ok, { _, _ ->
+                    FileUtils.writeLines(saveLogModel.logFile, scoresModel.history)
+                    Toast.makeText(activity, R.string.file_saved_message, Toast.LENGTH_SHORT).show()
+                    clearViewFromParent(saveToFileView)
+                })
+                .setOnCancelListener { clearViewFromParent(saveToFileView) }
+    }
+
+    private fun clearViewFromParent(view: View) {
+        (view.parent as? ViewGroup)?.removeView(view)
+    }
+
+    @Provides
+    @MainScope
+    @Named("newPlayers")
+    fun provideNewPlayersObservable(): Observable<String> {
+        return newPlayers
     }
 }
