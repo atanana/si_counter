@@ -98,9 +98,9 @@ class MainUiModule(private val activity: MainActivity) {
     @Provides
     @MainScope
     @Named("saveResultsDialog")
-    fun provideSaveResultsDialog(scoresModel: ScoresModel, saveLogModel: SaveLogModel): AlertDialog.Builder {
-        val saveToFileView = SaveToFileView(activity, null)
-        SaveFilePresenter(activity, saveLogModel, saveToFileView)
+    fun provideSaveResultsDialog(scoresModel: ScoresModel,
+                                 saveLogModel: SaveLogModel,
+                                 saveToFileView: SaveToFileView): AlertDialog.Builder {
         return AlertDialog.Builder(activity)
                 .setTitle(R.string.save_results_title)
                 .setCancelable(true)
@@ -111,6 +111,12 @@ class MainUiModule(private val activity: MainActivity) {
                     clearViewFromParent(saveToFileView)
                 })
                 .setOnCancelListener { clearViewFromParent(saveToFileView) }
+    }
+
+    @Provides
+    @MainScope
+    fun provideSaveToFileView(): SaveToFileView {
+        return SaveToFileView(activity, null)
     }
 
     private fun clearViewFromParent(view: View) {

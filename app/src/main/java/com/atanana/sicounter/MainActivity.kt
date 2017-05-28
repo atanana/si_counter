@@ -11,8 +11,8 @@ import com.atanana.sicounter.di.LogModule
 import com.atanana.sicounter.di.MainUiModule
 import com.atanana.sicounter.di.ScoresModule
 import com.atanana.sicounter.model.ScoresModel
-import com.atanana.sicounter.model.log.SaveLogModel
 import com.atanana.sicounter.presenter.LogsPresenter
+import com.atanana.sicounter.presenter.SaveFilePresenter
 import com.atanana.sicounter.presenter.ScoresPresenter
 import javax.inject.Inject
 import javax.inject.Named
@@ -27,9 +27,6 @@ open class MainActivity : AppCompatActivity() {
     @field:[Inject Named("resetDialog")]
     lateinit var resetDialog: AlertDialog.Builder
 
-    @Inject
-    lateinit var saveLogModel: SaveLogModel
-
     @Suppress("unused")
     @Inject
     lateinit var logsPresenter: LogsPresenter
@@ -41,8 +38,8 @@ open class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var scoresPresenter: ScoresPresenter
 
-    @field:[Inject Named("saveResultsDialog")]
-    lateinit var saveResultsDialog: AlertDialog.Builder
+    @Inject
+    lateinit var saveLogPresenter: SaveFilePresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +71,7 @@ open class MainActivity : AppCompatActivity() {
                 return true
             }
             R.id.mi_save -> {
-                saveResultsDialog.show()
+                saveLogPresenter.show()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
