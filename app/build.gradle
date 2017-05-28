@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.atanana.sicounter"
-        minSdkVersion 16
+        minSdkVersion 14
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -51,7 +51,7 @@ dependencies {
     compile 'io.reactivex:rxkotlin:0.55.0'
     compile 'io.reactivex:rxandroid:1.2.0'
     compile 'com.google.guava:guava:20.0'
-    compile 'com.github.euzee:permissionUtil:1.0.2'
+    compile 'gun0912.ted:tedpermission:1.0.3'
 
     compile 'org.slf4j:slf4j-api:1.7.21'
     compile 'com.github.tony19:logback-android-core:1.1.1-5'

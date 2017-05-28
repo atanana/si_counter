@@ -16,6 +16,13 @@
 #   public *;
 #}
 
+#logs
 -keep class ch.qos.** { *; }
 -keep class org.slf4j.** { *; }
 -keepattributes *Annotation*
+
+#permission
+-keepclassmembers class ** {
+    @com.squareup.otto.Subscribe public *;
+    @com.squareup.otto.Produce public *;
+}
