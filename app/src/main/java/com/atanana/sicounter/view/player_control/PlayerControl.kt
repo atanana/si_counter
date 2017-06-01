@@ -1,32 +1,81 @@
 package com.atanana.sicounter.view.player_control
 
 import android.content.Context
+import android.graphics.Typeface
 import android.util.AttributeSet
-import android.view.LayoutInflater
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.atanana.sicounter.R
 import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType.MINUS
 import com.atanana.sicounter.data.action.ScoreActionType.PLUS
+import com.atanana.sicounter.utils.dpToPx
+import com.atanana.sicounter.utils.pxToDp
+import com.atanana.sicounter.utils.screenSize
 import rx.Observable
 import rx.lang.kotlin.PublishSubject
-import rx.subjects.Subject
 
-open class PlayerControl(context: Context?, attrs: AttributeSet?) : FrameLayout(context, attrs) {
-    private val playerName: TextView by lazy { findViewById(R.id.player_name) as TextView }
-    private val playerScore: TextView by lazy { findViewById(R.id.player_score) as TextView }
-    private val addScore: View by lazy { findViewById(R.id.add_score) }
-    private val subtractScore: View by lazy { findViewById(R.id.subtract_score) }
-    private val _scoreActions: Subject<ScoreAction, ScoreAction> = PublishSubject()
+open class PlayerControl(context: Context?, attrs: AttributeSet?) : LinearLayout(context, attrs) {
+    private var playerName: TextView = TextView(context)
+    private var playerScore: TextView = TextView(context)
+    private val addScore: Button = Button(context)
+    private val subtractScore: Button = Button(context)
+    private val _scoreActions = PublishSubject<ScoreAction>()
 
     open val scoreActions: Observable<ScoreAction>
         get() = _scoreActions
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.player_control, this)
+        orientation = LinearLayout.VERTICAL
+
+        playerName.textAlignment = View.TEXT_ALIGNMENT_CENTER
+        playerName.typeface = Typeface.DEFAULT_BOLD
+        addView(playerName)
+
+        addScore.text = "+"
+        addView(addScore)
+
+        playerScore.textAlignment = View.TEXT_ALIGNMENT_CENTER
+        playerScore.typeface = Typeface.DEFAULT_BOLD
+        addView(playerScore)
+
+        subtractScore.text = "-"
+        addView(subtractScore)
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        val height = bottom - top
+        val slotHeight = height / 3
+        val labelHeight = slotHeight / 2
+
+        val labelTextSize = pxToDp(labelHeight, resources) * 2 / 3
+        val buttonTextSize = pxToDp(slotHeight, resources) / 2
+
+        playerName.textSize = labelTextSize
+        playerName.layout(left, top, right, top + labelHeight)
+
+        addScore.layout(left, top + labelHeight, right, top + labelHeight + slotHeight)
+        addScore.textSize = buttonTextSize
+
+        playerScore.layout(left, top + labelHeight + slotHeight, right, top + labelHeight * 2 + slotHeight)
+        playerScore.textSize = labelTextSize
+
+        subtractScore.layout(left, top + labelHeight * 2 + slotHeight, right, bottom)
+        subtractScore.textSize = buttonTextSize
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val screenHeight = screenSize(context).height
+        val height = Math.min((screenHeight / 2.5).toFloat(), dpToPx(300, resources))
+        val widthSpec = MeasureSpec.makeMeasureSpec((height / 3).toInt(), MeasureSpec.EXACTLY)
+        val heightSpec = MeasureSpec.makeMeasureSpec(height.toInt(), MeasureSpec.EXACTLY)
+        super.onMeasure(widthSpec, heightSpec)
     }
 
     open fun update(score: Score, id: Int? = null) {
