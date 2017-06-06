@@ -1,6 +1,7 @@
 package com.atanana.sicounter.presenter
 
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.exceptions.UnknownId
 import com.atanana.sicounter.model.ScoresModel

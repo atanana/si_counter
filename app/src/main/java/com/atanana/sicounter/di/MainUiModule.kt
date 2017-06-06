@@ -10,10 +10,9 @@ import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.R
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.SaveLogModel
-import com.atanana.sicounter.presenter.SaveFilePresenter
 import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.ScoresLog
-import com.atanana.sicounter.view.player_control.DefaultPlayerControlFabric
+import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import com.atanana.sicounter.view.save.SaveToFileView
 import dagger.Module
 import dagger.Provides
@@ -49,8 +48,8 @@ class MainUiModule(private val activity: MainActivity) {
 
     @Provides
     @MainScope
-    fun provideDefaultPlayerControlFabric(context: Context): DefaultPlayerControlFabric {
-        return DefaultPlayerControlFabric(context)
+    fun providePlayerControlFabric(context: Context): PlayerControlFabric {
+        return PlayerControlFabric(context)
     }
 
     @Provides

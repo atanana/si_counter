@@ -50,6 +50,7 @@ open class PlayerControl(context: Context?, attrs: AttributeSet?) : LinearLayout
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        val width = right - left
         val height = bottom - top
         val slotHeight = height / 3
         val labelHeight = slotHeight / 2
@@ -58,15 +59,15 @@ open class PlayerControl(context: Context?, attrs: AttributeSet?) : LinearLayout
         val buttonTextSize = pxToDp(slotHeight, resources) / 2
 
         playerName.textSize = labelTextSize
-        playerName.layout(left, top, right, top + labelHeight)
+        playerName.layout(0, top, width, top + labelHeight)
 
-        addScore.layout(left, top + labelHeight, right, top + labelHeight + slotHeight)
+        addScore.layout(0, top + labelHeight, width, top + labelHeight + slotHeight)
         addScore.textSize = buttonTextSize
 
-        playerScore.layout(left, top + labelHeight + slotHeight, right, top + labelHeight * 2 + slotHeight)
+        playerScore.layout(0, top + labelHeight + slotHeight, width, top + labelHeight * 2 + slotHeight)
         playerScore.textSize = labelTextSize
 
-        subtractScore.layout(left, top + labelHeight * 2 + slotHeight, right, bottom)
+        subtractScore.layout(0, top + labelHeight * 2 + slotHeight, width, bottom)
         subtractScore.textSize = buttonTextSize
     }
 

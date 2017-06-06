@@ -6,7 +6,7 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.ScoreHistoryFormatter
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.atanana.sicounter.view.PriceSelector
-import com.atanana.sicounter.view.player_control.DefaultPlayerControlFabric
+import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import dagger.Module
 import dagger.Provides
 import rx.Observable
@@ -25,7 +25,7 @@ class ScoresModule {
     fun provideScoresPresenter(scoresModel: ScoresModel,
                                @Named("scoresContainer") scoresContainer: ViewGroup,
                                priceSelector: PriceSelector,
-                               playerControlFabric: DefaultPlayerControlFabric): ScoresPresenter {
+                               playerControlFabric: PlayerControlFabric): ScoresPresenter {
         return ScoresPresenter(scoresModel, scoresContainer, playerControlFabric, priceSelector)
     }
 }
