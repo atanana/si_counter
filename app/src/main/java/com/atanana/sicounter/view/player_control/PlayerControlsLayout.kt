@@ -14,6 +14,17 @@ class PlayerControlsLayout(context: Context?, attrs: AttributeSet?) : LinearLayo
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val screenWidth = screenSize(context).width
+        val width = calculateWidth()
+        if (width > screenWidth) {
+            gravity = Gravity.START
+            super.onMeasure(exactly(width), heightMeasureSpec)
+        } else {
+            gravity = Gravity.CENTER
+            super.onMeasure(exactly(screenWidth - margin * 2), heightMeasureSpec)
+        }
+    }
+
+    private fun calculateWidth(): Int {
         var width = 0
         for (i in 0 until childCount) {
             val child = getChildAt(i)
@@ -23,12 +34,6 @@ class PlayerControlsLayout(context: Context?, attrs: AttributeSet?) : LinearLayo
             val layoutParams = child.layoutParams as MarginLayoutParams
             width += layoutParams.marginStart + layoutParams.marginEnd
         }
-        if (width > screenWidth) {
-            gravity = Gravity.START
-            super.onMeasure(exactly(width), heightMeasureSpec)
-        } else {
-            gravity = Gravity.CENTER
-            super.onMeasure(exactly(screenWidth - margin * 2), heightMeasureSpec)
-        }
+        return width
     }
 }
