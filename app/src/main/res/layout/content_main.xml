@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/price_separator">
 
-        <LinearLayout
+        <com.atanana.sicounter.view.player_control.PlayerControlsLayout
             android:id="@+id/scores_container"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -45,5 +45,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/scores_scroll"
-        android:layout_marginTop="@dimen/player_control_padding"/>
+        android:layout_marginTop="@dimen/player_control_padding" />
 </RelativeLayout>

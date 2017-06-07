@@ -5,7 +5,7 @@ import android.widget.LinearLayout
 import com.atanana.sicounter.R
 
 class PlayerControlFabric(private val context: Context) {
-    private val margin: Int by lazy { (context.resources.getDimensionPixelOffset(R.dimen.activity_horizontal_margin) * 1.5).toInt() }
+    private val margin: Int by lazy { (context.resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin) * 1.5).toInt() }
 
     fun build(): PlayerControl {
         val playerControl = PlayerControl(context, null)
