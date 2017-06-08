@@ -91,7 +91,10 @@ class MainUiModule(private val activity: MainActivity) {
                     playerName.text.clear()
                     clearViewFromParent(playerName)
                 })
-                .setOnCancelListener { clearViewFromParent(playerName) }
+                .setOnCancelListener {
+                    playerName.text.clear()
+                    clearViewFromParent(playerName)
+                }
     }
 
     @Provides
