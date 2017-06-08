@@ -40,10 +40,18 @@
 
     </HorizontalScrollView>
 
+    <Button
+        android:id="@+id/add_divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/scores_scroll"
+        android:maxWidth="200dp"
+        android:text="@string/add_divider" />
+
     <com.atanana.sicounter.view.ScoresLog
         android:id="@+id/log_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/scores_scroll"
+        android:layout_below="@id/add_divider"
         android:layout_marginTop="@dimen/player_control_padding" />
 </RelativeLayout>

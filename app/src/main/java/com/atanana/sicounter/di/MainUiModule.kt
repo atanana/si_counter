@@ -4,10 +4,12 @@ import android.content.Context
 import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.R
+import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.SaveLogModel
 import com.atanana.sicounter.view.PriceSelector
@@ -44,6 +46,13 @@ class MainUiModule(private val activity: MainActivity) {
     @Named("scoresContainer")
     fun provideScoresContainer(): ViewGroup {
         return mainView.findViewById(R.id.scores_container) as ViewGroup
+    }
+
+    @Provides
+    @MainScope
+    @Named("addDivider")
+    fun provideAddDividerButton(): Button {
+        return mainView.findViewById(R.id.add_divider) as Button
     }
 
     @Provides
@@ -100,7 +109,7 @@ class MainUiModule(private val activity: MainActivity) {
     @Provides
     @MainScope
     @Named("saveResultsDialog")
-    fun provideSaveResultsDialog(scoresModel: ScoresModel,
+    fun provideSaveResultsDialog(historyModel: HistoryModel,
                                  saveLogModel: SaveLogModel,
                                  saveToFileView: SaveToFileView): AlertDialog.Builder {
         return AlertDialog.Builder(activity)
@@ -108,7 +117,7 @@ class MainUiModule(private val activity: MainActivity) {
                 .setCancelable(true)
                 .setView(saveToFileView)
                 .setPositiveButton(R.string.ok, { _, _ ->
-                    FileUtils.writeLines(saveLogModel.logFile, scoresModel.history)
+                    FileUtils.writeLines(saveLogModel.logFile, historyModel.history)
                     Toast.makeText(activity, R.string.file_saved_message, Toast.LENGTH_SHORT).show()
                     clearViewFromParent(saveToFileView)
                 })

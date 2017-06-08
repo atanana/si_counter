@@ -10,6 +10,7 @@ import android.view.MenuItem
 import com.atanana.sicounter.di.LogModule
 import com.atanana.sicounter.di.MainUiModule
 import com.atanana.sicounter.di.ScoresModule
+import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.SaveFilePresenter
@@ -33,6 +34,9 @@ open class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var scoresModel: ScoresModel
+
+    @Inject
+    lateinit var historyModel: HistoryModel
 
     @Suppress("unused")
     @Inject
@@ -86,10 +90,12 @@ open class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         scoresModel.save(outState)
+        historyModel.save(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
         scoresModel.restore(savedInstanceState)
+        historyModel.restore(savedInstanceState)
     }
 }

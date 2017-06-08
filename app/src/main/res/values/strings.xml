@@ -28,6 +28,7 @@
     <!--logs-->
     <string name="new_player_log"><b>%s</b> присоединился к игре</string>
     <string name="reset_log">Сброс результатов</string>
+    <string name="add_divider">Вставить разделитель</string>
 
     <!--close-->
     <string name="close_title">Выход</string>

@@ -16,8 +16,7 @@ import java.util.*
 
 class ScoresModelBundleTest : AndroidTestCase() {
     fun testSaveInformation() {
-        val formatter = ScoreHistoryFormatter(context)
-        val model = ScoresModel(just("test 1", "test 2"), formatter)
+        val model = ScoresModel(just("test 1", "test 2"), HistoryModel(ScoreHistoryFormatter(context)))
         model.subscribeToScoreActions(just(
                 ScoreAction(PLUS, 10, 0),
                 ScoreAction(MINUS, 20, 1)
@@ -26,12 +25,6 @@ class ScoresModelBundleTest : AndroidTestCase() {
         val bundle = Bundle()
         model.save(bundle)
 
-        assertEquals(arrayListOf(
-                formatter.formatNewPlayer("test 1"),
-                formatter.formatNewPlayer("test 2"),
-                formatter.formatScoreAction(ScoreAction(PLUS, 10, 0), "test 1"),
-                formatter.formatScoreAction(ScoreAction(MINUS, 20, 1), "test 2")
-        ), bundle.getStringArrayList(KEY_HISTORY))
         @Suppress("UNCHECKED_CAST")
         assertEquals(hashMapOf(
                 Pair(0, Score("test 1", 10)),
@@ -40,11 +33,9 @@ class ScoresModelBundleTest : AndroidTestCase() {
     }
 
     fun testRestoreInformation() {
-        val model = ScoresModel(empty(), ScoreHistoryFormatter(context))
+        val model = ScoresModel(empty(), HistoryModel(ScoreHistoryFormatter(context)))
         val playersSubscriber = TestSubscriber<Pair<Score, Int>>()
         model.newPlayersObservable.subscribe(playersSubscriber)
-        val historySubscriber = TestSubscriber<String>()
-        model.historyChangesObservable.subscribe(historySubscriber)
 
         val bundle = Bundle()
         bundle.putSerializable(KEY_SCORES, hashMapOf(
@@ -59,7 +50,5 @@ class ScoresModelBundleTest : AndroidTestCase() {
                 Pair(Score("test 1", 40), 0),
                 Pair(Score("test 2", -50), 1))
         )
-        historySubscriber.assertNoErrors()
-        historySubscriber.assertReceivedOnNext(listOf("test 1 history", "test 2 history"))
     }
 }

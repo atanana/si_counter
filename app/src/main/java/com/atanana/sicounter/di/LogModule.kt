@@ -6,6 +6,7 @@ import com.atanana.sicounter.R
 import com.atanana.sicounter.fs.FileProvider
 import com.atanana.sicounter.logging.LoggerConfiguration
 import com.atanana.sicounter.logging.LogsWriter
+import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogFolderModel
 import com.atanana.sicounter.model.log.LogNameModel
@@ -23,10 +24,11 @@ import javax.inject.Named
 class LogModule {
     @Provides
     @MainScope
-    fun provideSaveLogModel(context: Context, fileProvider: FileProvider, scoresModel: ScoresModel): SaveLogModel {
+    fun provideSaveLogModel(context: Context, fileProvider: FileProvider, scoresModel: ScoresModel,
+                            historyModel: HistoryModel): SaveLogModel {
         val logFolder = externalAppFolder(context, fileProvider)
         LoggerConfiguration.configureLogbackDirectly(logFolder.absolutePath)
-        createLogsWriter(scoresModel)
+        createLogsWriter(historyModel)
 
         val logNameModel = createLogNameModel(scoresModel)
         val logFolderModel = LogFolderModel(logFolder, fileProvider, context)
@@ -38,8 +40,8 @@ class LogModule {
         return LogNameModel(newPlayerNames)
     }
 
-    fun createLogsWriter(scoresModel: ScoresModel): LogsWriter {
-        return LogsWriter(scoresModel.historyChangesObservable)
+    fun createLogsWriter(historyModel: HistoryModel): LogsWriter {
+        return LogsWriter(historyModel.historyChangesObservable)
     }
 
     fun externalAppFolder(context: Context, fileProvider: FileProvider): File {
@@ -60,7 +62,7 @@ class LogModule {
 
     @Provides
     @MainScope
-    fun provideLogsPresenter(scoresModel: ScoresModel, scoresLog: ScoresLog): LogsPresenter {
-        return LogsPresenter(scoresModel.historyChangesObservable, scoresLog)
+    fun provideLogsPresenter(historyModel: HistoryModel, scoresLog: ScoresLog): LogsPresenter {
+        return LogsPresenter(historyModel.historyChangesObservable, scoresLog)
     }
 }
