@@ -53,10 +53,11 @@ open class MainActivity : AppCompatActivity() {
             addPlayerDialog.show()
         }
 
-        val mainUiModule = MainUiModule(this)
         App.graph
-                .mainComponent(LogModule(), ScoresModule(), mainUiModule)
+                .mainComponent(LogModule(), ScoresModule(), MainUiModule(this))
                 .inject(this)
+
+        handleCrashes(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

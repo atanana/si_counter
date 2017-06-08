@@ -26,3 +26,6 @@
     @com.squareup.otto.Subscribe public *;
     @com.squareup.otto.Produce public *;
 }
+
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable

@@ -12,6 +12,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        manifestPlaceholders = [HOCKEYAPP_APP_ID: "c11a61abe6f1488c81a03e8a86eac7ba"]
     }
     buildTypes {
         release {
@@ -52,6 +53,7 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.0'
     compile 'com.google.guava:guava:20.0'
     compile 'gun0912.ted:tedpermission:1.0.3'
+    compile 'net.hockeyapp.android:HockeySDK:4.1.4'
 
     compile 'org.slf4j:slf4j-api:1.7.21'
     compile 'com.github.tony19:logback-android-core:1.1.1-5'
