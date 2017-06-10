@@ -4,17 +4,17 @@ import android.os.Bundle
 import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.exceptions.UnknownId
-import rx.Observable
-import rx.lang.kotlin.PublishSubject
-import rx.subjects.Subject
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
+import io.reactivex.Observable
 import java.util.*
 
 const val KEY_SCORES: String = "scores_model_scores"
 
 open class ScoresModel(newPlayersNames: Observable<String>, private val historyModel: HistoryModel) {
     private var playerScores: HashMap<Int, Score> = hashMapOf()
-    private val newPlayers: Subject<Pair<Score, Int>, Pair<Score, Int>> = PublishSubject()
-    private val updatedPlayers: Subject<Pair<Score, Int>, Pair<Score, Int>> = PublishSubject()
+    private val newPlayers: Subject<Pair<Score, Int>> = PublishSubject.create()
+    private val updatedPlayers: Subject<Pair<Score, Int>> = PublishSubject.create()
 
     open val newPlayersObservable: Observable<Pair<Score, Int>> get() = newPlayers
 

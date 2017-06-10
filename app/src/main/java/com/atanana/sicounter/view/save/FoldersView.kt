@@ -11,12 +11,12 @@ import com.atanana.sicounter.R
 import com.atanana.sicounter.data.Folder
 import com.atanana.sicounter.data.ParentFolder
 import com.atanana.sicounter.data.SelectedFolder
-import rx.Observable
-import rx.lang.kotlin.PublishSubject
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 
 class FoldersView(context: Context, attrs: AttributeSet?) : RecyclerView(context, attrs) {
     private val foldersAdapter = FoldersAdapter()
-    private val _selectedFolders = PublishSubject<SelectedFolder>()
+    private val _selectedFolders = PublishSubject.create<SelectedFolder>()
     val selectedFolders: Observable<SelectedFolder>
         get() = _selectedFolders
 

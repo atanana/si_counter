@@ -3,9 +3,9 @@ package com.atanana.sicounter.model
 import android.os.Bundle
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.presenter.ScoreHistoryFormatter
-import rx.Observable
-import rx.lang.kotlin.PublishSubject
-import rx.subjects.Subject
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import java.util.*
 
 const val KEY_HISTORY: String = "scores_model_history"
@@ -13,7 +13,7 @@ const val KEY_HISTORY: String = "scores_model_history"
 open class HistoryModel(private val scoreHistoryFormatter: ScoreHistoryFormatter) {
     private var _history: ArrayList<String> = arrayListOf()
 
-    private val historyChanges: Subject<String, String> = PublishSubject()
+    private val historyChanges: Subject<String> = PublishSubject.create()
 
     val historyChangesObservable: Observable<String> get() = historyChanges
 

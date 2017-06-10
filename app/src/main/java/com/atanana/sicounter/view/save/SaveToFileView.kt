@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.atanana.sicounter.R
 import com.atanana.sicounter.data.SelectedFolder
-import rx.Observable
+import io.reactivex.Observable
 
 class SaveToFileView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
     private val foldersView: FoldersView by lazy { findViewById(R.id.folders) as FoldersView }

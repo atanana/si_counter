@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.atanana.sicounter.R
-import rx.Observable
+import io.reactivex.Observable
 
 class CurrentFolderView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
     private val folderView: TextView by lazy { findViewById(R.id.folder_text) as TextView }

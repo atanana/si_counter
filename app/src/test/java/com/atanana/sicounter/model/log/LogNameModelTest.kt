@@ -1,20 +1,19 @@
 package com.atanana.sicounter.model.log
 
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import rx.lang.kotlin.PublishSubject
-import rx.observers.TestSubscriber
-import rx.subjects.Subject
 
 class LogNameModelTest {
     lateinit var model: LogNameModel
 
-    lateinit var newPlayersSubject: Subject<String, String>
+    lateinit var newPlayersSubject: Subject<String>
 
     @Before
     fun setUp() {
-        newPlayersSubject = PublishSubject<String>()
+        newPlayersSubject = PublishSubject.create()
         model = LogNameModel(newPlayersSubject)
     }
 
@@ -25,8 +24,7 @@ class LogNameModelTest {
 
     @Test
     fun shouldEmitDefaultFilename() {
-        val subscriber = TestSubscriber<String>()
-        model.filenameObservable.subscribe(subscriber)
+        val subscriber = model.filenameObservable.test()
         subscriber.assertValues("empty.txt")
     }
 
@@ -41,8 +39,7 @@ class LogNameModelTest {
 
     @Test
     fun shouldNotifyAboutFilenameChanges() {
-        val subscriber = TestSubscriber<String>()
-        model.filenameObservable.subscribe(subscriber)
+        val subscriber = model.filenameObservable.test()
 
         newPlayersSubject.onNext("test 1")
         newPlayersSubject.onNext("test 2")

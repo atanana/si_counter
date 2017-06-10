@@ -3,14 +3,10 @@ package com.atanana.sicounter.view.player_control
 import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.atanana.sicounter.R
 import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType.MINUS
@@ -18,15 +14,15 @@ import com.atanana.sicounter.data.action.ScoreActionType.PLUS
 import com.atanana.sicounter.utils.dpToPx
 import com.atanana.sicounter.utils.pxToDp
 import com.atanana.sicounter.utils.screenSize
-import rx.Observable
-import rx.lang.kotlin.PublishSubject
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 
 open class PlayerControl(context: Context?, attrs: AttributeSet?) : LinearLayout(context, attrs) {
     private var playerName: TextView = TextView(context)
     private var playerScore: TextView = TextView(context)
     private val addScore: Button = Button(context)
     private val subtractScore: Button = Button(context)
-    private val _scoreActions = PublishSubject<ScoreAction>()
+    private val _scoreActions = PublishSubject.create<ScoreAction>()
 
     open val scoreActions: Observable<ScoreAction>
         get() = _scoreActions

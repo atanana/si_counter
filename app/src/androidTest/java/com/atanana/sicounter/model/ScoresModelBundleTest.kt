@@ -7,11 +7,10 @@ import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType.MINUS
 import com.atanana.sicounter.data.action.ScoreActionType.PLUS
 import com.atanana.sicounter.presenter.ScoreHistoryFormatter
+import io.reactivex.Observable.empty
+import io.reactivex.Observable.just
 import org.hamcrest.Matchers
 import org.junit.Assert.assertThat
-import rx.Observable.empty
-import rx.Observable.just
-import rx.observers.TestSubscriber
 import java.util.*
 
 class ScoresModelBundleTest : AndroidTestCase() {
@@ -34,8 +33,7 @@ class ScoresModelBundleTest : AndroidTestCase() {
 
     fun testRestoreInformation() {
         val model = ScoresModel(empty(), HistoryModel(ScoreHistoryFormatter(context)))
-        val playersSubscriber = TestSubscriber<Pair<Score, Int>>()
-        model.newPlayersObservable.subscribe(playersSubscriber)
+        val playersSubscriber = model.newPlayersObservable.test()
 
         val bundle = Bundle()
         bundle.putSerializable(KEY_SCORES, hashMapOf(
@@ -46,7 +44,7 @@ class ScoresModelBundleTest : AndroidTestCase() {
         model.restore(bundle)
 
         playersSubscriber.assertNoErrors()
-        assertThat(playersSubscriber.onNextEvents, Matchers.containsInAnyOrder(
+        assertThat(playersSubscriber.values(), Matchers.containsInAnyOrder(
                 Pair(Score("test 1", 40), 0),
                 Pair(Score("test 2", -50), 1))
         )

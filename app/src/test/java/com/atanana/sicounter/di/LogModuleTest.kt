@@ -6,6 +6,7 @@ import com.atanana.sicounter.R
 import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.fs.FileProvider
 import com.atanana.sicounter.model.ScoresModel
+import io.reactivex.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -13,7 +14,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
-import rx.Observable
 import java.io.File
 
 class LogModuleTest {

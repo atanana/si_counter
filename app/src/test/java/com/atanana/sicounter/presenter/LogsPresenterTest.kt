@@ -1,12 +1,12 @@
 package com.atanana.sicounter.presenter
 
 import com.atanana.sicounter.view.ScoresLog
+import io.reactivex.Observable
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import rx.Observable
 
 class LogsPresenterTest {
     @Mock

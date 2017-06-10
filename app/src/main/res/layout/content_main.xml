@@ -46,6 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/scores_scroll"
         android:maxWidth="200dp"
+        android:textAllCaps="true"
         android:text="@string/add_divider" />
 
     <com.atanana.sicounter.view.ScoresLog

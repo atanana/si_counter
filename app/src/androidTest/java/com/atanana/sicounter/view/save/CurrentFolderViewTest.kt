@@ -3,7 +3,7 @@ package com.atanana.sicounter.view.save
 import android.test.AndroidTestCase
 import android.widget.TextView
 import com.atanana.sicounter.R
-import rx.Observable
+import io.reactivex.Observable
 
 class CurrentFolderViewTest : AndroidTestCase() {
     fun testCurrentFolderProvider() {

@@ -49,8 +49,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'io.reactivex:rxkotlin:0.55.0'
-    compile 'io.reactivex:rxandroid:1.2.0'
+    compile 'io.reactivex.rxjava2:rxkotlin:2.0.3'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'com.google.guava:guava:20.0'
     compile 'gun0912.ted:tedpermission:1.0.3'
     compile 'net.hockeyapp.android:HockeySDK:4.1.4'

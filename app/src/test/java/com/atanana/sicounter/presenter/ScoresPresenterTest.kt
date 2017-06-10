@@ -8,16 +8,15 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.player_control.PlayerControl
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
+import io.reactivex.Observable
+import io.reactivex.observers.TestObserver
+import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import rx.Observable
-import rx.lang.kotlin.PublishSubject
-import rx.observers.TestSubscriber
-import rx.subjects.PublishSubject
 
 private fun <T> anyObject(): T {
     return Mockito.anyObject<T>()
@@ -45,9 +44,9 @@ class ScoresPresenterTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
 
-        newPlayers = PublishSubject()
+        newPlayers = PublishSubject.create()
         `when`(model.newPlayersObservable).thenReturn(newPlayers)
-        updatedPlayers = PublishSubject()
+        updatedPlayers = PublishSubject.create()
         `when`(model.updatedPlayersObservable).thenReturn(updatedPlayers)
     }
 
@@ -77,16 +76,16 @@ class ScoresPresenterTest {
     @Test
     fun shouldTransferScoreActionsFromPlayerControls() {
         val playerControl1 = mockPlayerControl()
-        val scoreActions1 = PublishSubject<ScoreAction>()
+        val scoreActions1 = PublishSubject.create<ScoreAction>()
         `when`(playerControl1.scoreActions).thenReturn(scoreActions1)
 
         val playerControl2 = mockPlayerControl()
-        val scoreActions2 = PublishSubject<ScoreAction>()
+        val scoreActions2 = PublishSubject.create<ScoreAction>()
         `when`(playerControl2.scoreActions).thenReturn(scoreActions2)
 
         `when`(fabric.build()).thenReturn(playerControl1, playerControl2)
 
-        val subscriber = TestSubscriber<ScoreAction>()
+        val subscriber = TestObserver<ScoreAction>()
         `when`(model.subscribeToScoreActions(anyObject())).thenAnswer {
             @Suppress("UNCHECKED_CAST")
             val observable = it.arguments[0] as Observable<ScoreAction>

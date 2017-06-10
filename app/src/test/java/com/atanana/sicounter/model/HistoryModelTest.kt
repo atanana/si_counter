@@ -3,6 +3,8 @@ package com.atanana.sicounter.model
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType
 import com.atanana.sicounter.presenter.ScoreHistoryFormatter
+import io.reactivex.functions.Consumer
+import io.reactivex.subscribers.TestSubscriber
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -10,8 +12,6 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import rx.Observable
-import rx.observers.TestSubscriber
 
 private fun <T> anyObject(): T {
     return Mockito.anyObject<T>()
@@ -31,8 +31,7 @@ class HistoryModelTest {
 
     @Test
     fun shouldNotifyAboutNewPlayersHistory() {
-        val subscriber = TestSubscriber<String>()
-        model.historyChangesObservable.subscribe(subscriber)
+        val subscriber = model.historyChangesObservable.test()
 
         `when`(formatter.formatNewPlayer("test 1")).thenReturn("player 1")
         `when`(formatter.formatNewPlayer("test 2")).thenReturn("player 2")
@@ -56,8 +55,7 @@ class HistoryModelTest {
 
     @Test
     fun shouldNotifyAboutUpdateScoresHistory() {
-        val subscriber = TestSubscriber<String>()
-        model.historyChangesObservable.subscribe(subscriber)
+        val subscriber = model.historyChangesObservable.test()
 
         `when`(formatter.formatScoreAction(anyObject(), anyObject())).thenAnswer {
             val action: ScoreAction = it.arguments[0] as ScoreAction
@@ -89,8 +87,7 @@ class HistoryModelTest {
 
     @Test
     fun shouldNotifyAboutResetScoresHistory() {
-        val subscriber = TestSubscriber<String>()
-        model.historyChangesObservable.subscribe(subscriber)
+        val subscriber = model.historyChangesObservable.test()
         `when`(formatter.resetMessage).thenReturn("reset message")
 
         model.reset()

@@ -1,7 +1,7 @@
 package com.atanana.sicounter.model.log
 
 import com.atanana.sicounter.data.SelectedFolder
-import rx.Observable
+import io.reactivex.Observable
 import java.io.File
 
 class SaveLogModel(private val logNameModel: LogNameModel, private val logFolderModel: LogFolderModel) {

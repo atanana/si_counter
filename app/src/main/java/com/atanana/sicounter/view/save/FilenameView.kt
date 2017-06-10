@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.atanana.sicounter.R
-import rx.Observable
+import io.reactivex.Observable
 
 class FilenameView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
     private val filenameView: TextView by lazy { findViewById(R.id.filename_text) as TextView }

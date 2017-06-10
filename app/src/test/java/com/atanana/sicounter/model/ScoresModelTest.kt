@@ -4,39 +4,34 @@ import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType.MINUS
 import com.atanana.sicounter.data.action.ScoreActionType.PLUS
-import com.atanana.sicounter.presenter.ScoreHistoryFormatter
+import io.reactivex.Observable.just
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import rx.Observable.just
-import rx.lang.kotlin.PublishSubject
-import rx.observers.TestSubscriber
-import rx.subjects.Subject
 
 class ScoresModelTest {
     @Mock
     lateinit var historyModel: HistoryModel
 
-    lateinit var newPlayers: Subject<String, String>
+    lateinit var newPlayers: Subject<String>
 
     lateinit var model: ScoresModel
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        newPlayers = PublishSubject<String>()
+        newPlayers = PublishSubject.create()
         model = ScoresModel(newPlayers, historyModel)
     }
 
     @Test
     fun shouldNotifyAboutNewPlayersScores() {
-        val subscriber = TestSubscriber<Pair<Score, Int>>()
-        model.newPlayersObservable.subscribe(subscriber)
+        val subscriber = model.newPlayersObservable.test()
 
         newPlayers.onNext("test 1")
         newPlayers.onNext("test 2")
@@ -57,8 +52,7 @@ class ScoresModelTest {
     fun shouldNotifyAboutScoresUpdate() {
         model = ScoresModel(just("test 1", "test 2"), historyModel)
 
-        val subscriber = TestSubscriber<Pair<Score, Int>>()
-        model.updatedPlayersObservable.subscribe(subscriber)
+        val subscriber = model.updatedPlayersObservable.test()
 
         model.subscribeToScoreActions(just(
                 ScoreAction(PLUS, 10, 0),
@@ -92,8 +86,7 @@ class ScoresModelTest {
     fun shouldNotifyAboutScoresReset() {
         model = ScoresModel(just("test 1", "test 2"), historyModel)
 
-        val subscriber = TestSubscriber<Pair<Score, Int>>()
-        model.updatedPlayersObservable.subscribe(subscriber)
+        val subscriber = model.updatedPlayersObservable.test()
 
         model.subscribeToScoreActions(just(
                 ScoreAction(PLUS, 10, 0),
@@ -102,7 +95,7 @@ class ScoresModelTest {
         ))
         model.reset()
 
-        assertThat(subscriber.onNextEvents).endsWith(Pair(Score("test 1", 0), 0), Pair(Score("test 2", 0), 1))
+        assertThat(subscriber.values()).endsWith(Pair(Score("test 1", 0), 0), Pair(Score("test 2", 0), 1))
     }
 
     @Test

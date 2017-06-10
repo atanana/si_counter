@@ -18,16 +18,16 @@ import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import com.atanana.sicounter.view.save.SaveToFileView
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import org.apache.commons.io.FileUtils
-import rx.Observable
-import rx.lang.kotlin.PublishSubject
-import rx.subjects.Subject
 import javax.inject.Named
 
 @Module
 class MainUiModule(private val activity: MainActivity) {
     private val mainView: View = activity.findViewById(android.R.id.content)
-    private val newPlayers: Subject<String, String> = PublishSubject()
+    private val newPlayers: Subject<String> = PublishSubject.create()
 
     @Provides
     @MainScope

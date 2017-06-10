@@ -7,6 +7,8 @@ import com.atanana.sicounter.data.Folder
 import com.atanana.sicounter.data.ParentFolder
 import com.atanana.sicounter.data.SelectedFolder
 import com.atanana.sicounter.fs.FileProvider
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -14,9 +16,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
-import rx.lang.kotlin.PublishSubject
-import rx.observers.TestSubscriber
-import rx.subjects.Subject
 import java.io.File
 
 class LogFolderModelTest {
@@ -29,7 +28,7 @@ class LogFolderModelTest {
     lateinit var context: Context
 
     @Mock
-    lateinit var folderProvider: Subject<SelectedFolder, SelectedFolder>
+    lateinit var folderProvider: Subject<SelectedFolder>
 
     lateinit var file: File
 
@@ -37,7 +36,7 @@ class LogFolderModelTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         file = File(".")
-        folderProvider = PublishSubject()
+        folderProvider = PublishSubject.create()
 
         model = LogFolderModel(file, fileProvider, context)
         model.setFolderProvider(folderProvider)
@@ -48,8 +47,7 @@ class LogFolderModelTest {
 
     @Test
     fun shouldEmitInitialFolder() {
-        val subscriber = TestSubscriber<String>()
-        model.currentFolderObservable.subscribe(subscriber)
+        val subscriber = model.currentFolderObservable.test()
         subscriber.assertValue(file.absolutePath)
     }
 
@@ -59,8 +57,7 @@ class LogFolderModelTest {
         `when`(fileProvider.directories(file)).thenReturn(folders)
         model = LogFolderModel(file, fileProvider, context)
 
-        val subscriber = TestSubscriber<List<String>>()
-        model.foldersObservable.subscribe(subscriber)
+        val subscriber = model.foldersObservable.test()
         subscriber.assertValue(folders)
     }
 
@@ -84,8 +81,7 @@ class LogFolderModelTest {
 
     @Test
     fun shouldNotifyAboutCurrentFolderWhenChangingFolderToParent() {
-        val subscriber = TestSubscriber<String>()
-        model.currentFolderObservable.subscribe(subscriber)
+        val subscriber = model.currentFolderObservable.test()
 
         val parent1 = File("parent 1")
         val parent2 = File("parent 2")
@@ -100,8 +96,7 @@ class LogFolderModelTest {
 
     @Test
     fun shouldNotifyAboutFoldersWhenChangingFolderToParent() {
-        val subscriber = TestSubscriber<List<String>>()
-        model.foldersObservable.subscribe(subscriber)
+        val subscriber = model.foldersObservable.test()
 
         val parent1 = File("parent 1")
         val parent2 = File("parent 2")
@@ -126,8 +121,7 @@ class LogFolderModelTest {
         `when`(fileProvider.directories(parent)).thenThrow(RuntimeException())
         `when`(context.resources.getString(R.string.parent_list_exception)).thenReturn("parent exception")
 
-        val subscriber = TestSubscriber<String>()
-        model.errorsObservable.subscribe(subscriber)
+        val subscriber = model.errorsObservable.test()
 
         folderProvider.onNext(ParentFolder)
 
@@ -149,8 +143,7 @@ class LogFolderModelTest {
 
     @Test
     fun shouldNotifyAboutCurrentFolderWhenChangingFolderToSubfolder() {
-        val subscriber = TestSubscriber<String>()
-        model.currentFolderObservable.subscribe(subscriber)
+        val subscriber = model.currentFolderObservable.test()
 
         val subfolder1 = File("subfolder 1")
         val subfolder2 = File("subfolder 2")
@@ -165,8 +158,7 @@ class LogFolderModelTest {
 
     @Test
     fun shouldNotifyAboutFoldersWhenChangingFolderToSubfolder() {
-        val subscriber = TestSubscriber<List<String>>()
-        model.foldersObservable.subscribe(subscriber)
+        val subscriber = model.foldersObservable.test()
 
         val subfolder1 = File("subfolder 1")
         val subfolder2 = File("subfolder 2")
@@ -191,8 +183,7 @@ class LogFolderModelTest {
         `when`(fileProvider.directories(subfolder)).thenThrow(RuntimeException())
         `when`(context.resources.getString(R.string.folder_list_exception)).thenReturn("subfolder exception")
 
-        val subscriber = TestSubscriber<String>()
-        model.errorsObservable.subscribe(subscriber)
+        val subscriber = model.errorsObservable.test()
 
         folderProvider.onNext(Folder("1"))
 

@@ -1,7 +1,7 @@
 package com.atanana.sicounter.model.log
 
-import rx.Observable
-import rx.subjects.ReplaySubject
+import io.reactivex.Observable
+import io.reactivex.subjects.ReplaySubject
 
 const val DEFAULT_FILE_NAME = "empty"
 const val EXTENSION = ".txt"

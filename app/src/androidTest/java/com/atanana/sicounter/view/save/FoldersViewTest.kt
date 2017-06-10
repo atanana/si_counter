@@ -1,7 +1,7 @@
 package com.atanana.sicounter.view.save
 
 import android.test.AndroidTestCase
-import rx.Observable
+import io.reactivex.Observable
 
 class FoldersViewTest : AndroidTestCase() {
     fun testFoldersProvider() {

@@ -3,8 +3,8 @@ package com.atanana.sicounter.view.save
 import android.test.AndroidTestCase
 import android.widget.TextView
 import com.atanana.sicounter.R
+import io.reactivex.Observable
 import junit.framework.Assert
-import rx.Observable
 
 class FilenameViewTest : AndroidTestCase() {
     fun testFilenameProvider() {

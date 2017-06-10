@@ -7,7 +7,6 @@ import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType.MINUS
 import com.atanana.sicounter.data.action.ScoreActionType.PLUS
 import com.atanana.sicounter.presenter.ScoreHistoryFormatter
-import rx.observers.TestSubscriber
 
 class HistoryModelBundleTest : AndroidTestCase() {
     fun testSaveInformation() {
@@ -31,8 +30,7 @@ class HistoryModelBundleTest : AndroidTestCase() {
 
     fun testRestoreInformation() {
         val model = HistoryModel(ScoreHistoryFormatter(context))
-        val historySubscriber = TestSubscriber<String>()
-        model.historyChangesObservable.subscribe(historySubscriber)
+        val historySubscriber = model.historyChangesObservable.test()
 
         val bundle = Bundle()
         bundle.putSerializable(KEY_SCORES, hashMapOf(
@@ -43,6 +41,6 @@ class HistoryModelBundleTest : AndroidTestCase() {
         model.restore(bundle)
 
         historySubscriber.assertNoErrors()
-        historySubscriber.assertReceivedOnNext(listOf("test 1 history", "test 2 history"))
+        historySubscriber.assertValues("test 1 history", "test 2 history")
     }
 }

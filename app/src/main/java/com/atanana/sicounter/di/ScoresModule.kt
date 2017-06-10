@@ -10,7 +10,7 @@ import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import dagger.Module
 import dagger.Provides
-import rx.Observable
+import io.reactivex.Observable
 import javax.inject.Named
 
 @Module

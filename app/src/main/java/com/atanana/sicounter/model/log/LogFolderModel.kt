@@ -7,10 +7,9 @@ import com.atanana.sicounter.data.Folder
 import com.atanana.sicounter.data.ParentFolder
 import com.atanana.sicounter.data.SelectedFolder
 import com.atanana.sicounter.fs.FileProvider
-import rx.Observable
-import rx.lang.kotlin.PublishSubject
-import rx.subjects.PublishSubject
-import rx.subjects.ReplaySubject
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.ReplaySubject
 import java.io.File
 
 class LogFolderModel(private var _currentFolder: File, private val fileProvider: FileProvider, context: Context) {
@@ -20,7 +19,7 @@ class LogFolderModel(private var _currentFolder: File, private val fileProvider:
     private val _foldersSubject: ReplaySubject<List<String>> = ReplaySubject.createWithSize<List<String>>(1)
     val foldersObservable: Observable<List<String>> = _foldersSubject
 
-    private val _errorsSubject: PublishSubject<String> = PublishSubject()
+    private val _errorsSubject: PublishSubject<String> = PublishSubject.create()
     val errorsObservable: Observable<String> = _errorsSubject
 
     private val _currentFolderSubject: ReplaySubject<String> = ReplaySubject.createWithSize<String>(1)
