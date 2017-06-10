@@ -1,6 +1,7 @@
 package com.atanana.sicounter.di
 
 import android.content.Context
+import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.ViewGroup
@@ -53,6 +54,12 @@ class MainUiModule(private val activity: MainActivity) {
     @Named("addDivider")
     fun provideAddDividerButton(): Button {
         return mainView.findViewById(R.id.add_divider) as Button
+    }
+
+    @Provides
+    @MainScope
+    fun provideFabButton(): FloatingActionButton {
+        return mainView.findViewById(R.id.add_player) as FloatingActionButton
     }
 
     @Provides

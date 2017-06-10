@@ -38,6 +38,9 @@ open class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var historyModel: HistoryModel
 
+    @Inject
+    lateinit var fabButton: FloatingActionButton
+
     @Suppress("unused")
     @Inject
     lateinit var scoresPresenter: ScoresPresenter
@@ -52,14 +55,13 @@ open class MainActivity : AppCompatActivity() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar?
         setSupportActionBar(toolbar)
 
-        val fab = findViewById(R.id.add_player) as FloatingActionButton?
-        fab!!.setOnClickListener {
-            addPlayerDialog.show()
-        }
-
         App.graph
                 .mainComponent(LogModule(), ScoresModule(), MainUiModule(this))
                 .inject(this)
+
+        fabButton.setOnClickListener {
+            addPlayerDialog.show()
+        }
 
         handleCrashes(this)
     }
