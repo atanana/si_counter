@@ -44,11 +44,11 @@ open class ScoresModel(newPlayersNames: Observable<String>, private val historyM
         return playerScores[id]?.name ?: throw UnknownId(id)
     }
 
-    fun save(bundle: Bundle) {
+    open fun save(bundle: Bundle) {
         bundle.putSerializable(KEY_SCORES, playerScores)
     }
 
-    fun restore(bundle: Bundle?) {
+    open fun restore(bundle: Bundle?) {
         @Suppress("UNCHECKED_CAST")
         val newScores = bundle?.getSerializable(KEY_SCORES) as? HashMap<Int, Score>
         if (newScores != null) {

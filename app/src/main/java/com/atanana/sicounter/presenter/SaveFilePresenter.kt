@@ -11,7 +11,7 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 import java.util.ArrayList
 
-class SaveFilePresenter(private val context: Context, model: SaveLogModel, view: SaveToFileView,
+open class SaveFilePresenter(private val context: Context, model: SaveLogModel, view: SaveToFileView,
                         private val dialogBuilder: AlertDialog.Builder) {
     init {
         view.setFoldersProvider(model.foldersObservable)
@@ -21,7 +21,7 @@ class SaveFilePresenter(private val context: Context, model: SaveLogModel, view:
         model.setFolderProvider(view.selectedFolder)
     }
 
-    fun show() {
+    open fun showDialog() {
         TedPermission(context)
                 .setPermissionListener(object : PermissionListener {
                     override fun onPermissionGranted() {

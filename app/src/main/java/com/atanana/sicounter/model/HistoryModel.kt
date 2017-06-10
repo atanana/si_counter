@@ -39,7 +39,7 @@ open class HistoryModel(private val scoreHistoryFormatter: ScoreHistoryFormatter
         bundle.putStringArrayList(KEY_HISTORY, _history)
     }
 
-    fun restore(bundle: Bundle?) {
+    open fun restore(bundle: Bundle?) {
         val newHistory = bundle?.getStringArrayList(KEY_HISTORY)
         if (newHistory != null) {
             _history = newHistory

@@ -2,7 +2,6 @@ package com.atanana.sicounter
 
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -13,21 +12,11 @@ import com.atanana.sicounter.di.ScoresModule
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.LogsPresenter
-import com.atanana.sicounter.presenter.SaveFilePresenter
+import com.atanana.sicounter.presenter.MainUiPresenter
 import com.atanana.sicounter.presenter.ScoresPresenter
 import javax.inject.Inject
-import javax.inject.Named
 
 open class MainActivity : AppCompatActivity() {
-    @field:[Inject Named("addPlayerDialog")]
-    lateinit var addPlayerDialog: AlertDialog.Builder
-
-    @field:[Inject Named("exitDialog")]
-    lateinit var exitDialog: AlertDialog.Builder
-
-    @field:[Inject Named("resetDialog")]
-    lateinit var resetDialog: AlertDialog.Builder
-
     @Suppress("unused")
     @Inject
     lateinit var logsPresenter: LogsPresenter
@@ -45,8 +34,7 @@ open class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var scoresPresenter: ScoresPresenter
 
-    @Inject
-    lateinit var saveLogPresenter: SaveFilePresenter
+    lateinit var mainUiPresenter: MainUiPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,13 +43,9 @@ open class MainActivity : AppCompatActivity() {
         val toolbar = findViewById(R.id.toolbar) as Toolbar?
         setSupportActionBar(toolbar)
 
-        App.graph
-                .mainComponent(LogModule(), ScoresModule(), MainUiModule(this))
-                .inject(this)
-
-        fabButton.setOnClickListener {
-            addPlayerDialog.show()
-        }
+        val mainComponent = App.graph.mainComponent(LogModule(), ScoresModule(), MainUiModule(this))
+        mainComponent.inject(this)
+        mainUiPresenter = MainUiPresenter(mainComponent)
 
         handleCrashes(this)
     }
@@ -72,32 +56,20 @@ open class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.mi_new -> {
-                resetDialog.show()
-                return true
-            }
-            R.id.mi_save -> {
-                saveLogPresenter.show()
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
+        return mainUiPresenter.toolbarItemSelected(item.itemId) || return super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
-        exitDialog.show()
+        mainUiPresenter.onBackPressed()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        scoresModel.save(outState)
-        historyModel.save(outState)
+        mainUiPresenter.saveToBundle(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
-        scoresModel.restore(savedInstanceState)
-        historyModel.restore(savedInstanceState)
+        mainUiPresenter.restoreFromBundle(savedInstanceState)
     }
 }
