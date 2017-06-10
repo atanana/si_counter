@@ -3,8 +3,6 @@ package com.atanana.sicounter.model
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType
 import com.atanana.sicounter.presenter.ScoreHistoryFormatter
-import io.reactivex.functions.Consumer
-import io.reactivex.subscribers.TestSubscriber
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -100,5 +98,19 @@ class HistoryModelTest {
         `when`(formatter.resetMessage).thenReturn("reset message")
         model.reset()
         assertThat(model.history).isEqualTo(listOf("reset message"))
+    }
+
+    @Test
+    fun shouldNotifyAboutDivider() {
+        val subscriber = model.historyChangesObservable.test()
+        model.addDivider()
+
+        subscriber.assertValue("——————————")
+    }
+
+    @Test
+    fun shouldWriteDividerToHistory() {
+        model.addDivider()
+        assertThat(model.history).isEqualTo(listOf("——————————"))
     }
 }

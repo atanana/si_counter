@@ -35,7 +35,11 @@ open class HistoryModel(private val scoreHistoryFormatter: ScoreHistoryFormatter
         addHistory(scoreHistoryFormatter.formatScoreAction(action, player))
     }
 
-    fun save(bundle: Bundle) {
+    open fun addDivider() {
+        addHistory("——————————")
+    }
+
+    open fun save(bundle: Bundle) {
         bundle.putStringArrayList(KEY_HISTORY, _history)
     }
 

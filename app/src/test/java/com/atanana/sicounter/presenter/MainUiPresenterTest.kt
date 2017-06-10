@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AlertDialog
 import android.view.View
+import android.widget.Button
 import com.atanana.sicounter.R
 import com.atanana.sicounter.di.MainComponent
 import com.atanana.sicounter.model.HistoryModel
@@ -31,6 +32,9 @@ class MainUiPresenterTest {
     lateinit var fabButton: FloatingActionButton
 
     @Mock
+    lateinit var addDividerButton: Button
+
+    @Mock
     lateinit var addPlayerDialog: AlertDialog.Builder
 
     @Mock
@@ -55,6 +59,7 @@ class MainUiPresenterTest {
         `when`(component.inject(anyObject<MainUiPresenter>())).thenAnswer {
             val uiPresenter = it.arguments[0] as MainUiPresenter
             uiPresenter.fabButton = fabButton
+            uiPresenter.addDivider = addDividerButton
             uiPresenter.addPlayerDialog = addPlayerDialog
             uiPresenter.resetDialog = resetDialog
             uiPresenter.exitDialog = exitDialog
@@ -79,6 +84,16 @@ class MainUiPresenterTest {
 
         argumentCaptor.value.onClick(fabButton)
         verify(addPlayerDialog).show()
+    }
+
+    @Test
+    fun shouldAddDividerOnButtonClick() {
+        val argumentCaptor = ArgumentCaptor.forClass(View.OnClickListener::class.java)
+        createPresenter()
+        verify(addDividerButton).setOnClickListener(argumentCaptor.capture())
+
+        argumentCaptor.value.onClick(addDividerButton)
+        verify(historyModel).addDivider()
     }
 
     @Test

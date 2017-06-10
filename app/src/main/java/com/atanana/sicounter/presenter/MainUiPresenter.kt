@@ -3,6 +3,7 @@ package com.atanana.sicounter.presenter
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AlertDialog
+import android.widget.Button
 import com.atanana.sicounter.R
 import com.atanana.sicounter.di.MainComponent
 import com.atanana.sicounter.model.HistoryModel
@@ -32,10 +33,18 @@ class MainUiPresenter(mainComponent: MainComponent) {
     @Inject
     lateinit var historyModel: HistoryModel
 
+    @field:[Inject Named("addDivider")]
+    lateinit var addDivider: Button
+
     init {
         mainComponent.inject(this)
+
         fabButton.setOnClickListener {
             addPlayerDialog.show()
+        }
+
+        addDivider.setOnClickListener {
+            historyModel.addDivider()
         }
     }
 
