@@ -46,8 +46,6 @@ open class MainActivity : AppCompatActivity() {
         val mainComponent = App.graph.mainComponent(LogModule(), ScoresModule(), MainUiModule(this))
         mainComponent.inject(this)
         mainUiPresenter = MainUiPresenter(mainComponent)
-
-        handleCrashes(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
