@@ -12,7 +12,7 @@ import java.util.*
 const val KEY_SCORES: String = "scores_model_scores"
 
 open class ScoresModel(newPlayersNames: Observable<String>, private val historyModel: HistoryModel) {
-    private var playerScores: HashMap<Int, Score> = hashMapOf()
+    private var playerScores: TreeMap<Int, Score> = TreeMap()
     private val newPlayers: Subject<Pair<Score, Int>> = PublishSubject.create()
     private val updatedPlayers: Subject<Pair<Score, Int>> = PublishSubject.create()
 
@@ -50,7 +50,7 @@ open class ScoresModel(newPlayersNames: Observable<String>, private val historyM
 
     open fun restore(bundle: Bundle?) {
         @Suppress("UNCHECKED_CAST")
-        val newScores = bundle?.getSerializable(KEY_SCORES) as? HashMap<Int, Score>
+        val newScores = bundle?.getSerializable(KEY_SCORES) as? TreeMap<Int, Score>
         if (newScores != null) {
             playerScores = newScores
 
