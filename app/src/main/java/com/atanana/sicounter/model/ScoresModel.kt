@@ -20,6 +20,9 @@ open class ScoresModel(newPlayersNames: Observable<String>, private val historyM
 
     open val updatedPlayersObservable: Observable<Pair<Score, Int>> get() = updatedPlayers
 
+    open val scores: List<Score>
+        get() = playerScores.values.toList()
+
     init {
         newPlayersNames.subscribe({ newPlayer ->
             val newScore = Score(newPlayer, 0)

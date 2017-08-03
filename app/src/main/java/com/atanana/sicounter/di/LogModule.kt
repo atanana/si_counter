@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v7.app.AlertDialog
 import com.atanana.sicounter.R
 import com.atanana.sicounter.fs.FileProvider
+import com.atanana.sicounter.helpers.HistoryReportHelper
 import com.atanana.sicounter.logging.LoggerConfiguration
 import com.atanana.sicounter.logging.LogsWriter
 import com.atanana.sicounter.model.HistoryModel
@@ -49,6 +50,12 @@ class LogModule {
         val path = listOf(fileProvider.externalStorage.absolutePath, appName)
                 .joinToString(File.separator)
         return File(path)
+    }
+
+    @Provides
+    @MainScope
+    fun provideHistoryReportHelper(historyModel: HistoryModel, scoresModel: ScoresModel):HistoryReportHelper {
+        return HistoryReportHelper(historyModel, scoresModel)
     }
 
     @Provides

@@ -9,6 +9,7 @@ import io.reactivex.subjects.Subject
 import java.util.*
 
 const val KEY_HISTORY: String = "scores_model_history"
+const val HISTORY_SEPARATOR = "——————————"
 
 open class HistoryModel(private val scoreHistoryFormatter: ScoreHistoryFormatter) {
     private var _history: ArrayList<String> = arrayListOf()
@@ -17,7 +18,7 @@ open class HistoryModel(private val scoreHistoryFormatter: ScoreHistoryFormatter
 
     val historyChangesObservable: Observable<String> get() = historyChanges
 
-    val history: List<String>
+    open val history: List<String>
         get() {
             return Collections.unmodifiableList(_history)
         }
@@ -36,7 +37,7 @@ open class HistoryModel(private val scoreHistoryFormatter: ScoreHistoryFormatter
     }
 
     open fun addDivider() {
-        addHistory("——————————")
+        addHistory(HISTORY_SEPARATOR)
     }
 
     open fun save(bundle: Bundle) {

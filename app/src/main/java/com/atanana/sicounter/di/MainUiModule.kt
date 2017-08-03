@@ -10,7 +10,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.R
-import com.atanana.sicounter.model.HistoryModel
+import com.atanana.sicounter.helpers.HistoryReportHelper
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.SaveLogModel
 import com.atanana.sicounter.view.PriceSelector
@@ -116,15 +116,16 @@ class MainUiModule(private val activity: MainActivity) {
     @Provides
     @MainScope
     @Named("saveResultsDialog")
-    fun provideSaveResultsDialog(historyModel: HistoryModel,
-                                 saveLogModel: SaveLogModel,
-                                 saveToFileView: SaveToFileView): AlertDialog.Builder {
+    fun provideSaveResultsDialog(saveLogModel: SaveLogModel,
+                                 saveToFileView: SaveToFileView,
+                                 historyReportHelper: HistoryReportHelper): AlertDialog.Builder {
         return AlertDialog.Builder(activity)
                 .setTitle(R.string.save_results_title)
                 .setCancelable(true)
                 .setView(saveToFileView)
                 .setPositiveButton(R.string.ok, { _, _ ->
-                    FileUtils.writeLines(saveLogModel.logFile, historyModel.history)
+                    val report = historyReportHelper.createReport()
+                    FileUtils.writeLines(saveLogModel.logFile, report)
                     Toast.makeText(activity, R.string.file_saved_message, Toast.LENGTH_SHORT).show()
                     clearViewFromParent(saveToFileView)
                 })

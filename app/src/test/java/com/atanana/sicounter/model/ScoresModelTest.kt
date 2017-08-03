@@ -49,6 +49,14 @@ class ScoresModelTest {
     }
 
     @Test
+    fun shouldAddNewPlayersToScores() {
+        newPlayers.onNext("test 1")
+        newPlayers.onNext("test 2")
+
+        assertThat(model.scores).containsExactly(Score("test 1", 0), Score("test 2", 0))
+    }
+
+    @Test
     fun shouldNotifyAboutScoresUpdate() {
         model = ScoresModel(just("test 1", "test 2"), historyModel)
 
@@ -83,6 +91,20 @@ class ScoresModelTest {
     }
 
     @Test
+    fun shouldUpdateScores() {
+        newPlayers.onNext("test 1")
+        newPlayers.onNext("test 2")
+
+        model.subscribeToScoreActions(just(
+                ScoreAction(PLUS, 10, 0),
+                ScoreAction(PLUS, 20, 0),
+                ScoreAction(MINUS, 20, 1)
+        ))
+
+        assertThat(model.scores).containsExactly(Score("test 1", 30), Score("test 2", -20))
+    }
+
+    @Test
     fun shouldNotifyAboutScoresReset() {
         model = ScoresModel(just("test 1", "test 2"), historyModel)
 
@@ -102,5 +124,20 @@ class ScoresModelTest {
     fun shouldNotifyAboutResetScoresHistory() {
         model.reset()
         verify(historyModel).reset()
+    }
+
+    @Test
+    fun shouldResetScores() {
+        newPlayers.onNext("test 1")
+        newPlayers.onNext("test 2")
+
+        model.subscribeToScoreActions(just(
+                ScoreAction(PLUS, 10, 0),
+                ScoreAction(PLUS, 20, 0),
+                ScoreAction(MINUS, 20, 1)
+        ))
+        model.reset()
+
+        assertThat(model.scores).containsExactly(Score("test 1", 0), Score("test 2", 0))
     }
 }
