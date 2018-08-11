@@ -38,7 +38,7 @@ class FoldersView(context: Context, attrs: AttributeSet?) : RecyclerView(context
 
         private val folders: MutableList<String> = arrayListOf()
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder? {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val layout = when (viewType) {
                 TYPE_FOLDER -> R.layout.item_folder
                 TYPE_PARENT_FOLDER -> R.layout.item_parent_folder

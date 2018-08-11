@@ -24,14 +24,14 @@ class MainUiModuleTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        `when`(activity.findViewById(android.R.id.content)).thenReturn(view)
+        `when`(activity.findViewById<View>(android.R.id.content)).thenReturn(view)
         module = MainUiModule(activity)
     }
 
     @Test
     fun shouldProvideCorrectLogView() {
         val logView = mock(ScoresLog::class.java)
-        `when`(view.findViewById(R.id.log_view)).thenReturn(logView)
+        `when`(view.findViewById<View>(R.id.log_view)).thenReturn(logView)
         assertThat(module.provideLogView()).isEqualTo(logView)
     }
 }
