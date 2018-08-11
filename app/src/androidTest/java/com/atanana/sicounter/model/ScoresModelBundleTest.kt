@@ -28,18 +28,18 @@ class ScoresModelBundleTest : AndroidTestCase() {
         assertEquals(hashMapOf(
                 Pair(0, Score("test 1", 10)),
                 Pair(1, Score("test 2", -20))
-        ), bundle.getSerializable(KEY_SCORES) as HashMap<Int, Score>)
+        ), bundle.getSerializable(KEY_SCORES) as TreeMap<Int, Score>)
     }
 
     fun testRestoreInformation() {
         val model = ScoresModel(empty(), HistoryModel(ScoreHistoryFormatter(context)))
         val playersSubscriber = model.newPlayersObservable.test()
 
+        val treeMap = TreeMap<Int, Score>()
+        treeMap[0] = Score("test 1", 40)
+        treeMap[1] = Score("test 2", -50)
         val bundle = Bundle()
-        bundle.putSerializable(KEY_SCORES, hashMapOf(
-                Pair(0, Score("test 1", 40)),
-                Pair(1, Score("test 2", -50))
-        ))
+        bundle.putSerializable(KEY_SCORES, treeMap)
         bundle.putStringArrayList(KEY_HISTORY, arrayListOf("test 1 history", "test 2 history"))
         model.restore(bundle)
 

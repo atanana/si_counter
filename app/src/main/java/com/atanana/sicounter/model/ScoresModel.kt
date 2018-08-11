@@ -24,23 +24,23 @@ open class ScoresModel(newPlayersNames: Observable<String>, private val historyM
         get() = playerScores.values.toList()
 
     init {
-        newPlayersNames.subscribe({ newPlayer ->
+        newPlayersNames.subscribe { newPlayer ->
             val newScore = Score(newPlayer, 0)
             val newId = playerScores.size
             playerScores.put(newId, newScore)
             historyModel.onPlayerAdded(newPlayer)
             newPlayers.onNext(Pair(newScore, newId))
-        })
+        }
     }
 
     open fun subscribeToScoreActions(actions: Observable<ScoreAction>) {
-        actions.subscribe({ action ->
+        actions.subscribe { action ->
             val oldScore = playerScores[action.id] ?: throw UnknownId(action.id)
             val newScore = oldScore.copy(score = oldScore.score + action.absolutePrice)
             playerScores[action.id] = newScore
             historyModel.onScoreAction(action, playerNameById(action.id))
             updatedPlayers.onNext(Pair(newScore, action.id))
-        })
+        }
     }
 
     private fun playerNameById(id: Int): String {
@@ -66,7 +66,7 @@ open class ScoresModel(newPlayersNames: Observable<String>, private val historyM
     fun reset() {
         for ((id, score) in playerScores) {
             val newScore = score.copy(score = 0)
-            playerScores.put(id, newScore)
+            playerScores[id] = newScore
             updatedPlayers.onNext(Pair(newScore, id))
         }
         historyModel.reset()
