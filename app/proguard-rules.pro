@@ -29,3 +29,8 @@
 
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
+
+-dontwarn ch.qos.logback.core.net.**
+-dontwarn com.google.common.**
+-dontwarn com.google.errorprone.**
+-dontwarn org.slf4j.**
