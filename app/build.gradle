@@ -35,11 +35,11 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.18.0'
+    testCompile 'org.mockito:mockito-core:2.21.0'
     testCompile 'org.assertj:assertj-core:3.10.0'
 
     androidTestCompile 'junit:junit:4.12'
-    androidTestCompile 'org.mockito:mockito-core:2.18.0'
+    androidTestCompile 'org.mockito:mockito-core:2.21.0'
     androidTestCompile 'com.crittercism.dexmaker:dexmaker:1.4'
     androidTestCompile 'com.crittercism.dexmaker:dexmaker-mockito:1.4'
     androidTestCompile 'com.crittercism.dexmaker:dexmaker-dx:1.4'
@@ -48,20 +48,20 @@ dependencies {
     compile 'com.android.support:appcompat-v7:27.1.1'
     compile 'com.android.support:design:27.1.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'io.reactivex.rxjava2:rxkotlin:2.0.3'
+    compile 'io.reactivex.rxjava2:rxkotlin:2.3.0'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    compile 'com.google.guava:guava:24.1-android'
+    compile 'com.google.guava:guava:26.0-android'
     compile 'gun0912.ted:tedpermission:1.0.3'
 
     compile 'org.slf4j:slf4j-api:1.7.25'
-    compile 'com.github.tony19:logback-android-core:1.1.1-5'
+    compile 'com.github.tony19:logback-android-core:1.1.1-6'
     compile('com.github.tony19:logback-android-classic:1.1.1-5') {
         exclude group: 'com.google.android', module: 'android'
     }
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
 
-    compile 'com.google.dagger:dagger:2.15'
-    kapt 'com.google.dagger:dagger-compiler:2.15'
+    compile 'com.google.dagger:dagger:2.17'
+    kapt 'com.google.dagger:dagger-compiler:2.17'
 }
 repositories {
     mavenCentral()
