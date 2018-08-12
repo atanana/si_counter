@@ -3,7 +3,6 @@ package com.atanana.sicounter.view.player_control
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
-import android.util.AttributeSet
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -20,9 +19,9 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 @Suppress("LeakingThis")
-open class PlayerControl(context: Context?, attrs: AttributeSet?) : LinearLayout(context, attrs) {
-    private var playerName: TextView = TextView(context)
-    private var playerScore: TextView = TextView(context)
+open class PlayerControl(context: Context) : LinearLayout(context, null, 0) {
+    private val playerName: TextView = TextView(context)
+    private val playerScore: TextView = TextView(context)
     private val addScore: Button = Button(context)
     private val subtractScore: Button = Button(context)
     private val _scoreActions = PublishSubject.create<ScoreAction>()
@@ -33,20 +32,23 @@ open class PlayerControl(context: Context?, attrs: AttributeSet?) : LinearLayout
     init {
         orientation = LinearLayout.VERTICAL
 
-        playerName.textAlignment = View.TEXT_ALIGNMENT_CENTER
-        playerName.typeface = Typeface.DEFAULT_BOLD
-        playerName.setSingleLine(true)
+        style(playerName)
         addView(playerName)
 
         addScore.text = "+"
         addView(addScore)
 
-        playerScore.textAlignment = View.TEXT_ALIGNMENT_CENTER
-        playerScore.typeface = Typeface.DEFAULT_BOLD
+        style(playerScore)
         addView(playerScore)
 
         subtractScore.text = "-"
         addView(subtractScore)
+    }
+
+    private fun style(view: TextView) {
+        view.textAlignment = View.TEXT_ALIGNMENT_CENTER
+        view.typeface = Typeface.DEFAULT_BOLD
+        view.setSingleLine(true)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
