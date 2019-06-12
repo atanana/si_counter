@@ -7,12 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.R
-import com.atanana.sicounter.helpers.HistoryReportHelper
 import com.atanana.sicounter.model.ScoresModel
-import com.atanana.sicounter.model.log.SaveLogModel
 import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.ScoresLog
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
@@ -22,7 +19,6 @@ import dagger.Provides
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import org.apache.commons.io.FileUtils
 import javax.inject.Named
 
 @Module
@@ -115,25 +111,6 @@ class MainUiModule(private val activity: MainActivity) {
                     playerName.text.clear()
                     clearViewFromParent(playerName)
                 }
-    }
-
-    @Provides
-    @MainScope
-    @Named("saveResultsDialog")
-    fun provideSaveResultsDialog(saveLogModel: SaveLogModel,
-                                 saveToFileView: SaveToFileView,
-                                 historyReportHelper: HistoryReportHelper): AlertDialog.Builder {
-        return AlertDialog.Builder(activity)
-                .setTitle(R.string.save_results_title)
-                .setCancelable(true)
-                .setView(saveToFileView)
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    val report = historyReportHelper.createReport()
-                    FileUtils.writeLines(saveLogModel.logFile, report)
-                    Toast.makeText(activity, R.string.file_saved_message, Toast.LENGTH_SHORT).show()
-                    clearViewFromParent(saveToFileView)
-                }
-                .setOnCancelListener { clearViewFromParent(saveToFileView) }
     }
 
     @Provides

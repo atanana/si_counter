@@ -60,14 +60,12 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'com.google.guava:guava:26.0-android'
-    implementation 'gun0912.ted:tedpermission:1.0.3'
 
     implementation 'org.slf4j:slf4j-api:1.7.25'
     implementation 'com.github.tony19:logback-android-core:1.1.1-6'
     implementation('com.github.tony19:logback-android-classic:1.1.1-5') {
         exclude group: 'com.google.android', module: 'android'
     }
-    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
 
     implementation 'com.google.dagger:dagger:2.17'
     kapt 'com.google.dagger:dagger-compiler:2.17'
