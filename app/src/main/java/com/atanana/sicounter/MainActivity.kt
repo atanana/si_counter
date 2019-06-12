@@ -1,5 +1,7 @@
 package com.atanana.sicounter
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
@@ -13,6 +15,7 @@ import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.MainUiPresenter
+import com.atanana.sicounter.presenter.SaveFilePresenter
 import com.atanana.sicounter.presenter.ScoresPresenter
 import javax.inject.Inject
 
@@ -34,13 +37,16 @@ open class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var scoresPresenter: ScoresPresenter
 
+    @Inject
+    lateinit var saveFilePresenter: SaveFilePresenter
+
     lateinit var mainUiPresenter: MainUiPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar?
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         val mainComponent = App.graph.mainComponent(LogModule(), ScoresModule(), MainUiModule(this))
@@ -69,5 +75,13 @@ open class MainActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
         mainUiPresenter.restoreFromBundle(savedInstanceState)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == SaveFilePresenter.REQUEST_CODE_SAVE_FILE && resultCode == Activity.RESULT_OK && data != null) {
+            saveFilePresenter.saveReport(data.data)
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 }

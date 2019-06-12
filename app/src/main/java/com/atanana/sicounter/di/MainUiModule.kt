@@ -32,6 +32,10 @@ class MainUiModule(private val activity: MainActivity) {
 
     @Provides
     @MainScope
+    fun provideActivity(): MainActivity = activity
+
+    @Provides
+    @MainScope
     fun provideLogView(): ScoresLog {
         return mainView.findViewById(R.id.log_view) as ScoresLog
     }
@@ -76,7 +80,7 @@ class MainUiModule(private val activity: MainActivity) {
                 .setTitle(R.string.reset_title)
                 .setCancelable(true)
                 .setMessage(R.string.reset_message)
-                .setPositiveButton(R.string.yes, { _, _ -> scoresModel.reset() })
+                .setPositiveButton(R.string.yes) { _, _ -> scoresModel.reset() }
                 .setNegativeButton(R.string.no, null)
     }
 
@@ -88,7 +92,7 @@ class MainUiModule(private val activity: MainActivity) {
                 .setTitle(R.string.close_title)
                 .setCancelable(true)
                 .setMessage(R.string.close_message)
-                .setPositiveButton(R.string.yes, { _, _ -> activity.finish() })
+                .setPositiveButton(R.string.yes) { _, _ -> activity.finish() }
                 .setNegativeButton(R.string.no, null)
     }
 
@@ -102,11 +106,11 @@ class MainUiModule(private val activity: MainActivity) {
                 .setTitle(R.string.player_name_title)
                 .setCancelable(true)
                 .setView(playerName)
-                .setPositiveButton(R.string.ok, { _, _ ->
+                .setPositiveButton(R.string.ok) { _, _ ->
                     newPlayers.onNext(playerName.text.toString())
                     playerName.text.clear()
                     clearViewFromParent(playerName)
-                })
+                }
                 .setOnCancelListener {
                     playerName.text.clear()
                     clearViewFromParent(playerName)
@@ -123,12 +127,12 @@ class MainUiModule(private val activity: MainActivity) {
                 .setTitle(R.string.save_results_title)
                 .setCancelable(true)
                 .setView(saveToFileView)
-                .setPositiveButton(R.string.ok, { _, _ ->
+                .setPositiveButton(R.string.ok) { _, _ ->
                     val report = historyReportHelper.createReport()
                     FileUtils.writeLines(saveLogModel.logFile, report)
                     Toast.makeText(activity, R.string.file_saved_message, Toast.LENGTH_SHORT).show()
                     clearViewFromParent(saveToFileView)
-                })
+                }
                 .setOnCancelListener { clearViewFromParent(saveToFileView) }
     }
 

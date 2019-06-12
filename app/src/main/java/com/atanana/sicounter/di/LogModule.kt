@@ -1,7 +1,7 @@
 package com.atanana.sicounter.di
 
 import android.content.Context
-import android.support.v7.app.AlertDialog
+import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.R
 import com.atanana.sicounter.fs.FileProvider
 import com.atanana.sicounter.helpers.HistoryReportHelper
@@ -19,24 +19,24 @@ import com.atanana.sicounter.view.save.SaveToFileView
 import dagger.Module
 import dagger.Provides
 import java.io.File
-import javax.inject.Named
 
 @Module
 class LogModule {
     @Provides
     @MainScope
-    fun provideSaveLogModel(context: Context, fileProvider: FileProvider, scoresModel: ScoresModel,
+    fun provideSaveLogModel(context: Context, fileProvider: FileProvider, logNameModel: LogNameModel,
                             historyModel: HistoryModel): SaveLogModel {
         val logFolder = externalAppFolder(context, fileProvider)
         LoggerConfiguration.configureLogbackDirectly(logFolder.absolutePath)
         createLogsWriter(historyModel)
 
-        val logNameModel = createLogNameModel(scoresModel)
         val logFolderModel = LogFolderModel(logFolder, fileProvider, context)
         return SaveLogModel(logNameModel, logFolderModel)
     }
 
-    fun createLogNameModel(scoresModel: ScoresModel): LogNameModel {
+    @Provides
+    @MainScope
+    fun provideLogNameModel(scoresModel: ScoresModel): LogNameModel {
         val newPlayerNames = scoresModel.newPlayersObservable.map { it.first.name }
         return LogNameModel(newPlayerNames)
     }
@@ -54,7 +54,7 @@ class LogModule {
 
     @Provides
     @MainScope
-    fun provideHistoryReportHelper(historyModel: HistoryModel, scoresModel: ScoresModel):HistoryReportHelper {
+    fun provideHistoryReportHelper(historyModel: HistoryModel, scoresModel: ScoresModel): HistoryReportHelper {
         return HistoryReportHelper(historyModel, scoresModel)
     }
 
@@ -63,8 +63,10 @@ class LogModule {
     fun provideSaveLogPresenter(saveLogModel: SaveLogModel,
                                 saveToFileView: SaveToFileView,
                                 context: Context,
-                                @Named("saveResultsDialog") dialogBuilder: AlertDialog.Builder): SaveFilePresenter {
-        return SaveFilePresenter(context, saveLogModel, saveToFileView, dialogBuilder)
+                                activity: MainActivity,
+                                historyReportHelper: HistoryReportHelper,
+                                logNameModel: LogNameModel): SaveFilePresenter {
+        return SaveFilePresenter(context, saveLogModel, saveToFileView, activity, historyReportHelper, logNameModel)
     }
 
     @Provides
