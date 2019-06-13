@@ -23,10 +23,12 @@ class ScoresModule {
 
     @Provides
     @MainScope
-    fun provideScoresPresenter(scoresModel: ScoresModel,
-                               @Named("scoresContainer") scoresContainer: ViewGroup,
-                               priceSelector: PriceSelector,
-                               playerControlFabric: PlayerControlFabric): ScoresPresenter {
+    fun provideScoresPresenter(
+        scoresModel: ScoresModel,
+        @Named("scoresContainer") scoresContainer: ViewGroup,
+        priceSelector: PriceSelector,
+        playerControlFabric: PlayerControlFabric
+    ): ScoresPresenter {
         return ScoresPresenter(scoresModel, scoresContainer, playerControlFabric, priceSelector)
     }
 

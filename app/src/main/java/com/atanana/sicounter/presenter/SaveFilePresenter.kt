@@ -1,6 +1,5 @@
 package com.atanana.sicounter.presenter
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -8,30 +7,20 @@ import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.R
 import com.atanana.sicounter.helpers.HistoryReportHelper
 import com.atanana.sicounter.model.log.LogNameModel
-import com.atanana.sicounter.model.log.SaveLogModel
-import com.atanana.sicounter.view.save.SaveToFileView
 
-open class SaveFilePresenter(private val context: Context,
-                             model: SaveLogModel,
-                             view: SaveToFileView,
-                             private val activity: MainActivity,
-                             private val historyReportHelper: HistoryReportHelper,
-                             private val logNameModel: LogNameModel) {
-    init {
-        view.setFoldersProvider(model.foldersObservable)
-        view.setCurrentFolderProvider(model.currentFolderObservable)
-        view.setFilenameProvider(model.logName)
-        model.errorsObservable.subscribe { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
-        model.setFolderProvider(view.selectedFolder)
-    }
+open class SaveFilePresenter(
+    private val activity: MainActivity,
+    private val historyReportHelper: HistoryReportHelper,
+    private val logNameModel: LogNameModel
+) {
 
     open fun showDialog() {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
-                .apply {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_TITLE, logNameModel.fullFilename)
-                    addCategory(Intent.CATEGORY_OPENABLE)
-                }
+            .apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TITLE, logNameModel.fullFilename)
+                addCategory(Intent.CATEGORY_OPENABLE)
+            }
         activity.startActivityForResult(intent, REQUEST_CODE_SAVE_FILE)
     }
 

@@ -4,14 +4,17 @@ import android.os.Bundle
 import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.exceptions.UnknownId
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import io.reactivex.Observable
 import java.util.*
 
 const val KEY_SCORES: String = "scores_model_scores"
 
-open class ScoresModel(newPlayersNames: Observable<String>, private val historyModel: HistoryModel) {
+open class ScoresModel(
+    newPlayersNames: Observable<String>,
+    private val historyModel: HistoryModel
+) {
     private var playerScores: TreeMap<Int, Score> = TreeMap()
     private val newPlayers: Subject<Pair<Score, Int>> = PublishSubject.create()
     private val updatedPlayers: Subject<Pair<Score, Int>> = PublishSubject.create()

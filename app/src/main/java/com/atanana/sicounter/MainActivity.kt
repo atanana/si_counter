@@ -60,7 +60,9 @@ open class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return mainUiPresenter.toolbarItemSelected(item.itemId) || return super.onOptionsItemSelected(item)
+        return mainUiPresenter.toolbarItemSelected(item.itemId) || return super.onOptionsItemSelected(
+            item
+        )
     }
 
     override fun onBackPressed() {

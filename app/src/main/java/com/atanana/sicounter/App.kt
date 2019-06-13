@@ -14,7 +14,7 @@ class App : Application() {
         super.onCreate()
 
         graph = DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .build()
+            .appModule(AppModule(this))
+            .build()
     }
 }

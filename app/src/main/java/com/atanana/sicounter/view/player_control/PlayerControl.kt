@@ -64,13 +64,28 @@ open class PlayerControl(context: Context) : LinearLayout(context, null, 0) {
         playerName.textSize = labelTextSize
         playerName.layout(0, top, width, top + labelHeight)
 
-        addScore.layout(slotPadding, top + labelHeight, width - slotPadding, top + labelHeight + slotHeight)
+        addScore.layout(
+            slotPadding,
+            top + labelHeight,
+            width - slotPadding,
+            top + labelHeight + slotHeight
+        )
         addScore.textSize = buttonTextSize
 
-        playerScore.layout(0, top + labelHeight + slotHeight, width, top + labelHeight * 2 + slotHeight)
+        playerScore.layout(
+            0,
+            top + labelHeight + slotHeight,
+            width,
+            top + labelHeight * 2 + slotHeight
+        )
         playerScore.textSize = labelTextSize
 
-        subtractScore.layout(slotPadding, top + labelHeight * 2 + slotHeight, width - slotPadding, bottom)
+        subtractScore.layout(
+            slotPadding,
+            top + labelHeight * 2 + slotHeight,
+            width - slotPadding,
+            bottom
+        )
         subtractScore.textSize = buttonTextSize
     }
 

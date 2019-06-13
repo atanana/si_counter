@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.atanana.sicounter.R
 
 open class ScoresLog(context: Context, attrs: AttributeSet?) : ScrollView(context, attrs) {
-    private val logText: TextView by lazy { findViewById(R.id.log_text) as TextView }
+    private val logText: TextView by lazy { findViewById<TextView>(R.id.log_text) }
 
     init {
         LayoutInflater.from(context).inflate(R.layout.scores_log, this)

@@ -49,17 +49,17 @@ class MainUiPresenter(mainComponent: MainComponent) {
     }
 
     fun toolbarItemSelected(itemId: Int): Boolean =
-            when (itemId) {
-                R.id.mi_new -> {
-                    resetDialog.show()
-                    true
-                }
-                R.id.mi_save -> {
-                    saveLogPresenter.showDialog()
-                    true
-                }
-                else -> false
+        when (itemId) {
+            R.id.mi_new -> {
+                resetDialog.show()
+                true
             }
+            R.id.mi_save -> {
+                saveLogPresenter.showDialog()
+                true
+            }
+            else -> false
+        }
 
     fun onBackPressed() {
         exitDialog.show()

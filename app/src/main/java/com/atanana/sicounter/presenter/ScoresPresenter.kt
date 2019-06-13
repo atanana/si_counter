@@ -9,10 +9,12 @@ import com.atanana.sicounter.view.player_control.PlayerControl
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import io.reactivex.subjects.PublishSubject
 
-class ScoresPresenter(model: ScoresModel,
-                      private val scoresContainer: ViewGroup,
-                      private val playerControlFabric: PlayerControlFabric,
-                      priceSelector: PriceSelector) {
+class ScoresPresenter(
+    model: ScoresModel,
+    private val scoresContainer: ViewGroup,
+    private val playerControlFabric: PlayerControlFabric,
+    priceSelector: PriceSelector
+) {
     private val scoreViews: MutableMap<Int, PlayerControl> = hashMapOf()
     private val scoreActions = PublishSubject.create<ScoreAction>()
 
@@ -33,7 +35,7 @@ class ScoresPresenter(model: ScoresModel,
         })
 
         model.subscribeToScoreActions(
-                scoreActions.map { action -> action.copy(price = priceSelector.price) }
+            scoreActions.map { action -> action.copy(price = priceSelector.price) }
         )
     }
 }

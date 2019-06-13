@@ -10,7 +10,10 @@ open class PlayerControlFabric(private val context: Context) {
 
     open fun build(): PlayerControl {
         val playerControl = PlayerControl(ContextThemeWrapper(context, R.style.AppTheme))
-        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
         layoutParams.marginEnd = margin
         playerControl.layoutParams = layoutParams
         return playerControl

@@ -13,7 +13,6 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.ScoresLog
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
-import com.atanana.sicounter.view.save.SaveToFileView
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
@@ -73,11 +72,11 @@ class MainUiModule(private val activity: MainActivity) {
     @Named("resetDialog")
     fun provideResetDialog(scoresModel: ScoresModel): AlertDialog.Builder {
         return AlertDialog.Builder(activity)
-                .setTitle(R.string.reset_title)
-                .setCancelable(true)
-                .setMessage(R.string.reset_message)
-                .setPositiveButton(R.string.yes) { _, _ -> scoresModel.reset() }
-                .setNegativeButton(R.string.no, null)
+            .setTitle(R.string.reset_title)
+            .setCancelable(true)
+            .setMessage(R.string.reset_message)
+            .setPositiveButton(R.string.yes) { _, _ -> scoresModel.reset() }
+            .setNegativeButton(R.string.no, null)
     }
 
     @Provides
@@ -85,11 +84,11 @@ class MainUiModule(private val activity: MainActivity) {
     @Named("exitDialog")
     fun provideExitDialog(): AlertDialog.Builder {
         return AlertDialog.Builder(activity)
-                .setTitle(R.string.close_title)
-                .setCancelable(true)
-                .setMessage(R.string.close_message)
-                .setPositiveButton(R.string.yes) { _, _ -> activity.finish() }
-                .setNegativeButton(R.string.no, null)
+            .setTitle(R.string.close_title)
+            .setCancelable(true)
+            .setMessage(R.string.close_message)
+            .setPositiveButton(R.string.yes) { _, _ -> activity.finish() }
+            .setNegativeButton(R.string.no, null)
     }
 
     @Provides
@@ -99,24 +98,18 @@ class MainUiModule(private val activity: MainActivity) {
         val playerName = EditText(activity)
         playerName.setSingleLine(true)
         return AlertDialog.Builder(activity)
-                .setTitle(R.string.player_name_title)
-                .setCancelable(true)
-                .setView(playerName)
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    newPlayers.onNext(playerName.text.toString())
-                    playerName.text.clear()
-                    clearViewFromParent(playerName)
-                }
-                .setOnCancelListener {
-                    playerName.text.clear()
-                    clearViewFromParent(playerName)
-                }
-    }
-
-    @Provides
-    @MainScope
-    fun provideSaveToFileView(): SaveToFileView {
-        return SaveToFileView(activity, null)
+            .setTitle(R.string.player_name_title)
+            .setCancelable(true)
+            .setView(playerName)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                newPlayers.onNext(playerName.text.toString())
+                playerName.text.clear()
+                clearViewFromParent(playerName)
+            }
+            .setOnCancelListener {
+                playerName.text.clear()
+                clearViewFromParent(playerName)
+            }
     }
 
     private fun clearViewFromParent(view: View) {
