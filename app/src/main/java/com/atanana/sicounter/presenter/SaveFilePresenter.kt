@@ -2,6 +2,7 @@ package com.atanana.sicounter.presenter
 
 import android.content.Intent
 import android.net.Uri
+import android.support.annotation.StringRes
 import android.widget.Toast
 import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.R
@@ -25,16 +26,26 @@ open class SaveFilePresenter(
     }
 
     fun saveReport(uri: Uri?) {
-        //todo show message
-        uri ?: return
-        val outputStream = activity.contentResolver.openOutputStream(uri) ?: return
+        val result = trySaveReport(uri)
+        val message = if (result) R.string.file_saved_message else R.string.file_save_error
+        showToast(message)
+    }
+
+    private fun trySaveReport(uri: Uri?): Boolean {
+        uri ?: return false
+        val outputStream = activity.contentResolver.openOutputStream(uri) ?: return false
         outputStream.use { stream ->
             val report = historyReportHelper.createReport().joinToString("\n")
             val writer = stream.writer()
             writer.write(report)
             writer.flush()
         }
-        Toast.makeText(activity, R.string.file_saved_message, Toast.LENGTH_SHORT).show()
+
+        return true
+    }
+
+    private fun showToast(@StringRes message: Int) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
     companion object {
