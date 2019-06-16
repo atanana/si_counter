@@ -9,6 +9,8 @@
     <!--menu-->
     <string name="mi_save">Сохранить результаты в файл</string>
     <string name="mi_new">Сбросить результаты</string>
+    <string name="mi_history">Посмотреть историю</string>
+    <string name="mi_clear_history">Очистить историю</string>
 
     <!--prices-->
     <string name="price_10">10</string>
@@ -52,6 +54,5 @@
     <string name="file_save_error">Не удалось сохранить файл!</string>
 
     <!--history-->
-    <string name="clear_history_action">Очистить историю</string>
     <string name="history_title">История</string>
 </resources>

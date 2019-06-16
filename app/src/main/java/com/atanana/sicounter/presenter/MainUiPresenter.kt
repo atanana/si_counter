@@ -1,9 +1,12 @@
 package com.atanana.sicounter.presenter
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AlertDialog
 import android.widget.Button
+import com.atanana.sicounter.HistoryActivity
+import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.R
 import com.atanana.sicounter.di.MainComponent
 import com.atanana.sicounter.model.HistoryModel
@@ -36,6 +39,9 @@ class MainUiPresenter(mainComponent: MainComponent) {
     @field:[Inject Named("addDivider")]
     lateinit var addDivider: Button
 
+    @Inject
+    lateinit var activity: MainActivity
+
     init {
         mainComponent.inject(this)
 
@@ -56,6 +62,11 @@ class MainUiPresenter(mainComponent: MainComponent) {
             }
             R.id.mi_save -> {
                 saveLogPresenter.showDialog()
+                true
+            }
+            R.id.mi_history -> {
+                val intent = Intent(activity, HistoryActivity::class.java)
+                activity.startActivity(intent)
                 true
             }
             else -> false
