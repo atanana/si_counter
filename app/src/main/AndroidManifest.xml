@@ -12,11 +12,7 @@
         <activity
             android:name=".HistoryActivity"
             android:label="@string/history_title"
-            android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.atanana.sicounter.MainActivity" />
         </activity>
         <activity
             android:name=".MainActivity"

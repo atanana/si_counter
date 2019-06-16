@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import com.atanana.sicounter.di.HistoryUiModule
 import com.atanana.sicounter.presenter.HistoryPresenter
 import kotlinx.android.synthetic.main.activity_history.*
@@ -13,9 +14,12 @@ class HistoryActivity : AppCompatActivity() {
     @Inject
     lateinit var historyPresenter: HistoryPresenter
 
+    lateinit var historyView: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
+        historyView = findViewById(R.id.history_content)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val historyComponent = App.graph.historyComponent(HistoryUiModule(this))

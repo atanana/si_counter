@@ -1,17 +1,17 @@
 package com.atanana.sicounter.presenter
 
 import android.support.annotation.IdRes
-import android.widget.TextView
+import com.atanana.sicounter.HistoryActivity
 import com.atanana.sicounter.R
 import com.atanana.sicounter.fs.HistoryPersistence
 
 class HistoryPresenter(
     private val historyPersistence: HistoryPersistence,
-    private val historyView: TextView
+    private val activity: HistoryActivity
 ) {
     fun loadHistory() {
         val history = historyPersistence.getAllHistory()
-        historyView.text = history
+        activity.historyView.text = history
     }
 
     fun onOptionsItemSelected(@IdRes itemId: Int?): Boolean =
@@ -19,6 +19,10 @@ class HistoryPresenter(
             R.id.mi_clear_history -> {
                 clearHistory()
                 loadHistory()
+                true
+            }
+            android.R.id.home -> {
+                activity.onBackPressed()
                 true
             }
             else -> false
