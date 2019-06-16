@@ -17,6 +17,10 @@ class HistoryPersistence(private val context: Context) {
             it.bufferedReader().readText()
         }
 
+    fun clearHistory() {
+        context.deleteFile(FILENAME)
+    }
+
     companion object {
         const val FILENAME = "history.txt"
     }

@@ -1,8 +1,6 @@
 package com.atanana.sicounter.di
 
-import android.content.Context
 import com.atanana.sicounter.MainActivity
-import com.atanana.sicounter.fs.HistoryPersistence
 import com.atanana.sicounter.helpers.HistoryReportHelper
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
@@ -44,9 +42,4 @@ class LogModule {
     fun provideLogsPresenter(historyModel: HistoryModel, scoresLog: ScoresLog): LogsPresenter {
         return LogsPresenter(historyModel.historyChangesObservable, scoresLog)
     }
-
-    @Provides
-    @MainScope
-    fun provideHistoryPersistence(context: Context): HistoryPersistence =
-        HistoryPersistence(context)
 }
