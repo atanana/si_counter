@@ -49,5 +49,9 @@
     <string name="folder_label">Папка</string>
     <string name="file_label">Файл</string>
     <string name="file_saved_message">Файл сохранён!</string>
-    <string name="file_save_error">Не удолось сохранить файл!</string>
+    <string name="file_save_error">Не удалось сохранить файл!</string>
+
+    <!--history-->
+    <string name="clear_history_action">Очистить историю</string>
+    <string name="history_title">История</string>
 </resources>
