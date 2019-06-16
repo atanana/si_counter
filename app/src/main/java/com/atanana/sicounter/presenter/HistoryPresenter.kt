@@ -11,7 +11,7 @@ class HistoryPresenter(
 ) {
     fun loadHistory() {
         val history = historyPersistence.getAllHistory()
-        activity.historyView.text = history
+        activity.historyView.text = history.asReversed().joinToString("\n")
     }
 
     fun onOptionsItemSelected(@IdRes itemId: Int?): Boolean =
