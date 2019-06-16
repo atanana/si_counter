@@ -1,10 +1,10 @@
 package com.atanana.sicounter
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.atanana.sicounter.di.HistoryUiModule
 import com.atanana.sicounter.presenter.HistoryPresenter
 import kotlinx.android.synthetic.main.activity_history.*

@@ -1,6 +1,6 @@
 package com.atanana.sicounter.presenter
 
-import android.support.annotation.IdRes
+import androidx.annotation.IdRes
 import com.atanana.sicounter.HistoryActivity
 import com.atanana.sicounter.R
 import com.atanana.sicounter.fs.HistoryPersistence

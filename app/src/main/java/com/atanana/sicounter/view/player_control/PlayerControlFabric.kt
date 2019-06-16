@@ -1,8 +1,8 @@
 package com.atanana.sicounter.view.player_control
 
 import android.content.Context
-import android.support.v7.view.ContextThemeWrapper
 import android.widget.LinearLayout
+import androidx.appcompat.view.ContextThemeWrapper
 import com.atanana.sicounter.R
 
 open class PlayerControlFabric(private val context: Context) {

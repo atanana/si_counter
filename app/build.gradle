@@ -13,12 +13,12 @@ android {
         }
     }
 
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "com.atanana.sicounter"
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 5
         versionName "1.1.1"
     }
@@ -59,8 +59,8 @@ dependencies {
     androidTestImplementation 'com.crittercism.dexmaker:dexmaker-dx:1.4'
     androidTestImplementation 'org.hamcrest:hamcrest-library:2.1'
 
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'com.google.android.material:material:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'

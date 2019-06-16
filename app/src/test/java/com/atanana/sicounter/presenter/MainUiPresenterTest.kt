@@ -1,14 +1,14 @@
 package com.atanana.sicounter.presenter
 
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v7.app.AlertDialog
 import android.view.View
 import android.widget.Button
+import androidx.appcompat.app.AlertDialog
 import com.atanana.sicounter.R
 import com.atanana.sicounter.di.MainComponent
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test

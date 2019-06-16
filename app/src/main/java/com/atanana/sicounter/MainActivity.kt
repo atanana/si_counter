@@ -3,11 +3,10 @@ package com.atanana.sicounter
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.atanana.sicounter.di.LogModule
 import com.atanana.sicounter.di.MainUiModule
 import com.atanana.sicounter.di.ScoresModule
@@ -17,6 +16,7 @@ import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.MainUiPresenter
 import com.atanana.sicounter.presenter.SaveFilePresenter
 import com.atanana.sicounter.presenter.ScoresPresenter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import javax.inject.Inject
 
 open class MainActivity : AppCompatActivity() {

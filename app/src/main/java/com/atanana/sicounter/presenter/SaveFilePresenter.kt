@@ -2,8 +2,8 @@ package com.atanana.sicounter.presenter
 
 import android.content.Intent
 import android.net.Uri
-import android.support.annotation.StringRes
 import android.widget.Toast
+import androidx.annotation.StringRes
 import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.R
 import com.atanana.sicounter.helpers.HistoryReportHelper
