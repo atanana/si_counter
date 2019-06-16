@@ -2,6 +2,8 @@ package com.atanana.sicounter
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import com.atanana.sicounter.di.HistoryUiModule
 import com.atanana.sicounter.presenter.HistoryPresenter
 import kotlinx.android.synthetic.main.activity_history.*
@@ -20,4 +22,12 @@ class HistoryActivity : AppCompatActivity() {
         historyComponent.inject(this)
         historyPresenter.loadHistory()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_history, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
+        historyPresenter.onOptionsItemSelected(item?.itemId) || super.onOptionsItemSelected(item)
 }

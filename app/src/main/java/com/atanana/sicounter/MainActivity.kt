@@ -59,11 +59,8 @@ open class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return mainUiPresenter.toolbarItemSelected(item.itemId) || return super.onOptionsItemSelected(
-            item
-        )
-    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        mainUiPresenter.toolbarItemSelected(item.itemId) || super.onOptionsItemSelected(item)
 
     override fun onBackPressed() {
         mainUiPresenter.onBackPressed()

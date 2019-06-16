@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.atanana.sicounter.HistoryActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/mi_clear_history"
         android:orderInCategory="100"
         android:title="@string/mi_clear_history"
         app:showAsAction="never" />

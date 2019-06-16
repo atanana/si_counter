@@ -13,8 +13,12 @@ class HistoryPersistence(private val context: Context) {
     }
 
     fun getAllHistory(): String =
-        context.openFileInput(FILENAME).use {
-            it.bufferedReader().readText()
+        try {
+            context.openFileInput(FILENAME).use {
+                it.bufferedReader().readText()
+            }
+        } catch (e: Exception) {
+            ""
         }
 
     fun clearHistory() {

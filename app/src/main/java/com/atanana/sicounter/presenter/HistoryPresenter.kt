@@ -1,6 +1,8 @@
 package com.atanana.sicounter.presenter
 
+import android.support.annotation.IdRes
 import android.widget.TextView
+import com.atanana.sicounter.R
 import com.atanana.sicounter.fs.HistoryPersistence
 
 class HistoryPresenter(
@@ -12,7 +14,17 @@ class HistoryPresenter(
         historyView.text = history
     }
 
-    fun clearHistory() {
+    fun onOptionsItemSelected(@IdRes itemId: Int?): Boolean =
+        when (itemId) {
+            R.id.mi_clear_history -> {
+                clearHistory()
+                loadHistory()
+                true
+            }
+            else -> false
+        }
+
+    private fun clearHistory() {
         historyPersistence.clearHistory()
     }
 }
