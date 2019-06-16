@@ -2,6 +2,7 @@ package com.atanana.sicounter.di
 
 import android.content.Context
 import android.view.ViewGroup
+import com.atanana.sicounter.fs.HistoryPersistence
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.ScoreHistoryFormatter
@@ -34,7 +35,10 @@ class ScoresModule {
 
     @Provides
     @MainScope
-    fun provideHistoryModel(context: Context): HistoryModel {
-        return HistoryModel(ScoreHistoryFormatter(context))
+    fun provideHistoryModel(
+        context: Context,
+        historyPersistence: HistoryPersistence
+    ): HistoryModel {
+        return HistoryModel(ScoreHistoryFormatter(context), historyPersistence)
     }
 }
