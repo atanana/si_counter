@@ -5,6 +5,6 @@ import io.reactivex.Observable
 
 class LogsPresenter(historyChanges: Observable<String>, private val logsView: ScoresLog) {
     init {
-        historyChanges.subscribe({ change -> logsView.append(change + "\n") })
+        historyChanges.subscribe { change -> logsView.append(change + "\n") }
     }
 }

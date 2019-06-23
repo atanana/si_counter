@@ -19,20 +19,20 @@ class ScoresPresenter(
     private val scoreActions = PublishSubject.create<ScoreAction>()
 
     init {
-        model.newPlayersObservable.subscribe({ (score, id) ->
+        model.newPlayersObservable.subscribe { (score, id) ->
             val playerControl = playerControlFabric.build()
             playerControl.update(score, id)
-            playerControl.scoreActions.subscribe({ scoreAction ->
+            playerControl.scoreActions.subscribe { scoreAction ->
                 scoreActions.onNext(scoreAction)
-            })
+            }
             scoresContainer.addView(playerControl)
             scoreViews[id] = playerControl
-        })
+        }
 
-        model.updatedPlayersObservable.subscribe({ (score, id) ->
+        model.updatedPlayersObservable.subscribe { (score, id) ->
             val playerControl = scoreViews[id] ?: throw UnknownId(id)
             playerControl.update(score)
-        })
+        }
 
         model.subscribeToScoreActions(
             scoreActions.map { action -> action.copy(price = priceSelector.price) }

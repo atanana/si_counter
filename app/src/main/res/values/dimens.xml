@@ -7,13 +7,6 @@
 
     <dimen name="price_separator_margin">10dp</dimen>
 
-    <dimen name="player_name_size">32sp</dimen>
-    <dimen name="player_score_size">24sp</dimen>
-
     <!--player control-->
     <dimen name="player_control_padding">10dp</dimen>
-    <dimen name="player_control_score_button_size">75dp</dimen>
-
-    <!--save file-->
-    <dimen name="save_file_padding">10dp</dimen>
 </resources>

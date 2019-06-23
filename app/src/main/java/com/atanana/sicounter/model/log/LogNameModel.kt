@@ -19,7 +19,7 @@ class LogNameModel(newPlayersNameProvider: Observable<String>) {
             if (_filename == DEFAULT_FILE_NAME) {
                 _filename = it
             } else {
-                _filename += "-" + it
+                _filename += "-$it"
             }
 
             notifyFilenameChanged()

@@ -30,7 +30,7 @@ open class ScoresModel(
         newPlayersNames.subscribe { newPlayer ->
             val newScore = Score(newPlayer, 0)
             val newId = playerScores.size
-            playerScores.put(newId, newScore)
+            playerScores[newId] = newScore
             historyModel.onPlayerAdded(newPlayer)
             newPlayers.onNext(Pair(newScore, newId))
         }
