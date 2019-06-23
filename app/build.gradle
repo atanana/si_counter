@@ -50,6 +50,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.28.2'
+    testImplementation 'org.mockito:mockito-inline:2.28.2'
     testImplementation 'org.assertj:assertj-core:3.12.2'
 
     androidTestImplementation 'junit:junit:4.12'
