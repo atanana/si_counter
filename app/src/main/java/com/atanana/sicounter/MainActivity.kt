@@ -40,7 +40,7 @@ open class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var saveFilePresenter: SaveFilePresenter
 
-    lateinit var mainUiPresenter: MainUiPresenter
+    private lateinit var mainUiPresenter: MainUiPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

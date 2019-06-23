@@ -96,7 +96,7 @@ class MainUiModule(private val activity: MainActivity) {
     @Named("addPlayerDialog")
     fun provideAddPlayerDialog(): AlertDialog.Builder {
         val playerName = EditText(activity)
-        playerName.setSingleLine(true)
+        playerName.isSingleLine = true
         return AlertDialog.Builder(activity)
             .setTitle(R.string.player_name_title)
             .setCancelable(true)

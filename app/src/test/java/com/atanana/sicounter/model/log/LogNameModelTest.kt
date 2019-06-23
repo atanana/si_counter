@@ -7,9 +7,9 @@ import org.junit.Before
 import org.junit.Test
 
 class LogNameModelTest {
-    lateinit var model: LogNameModel
+    private lateinit var model: LogNameModel
 
-    lateinit var newPlayersSubject: Subject<String>
+    private lateinit var newPlayersSubject: Subject<String>
 
     @Before
     fun setUp() {

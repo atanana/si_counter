@@ -14,7 +14,7 @@ import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 
 class ScoreHistoryFormatterTest {
-    lateinit var formatter: ScoreHistoryFormatter
+    private lateinit var formatter: ScoreHistoryFormatter
 
     @Mock
     lateinit var context: Context

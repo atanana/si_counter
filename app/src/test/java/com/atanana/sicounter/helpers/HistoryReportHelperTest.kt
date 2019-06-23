@@ -4,18 +4,15 @@ import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.model.HISTORY_SEPARATOR
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
-import org.mockito.junit.MockitoJUnit
-import org.mockito.junit.MockitoRule
-
-import org.mockito.Mockito.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
 class HistoryReportHelperTest {
-    lateinit var helper:HistoryReportHelper
+    private lateinit var helper: HistoryReportHelper
 
     @Mock
     lateinit var scoresModel:ScoresModel

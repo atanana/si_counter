@@ -37,8 +37,8 @@ class ScoresPresenterTest {
     @Mock
     lateinit var priceSelector: PriceSelector
 
-    lateinit var newPlayers: PublishSubject<Pair<Score, Int>>
-    lateinit var updatedPlayers: PublishSubject<Pair<Score, Int>>
+    private lateinit var newPlayers: PublishSubject<Pair<Score, Int>>
+    private lateinit var updatedPlayers: PublishSubject<Pair<Score, Int>>
 
     @Before
     fun setUp() {

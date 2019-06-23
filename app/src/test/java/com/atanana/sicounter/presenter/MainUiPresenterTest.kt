@@ -23,7 +23,7 @@ private fun <T> anyObject(): T {
 }
 
 class MainUiPresenterTest {
-    lateinit var presenter: MainUiPresenter
+    private lateinit var presenter: MainUiPresenter
 
     @Mock
     lateinit var component: MainComponent

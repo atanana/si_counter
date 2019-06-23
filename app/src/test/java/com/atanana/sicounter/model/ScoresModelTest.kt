@@ -18,9 +18,9 @@ class ScoresModelTest {
     @Mock
     lateinit var historyModel: HistoryModel
 
-    lateinit var newPlayers: Subject<String>
+    private lateinit var newPlayers: Subject<String>
 
-    lateinit var model: ScoresModel
+    private lateinit var model: ScoresModel
 
     @Before
     fun setUp() {

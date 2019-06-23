@@ -2,6 +2,7 @@ package com.atanana.sicounter.model
 
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType
+import com.atanana.sicounter.fs.HistoryPersistence
 import com.atanana.sicounter.presenter.ScoreHistoryFormatter
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -19,12 +20,15 @@ class HistoryModelTest {
     @Mock
     lateinit var formatter: ScoreHistoryFormatter
 
-    lateinit var model: HistoryModel
+    @Mock
+    lateinit var historyPersistence: HistoryPersistence
+
+    private lateinit var model: HistoryModel
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        model = HistoryModel(formatter)
+        model = HistoryModel(formatter, historyPersistence)
     }
 
     @Test
