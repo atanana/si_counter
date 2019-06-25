@@ -4,52 +4,40 @@ import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.model.HISTORY_SEPARATOR
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
+import io.kotlintest.matchers.collections.shouldStartWith
+import io.kotlintest.shouldBe
+import io.kotlintest.specs.StringSpec
+import io.mockk.every
+import io.mockk.mockk
 
-class HistoryReportHelperTest {
-    private lateinit var helper: HistoryReportHelper
-
-    @Mock
-    lateinit var scoresModel:ScoresModel
-
-    @Mock
-    lateinit var historyModel:HistoryModel
-
-    @Before
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-
-        helper = HistoryReportHelper(historyModel, scoresModel)
-
-        `when`(historyModel.history).thenReturn(emptyList())
-        `when`(scoresModel.scores).thenReturn(emptyList())
+class HistoryReportHelperTest : StringSpec({
+    val scoresModel: ScoresModel = mockk {
+        every { scores } returns emptyList()
     }
 
-    @Test
-    fun shouldPutHistoryInReport() {
-        `when`(historyModel.history).thenReturn(listOf("test 1", "test 2", "test 3"))
-        assertThat(helper.createReport()).startsWith("test 1", "test 2", "test 3")
+    val historyModel: HistoryModel = mockk {
+        every { history } returns emptyList()
     }
 
-    @Test
-    fun shouldAddSeparator() {
-        `when`(historyModel.history).thenReturn(listOf("test 1", "test 2", "test 3"))
+    val helper = HistoryReportHelper(historyModel, scoresModel)
+
+    "should put history in report" {
+        every { historyModel.history } returns listOf("test 1", "test 2", "test 3")
+        helper.createReport() shouldStartWith listOf("test 1", "test 2", "test 3")
+    }
+
+    "should add separator" {
+        every { historyModel.history } returns listOf("test 1", "test 2", "test 3")
         val report = helper.createReport()
-        assertThat(report[report.size - 2]).isEqualTo(HISTORY_SEPARATOR)
+        report[report.size - 2] shouldBe HISTORY_SEPARATOR
     }
 
-    @Test
-    fun shouldAddTotalSection() {
-        `when`(scoresModel.scores).thenReturn(listOf(
-                Score("test 1", -10),
-                Score("test 2", 20),
-                Score("test 3", 40)
-        ))
-        assertThat(helper.createReport().last()).isEqualTo("test 1 -> -10, test 2 -> 20, test 3 -> 40")
+    "should add total section" {
+        every { scoresModel.scores } returns listOf(
+            Score("test 1", -10),
+            Score("test 2", 20),
+            Score("test 3", 40)
+        )
+        helper.createReport().last() shouldBe "test 1 -> -10, test 2 -> 20, test 3 -> 40"
     }
-}
+})
