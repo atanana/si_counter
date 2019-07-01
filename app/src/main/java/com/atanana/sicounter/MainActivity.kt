@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.MainUiPresenter
@@ -25,7 +24,6 @@ open class MainActivity : AppCompatActivity() {
 
     private val logsPresenter: LogsPresenter by currentScope.inject()
     private val scoresModel: ScoresModel by currentScope.inject()
-    private val historyModel: HistoryModel by currentScope.inject()
     private val scoresPresenter: ScoresPresenter by currentScope.inject()
     private val saveFilePresenter: SaveFilePresenter by currentScope.inject()
 
