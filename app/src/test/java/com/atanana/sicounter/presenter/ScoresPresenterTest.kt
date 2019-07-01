@@ -123,7 +123,7 @@ class ScoresPresenterTest {
     }
 
     private fun createPresenter() {
-        presenter = ScoresPresenter(model, container, fabric, priceSelector)
+        presenter = ScoresPresenter(model, fabric)
     }
 
     private fun mockPlayerControl(): PlayerControl {

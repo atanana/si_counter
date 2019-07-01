@@ -27,11 +27,7 @@ open class ScoresModel(
     open val scores: List<Score>
         get() = playerScores.values.toList()
 
-    init {
-
-    }
-
-    open fun subscribeToScoreActions(actions: Observable<ScoreAction>) {
+    open fun subscribeToScoreActions(actions: Observable<ScoreAction>): Disposable =
         actions.subscribe { action ->
             val oldScore = playerScores[action.id] ?: throw UnknownId(action.id)
             val newScore = oldScore.copy(score = oldScore.score + action.absolutePrice)
@@ -39,7 +35,6 @@ open class ScoresModel(
             historyModel.onScoreAction(action, playerNameById(action.id))
             updatedPlayers.onNext(Pair(newScore, action.id))
         }
-    }
 
     fun connect(): Disposable =
         newPlayersNames.subscribe { newPlayer ->

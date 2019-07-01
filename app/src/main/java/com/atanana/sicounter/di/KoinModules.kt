@@ -37,28 +37,12 @@ val mainModule = module {
             LogNameModel(newPlayerNames)
         }
         scoped { ScoresModel(get(named("newPlayers")), get()) }
-        scoped { ScoresPresenter(get(), get(named("scoresContainer")), get(), get()) }
+        scoped { ScoresPresenter(get(), get()) }
         scoped { HistoryModel(get(), get()) }
         scoped { PlayerControlFabric(get()) }
         scoped { ScoreHistoryFormatter(get()) }
         scoped(named("newPlayers")) { PublishSubject.create<String>() }
 
-//        scoped {
-//            val activity = get<MainActivity>()
-//            activity.findViewById<View>(android.R.id.content)
-//        }
-//        scoped {
-//            val mainView = get<View>()
-//            mainView.findViewById<ScoresLog>(R.id.log_view)
-//        }
-//        scoped {
-//            val mainView = get<View>()
-//            mainView.findViewById<PriceSelector>(R.id.price_selector)
-//        }
-//        scoped(named("scoresContainer")) {
-//            val mainView = get<View>()
-//            mainView.findViewById<ViewGroup>(R.id.scores_container)
-//        }
         factory { (router: MainRouter) ->
             MainUiPresenter(
                 get(named("newPlayers")),

@@ -46,11 +46,13 @@ open class MainActivity : AppCompatActivity() {
             mainUiPresenter.addDivider()
         }
 
-        disposable = CompositeDisposable()
-        disposable.addAll(
-            logsPresenter.connect(log_view),
-            scoresModel.connect()
-        )
+        disposable = CompositeDisposable().apply {
+            addAll(
+                logsPresenter.connect(log_view),
+                scoresModel.connect(),
+                scoresPresenter.connect(price_selector, scores_container)
+            )
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
