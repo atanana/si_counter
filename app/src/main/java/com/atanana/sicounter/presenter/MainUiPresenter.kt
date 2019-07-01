@@ -2,7 +2,7 @@ package com.atanana.sicounter.presenter
 
 import android.content.Context
 import android.os.Bundle
-import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.atanana.sicounter.R
 import com.atanana.sicounter.model.HistoryModel
@@ -22,14 +22,13 @@ class MainUiPresenter(
     }
 
     fun showAddPlayerDialog(context: Context) {
-        val playerName = EditText(context)
-        playerName.setSingleLine()
         AlertDialog.Builder(context)
             .setTitle(R.string.player_name_title)
             .setCancelable(true)
-            .setView(playerName)
-            .setPositiveButton(R.string.ok) { _, _ ->
-                newPlayers.onNext(playerName.text.toString())
+            .setView(R.layout.dialog_add_player)
+            .setPositiveButton(R.string.ok) { dialog, _ ->
+                val playerName = (dialog as AlertDialog).findViewById<TextView>(R.id.name)
+                newPlayers.onNext(playerName!!.text.toString())
             }
             .show()
     }
