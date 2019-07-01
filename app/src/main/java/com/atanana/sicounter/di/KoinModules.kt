@@ -39,7 +39,8 @@ val mainModule = module {
         scoped { ScoresModel(get(named("newPlayers")), get()) }
         scoped { ScoresPresenter(get(), get(named("scoresContainer")), get(), get()) }
         scoped { HistoryModel(get(), get()) }
-        scoped { PlayerControlFabric(androidContext()) }
+        scoped { PlayerControlFabric(get()) }
+        scoped { ScoreHistoryFormatter(get()) }
         scoped(named("newPlayers")) { PublishSubject.create<String>() }
 
 //        scoped {
