@@ -32,6 +32,6 @@ class HistoryActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
-        historyPresenter.onOptionsItemSelected(item?.itemId) || super.onOptionsItemSelected(item)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        historyPresenter.onOptionsItemSelected(item.itemId) || super.onOptionsItemSelected(item)
 }
