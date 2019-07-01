@@ -14,17 +14,18 @@ import com.atanana.sicounter.presenter.MainUiPresenter
 import com.atanana.sicounter.presenter.SaveFilePresenter
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.atanana.sicounter.router.MainRouter
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import org.koin.androidx.scope.currentScope
 import org.koin.core.parameter.parametersOf
 
 open class MainActivity : AppCompatActivity() {
+    private lateinit var disposable: CompositeDisposable
+
     private val logsPresenter: LogsPresenter by currentScope.inject()
     private val scoresModel: ScoresModel by currentScope.inject()
     private val historyModel: HistoryModel by currentScope.inject()
-    private val fabButton: FloatingActionButton by currentScope.inject()
     private val scoresPresenter: ScoresPresenter by currentScope.inject()
     private val saveFilePresenter: SaveFilePresenter by currentScope.inject()
 
@@ -44,6 +45,12 @@ open class MainActivity : AppCompatActivity() {
         add_divider.setOnClickListener {
             mainUiPresenter.addDivider()
         }
+
+        disposable = CompositeDisposable()
+        disposable.addAll(
+            logsPresenter.connect(log_view),
+            scoresModel.connect()
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -74,5 +81,10 @@ open class MainActivity : AppCompatActivity() {
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 }

@@ -5,6 +5,7 @@ import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.exceptions.UnknownId
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import java.util.*
@@ -12,7 +13,7 @@ import java.util.*
 const val KEY_SCORES: String = "scores_model_scores"
 
 open class ScoresModel(
-    newPlayersNames: Observable<String>,
+    private val newPlayersNames: Observable<String>,
     private val historyModel: HistoryModel
 ) {
     private var playerScores: TreeMap<Int, Score> = TreeMap()
@@ -27,13 +28,7 @@ open class ScoresModel(
         get() = playerScores.values.toList()
 
     init {
-        newPlayersNames.subscribe { newPlayer ->
-            val newScore = Score(newPlayer, 0)
-            val newId = playerScores.size
-            playerScores[newId] = newScore
-            historyModel.onPlayerAdded(newPlayer)
-            newPlayers.onNext(Pair(newScore, newId))
-        }
+
     }
 
     open fun subscribeToScoreActions(actions: Observable<ScoreAction>) {
@@ -45,6 +40,15 @@ open class ScoresModel(
             updatedPlayers.onNext(Pair(newScore, action.id))
         }
     }
+
+    fun connect(): Disposable =
+        newPlayersNames.subscribe { newPlayer ->
+            val newScore = Score(newPlayer, 0)
+            val newId = playerScores.size
+            playerScores[newId] = newScore
+            historyModel.onPlayerAdded(newPlayer)
+            newPlayers.onNext(Pair(newScore, newId))
+        }
 
     private fun playerNameById(id: Int): String {
         return playerScores[id]?.name ?: throw UnknownId(id)

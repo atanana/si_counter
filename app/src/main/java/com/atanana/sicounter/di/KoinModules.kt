@@ -30,7 +30,7 @@ val mainModule = module {
         scoped { SaveFilePresenter(get(), get(), get()) }
         scoped {
             val historyChanges = get<HistoryModel>().historyChangesObservable
-            LogsPresenter(historyChanges, get())
+            LogsPresenter(historyChanges)
         }
         scoped {
             val newPlayerNames = get<ScoresModel>().newPlayersObservable.map { it.first.name }

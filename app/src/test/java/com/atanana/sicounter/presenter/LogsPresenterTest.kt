@@ -19,7 +19,7 @@ class LogsPresenterTest {
 
     @Test
     fun shouldReflectHistoryChangesInView() {
-        LogsPresenter(Observable.just("test 1", "test 2", "test 3"), scoresLog)
+        LogsPresenter(Observable.just("test 1", "test 2", "test 3"))
         verify(scoresLog).append("test 1\n")
         verify(scoresLog).append("test 2\n")
         verify(scoresLog).append("test 3\n")
