@@ -39,7 +39,7 @@ open class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         add_player.setOnClickListener {
-            mainUiPresenter.showAddPlayerDialog()
+            mainUiPresenter.showAddPlayerDialog(this)
         }
         add_divider.setOnClickListener {
             mainUiPresenter.addDivider()
@@ -52,10 +52,10 @@ open class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        mainUiPresenter.toolbarItemSelected(item.itemId) || super.onOptionsItemSelected(item)
+        mainUiPresenter.toolbarItemSelected(item.itemId, this) || super.onOptionsItemSelected(item)
 
     override fun onBackPressed() {
-        mainUiPresenter.onBackPressed()
+        mainUiPresenter.onBackPressed(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

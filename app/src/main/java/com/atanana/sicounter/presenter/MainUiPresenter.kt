@@ -15,14 +15,13 @@ class MainUiPresenter(
     private val saveLogPresenter: SaveFilePresenter,
     private val scoresModel: ScoresModel,
     private val historyModel: HistoryModel,
-    private val router: MainRouter,
-    private val context: Context
+    private val router: MainRouter
 ) {
     fun addDivider() {
         historyModel.addDivider()
     }
 
-    fun showAddPlayerDialog() {
+    fun showAddPlayerDialog(context: Context) {
         val playerName = EditText(context)
         playerName.setSingleLine()
         AlertDialog.Builder(context)
@@ -32,12 +31,13 @@ class MainUiPresenter(
             .setPositiveButton(R.string.ok) { _, _ ->
                 newPlayers.onNext(playerName.text.toString())
             }
+            .show()
     }
 
-    fun toolbarItemSelected(itemId: Int): Boolean =
+    fun toolbarItemSelected(itemId: Int, context: Context): Boolean =
         when (itemId) {
             R.id.mi_new -> {
-                showResetDialog()
+                showResetDialog(context)
                 true
             }
             R.id.mi_save -> {
@@ -51,7 +51,7 @@ class MainUiPresenter(
             else -> false
         }
 
-    private fun showResetDialog() {
+    private fun showResetDialog(context: Context) {
         AlertDialog.Builder(context)
             .setTitle(R.string.reset_title)
             .setCancelable(true)
@@ -61,7 +61,7 @@ class MainUiPresenter(
             .show()
     }
 
-    fun onBackPressed() {
+    fun onBackPressed(context: Context) {
         AlertDialog.Builder(context)
             .setTitle(R.string.close_title)
             .setCancelable(true)

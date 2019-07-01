@@ -63,7 +63,7 @@ val mainModule = module {
             MainUiPresenter(
                 get(named("newPlayers")),
                 get(), get(), get(),
-                router, get()
+                router
             )
         }
     }
