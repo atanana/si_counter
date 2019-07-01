@@ -1,14 +1,13 @@
 package com.atanana.sicounter.presenter
 
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
-import com.atanana.sicounter.HistoryActivity
-import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.R
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
+import com.atanana.sicounter.router.MainRouter
 import io.reactivex.subjects.PublishSubject
 
 class MainUiPresenter(
@@ -16,16 +15,17 @@ class MainUiPresenter(
     private val saveLogPresenter: SaveFilePresenter,
     private val scoresModel: ScoresModel,
     private val historyModel: HistoryModel,
-    private val activity: MainActivity
+    private val router: MainRouter,
+    private val context: Context
 ) {
     fun addDivider() {
         historyModel.addDivider()
     }
 
     fun showAddPlayerDialog() {
-        val playerName = EditText(activity)
+        val playerName = EditText(context)
         playerName.setSingleLine()
-        AlertDialog.Builder(activity)
+        AlertDialog.Builder(context)
             .setTitle(R.string.player_name_title)
             .setCancelable(true)
             .setView(playerName)
@@ -41,19 +41,18 @@ class MainUiPresenter(
                 true
             }
             R.id.mi_save -> {
-                saveLogPresenter.showDialog()
+                router.showSaveFileDialog(saveLogPresenter.filename)
                 true
             }
             R.id.mi_history -> {
-                val intent = Intent(activity, HistoryActivity::class.java)
-                activity.startActivity(intent)
+                router.openHistory()
                 true
             }
             else -> false
         }
 
     private fun showResetDialog() {
-        AlertDialog.Builder(activity)
+        AlertDialog.Builder(context)
             .setTitle(R.string.reset_title)
             .setCancelable(true)
             .setMessage(R.string.reset_message)
@@ -63,11 +62,11 @@ class MainUiPresenter(
     }
 
     fun onBackPressed() {
-        AlertDialog.Builder(activity)
+        AlertDialog.Builder(context)
             .setTitle(R.string.close_title)
             .setCancelable(true)
             .setMessage(R.string.close_message)
-            .setPositiveButton(R.string.yes) { _, _ -> activity.finish() }
+            .setPositiveButton(R.string.yes) { _, _ -> router.close() }
             .setNegativeButton(R.string.no, null)
             .show()
     }

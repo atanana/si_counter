@@ -13,6 +13,7 @@ import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.MainUiPresenter
 import com.atanana.sicounter.presenter.SaveFilePresenter
 import com.atanana.sicounter.presenter.ScoresPresenter
+import com.atanana.sicounter.router.MainRouter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -27,7 +28,8 @@ open class MainActivity : AppCompatActivity() {
     private val scoresPresenter: ScoresPresenter by currentScope.inject()
     private val saveFilePresenter: SaveFilePresenter by currentScope.inject()
 
-    private val mainUiPresenter: MainUiPresenter by currentScope.inject { parametersOf(this@MainActivity) }
+    private val mainRouter: MainRouter by currentScope.inject { parametersOf(this) }
+    private val mainUiPresenter: MainUiPresenter by currentScope.inject { parametersOf(mainRouter) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +69,7 @@ open class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == SaveFilePresenter.REQUEST_CODE_SAVE_FILE && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == MainRouter.REQUEST_CODE_SAVE_FILE && resultCode == Activity.RESULT_OK && data != null) {
             saveFilePresenter.saveReport(data.data)
         } else {
             super.onActivityResult(requestCode, resultCode, data)
