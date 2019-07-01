@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.atanana.sicounter.model.ScoresModel
+import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.MainUiPresenter
 import com.atanana.sicounter.presenter.SaveFilePresenter
@@ -26,6 +27,7 @@ open class MainActivity : AppCompatActivity() {
     private val scoresModel: ScoresModel by currentScope.inject()
     private val scoresPresenter: ScoresPresenter by currentScope.inject()
     private val saveFilePresenter: SaveFilePresenter by currentScope.inject()
+    private val logNameModel: LogNameModel by currentScope.inject()
 
     private val mainRouter: MainRouter by currentScope.inject { parametersOf(this) }
     private val mainUiPresenter: MainUiPresenter by currentScope.inject { parametersOf(mainRouter) }
@@ -48,7 +50,8 @@ open class MainActivity : AppCompatActivity() {
             addAll(
                 logsPresenter.connect(log_view),
                 scoresModel.connect(),
-                scoresPresenter.connect(price_selector, scores_container)
+                scoresPresenter.connect(price_selector, scores_container),
+                logNameModel.connect()
             )
         }
     }

@@ -1,21 +1,22 @@
 package com.atanana.sicounter.model.log
 
 import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.ReplaySubject
 
 const val DEFAULT_FILE_NAME = "empty"
 const val EXTENSION = ".txt"
 
-class LogNameModel(newPlayersNameProvider: Observable<String>) {
+class LogNameModel(private val newPlayersNameProvider: Observable<String>) {
     private var _filename = DEFAULT_FILE_NAME
 
     private val filenameSubject: ReplaySubject<String> = ReplaySubject.createWithSize(1)
     val filenameObservable: Observable<String> = filenameSubject
 
-    init {
+    fun connect(): Disposable {
         notifyFilenameChanged()
 
-        newPlayersNameProvider.subscribe {
+        return newPlayersNameProvider.subscribe {
             if (_filename == DEFAULT_FILE_NAME) {
                 _filename = it
             } else {
