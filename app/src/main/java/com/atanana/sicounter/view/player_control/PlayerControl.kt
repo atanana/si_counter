@@ -49,7 +49,7 @@ class PlayerControl(context: Context) : LinearLayout(context, null, 0) {
     private fun style(view: TextView) {
         view.textAlignment = View.TEXT_ALIGNMENT_CENTER
         view.typeface = Typeface.DEFAULT_BOLD
-        view.isSingleLine = true
+        view.setSingleLine()
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

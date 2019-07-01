@@ -2,62 +2,42 @@ package com.atanana.sicounter.presenter
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.atanana.sicounter.HistoryActivity
 import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.R
-import com.atanana.sicounter.di.MainComponent
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import javax.inject.Inject
-import javax.inject.Named
+import io.reactivex.subjects.PublishSubject
 
-class MainUiPresenter(mainComponent: MainComponent) {
-    @field:[Inject Named("exitDialog")]
-    lateinit var exitDialog: AlertDialog.Builder
+class MainUiPresenter(
+    private val newPlayers: PublishSubject<String>,
+    private val saveLogPresenter: SaveFilePresenter,
+    private val scoresModel: ScoresModel,
+    private val historyModel: HistoryModel,
+    private val activity: MainActivity
+) {
+    fun addDivider() {
+        historyModel.addDivider()
+    }
 
-    @field:[Inject Named("resetDialog")]
-    lateinit var resetDialog: AlertDialog.Builder
-
-    @field:[Inject Named("addPlayerDialog")]
-    lateinit var addPlayerDialog: AlertDialog.Builder
-
-    @Inject
-    lateinit var fabButton: FloatingActionButton
-
-    @Inject
-    lateinit var saveLogPresenter: SaveFilePresenter
-
-    @Inject
-    lateinit var scoresModel: ScoresModel
-
-    @Inject
-    lateinit var historyModel: HistoryModel
-
-    @field:[Inject Named("addDivider")]
-    lateinit var addDivider: Button
-
-    @Inject
-    lateinit var activity: MainActivity
-
-    init {
-        mainComponent.inject(this)
-
-        fabButton.setOnClickListener {
-            addPlayerDialog.show()
-        }
-
-        addDivider.setOnClickListener {
-            historyModel.addDivider()
-        }
+    fun showAddPlayerDialog() {
+        val playerName = EditText(activity)
+        playerName.setSingleLine()
+        AlertDialog.Builder(activity)
+            .setTitle(R.string.player_name_title)
+            .setCancelable(true)
+            .setView(playerName)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                newPlayers.onNext(playerName.text.toString())
+            }
     }
 
     fun toolbarItemSelected(itemId: Int): Boolean =
         when (itemId) {
             R.id.mi_new -> {
-                resetDialog.show()
+                showResetDialog()
                 true
             }
             R.id.mi_save -> {
@@ -72,8 +52,24 @@ class MainUiPresenter(mainComponent: MainComponent) {
             else -> false
         }
 
+    private fun showResetDialog() {
+        AlertDialog.Builder(activity)
+            .setTitle(R.string.reset_title)
+            .setCancelable(true)
+            .setMessage(R.string.reset_message)
+            .setPositiveButton(R.string.yes) { _, _ -> scoresModel.reset() }
+            .setNegativeButton(R.string.no, null)
+            .show()
+    }
+
     fun onBackPressed() {
-        exitDialog.show()
+        AlertDialog.Builder(activity)
+            .setTitle(R.string.close_title)
+            .setCancelable(true)
+            .setMessage(R.string.close_message)
+            .setPositiveButton(R.string.yes) { _, _ -> activity.finish() }
+            .setNegativeButton(R.string.no, null)
+            .show()
     }
 
     fun saveToBundle(outState: Bundle) {

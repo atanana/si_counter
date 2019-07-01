@@ -5,14 +5,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.atanana.sicounter.di.HistoryUiModule
 import com.atanana.sicounter.presenter.HistoryPresenter
 import kotlinx.android.synthetic.main.activity_history.*
-import javax.inject.Inject
+import org.koin.androidx.scope.currentScope
 
 class HistoryActivity : AppCompatActivity() {
-    @Inject
-    lateinit var historyPresenter: HistoryPresenter
+    private val historyPresenter: HistoryPresenter by currentScope.inject()
 
     lateinit var historyView: TextView
 
@@ -22,8 +20,6 @@ class HistoryActivity : AppCompatActivity() {
         historyView = findViewById(R.id.history_content)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val historyComponent = App.graph.historyComponent(HistoryUiModule(this))
-        historyComponent.inject(this)
         historyPresenter.loadHistory()
     }
 

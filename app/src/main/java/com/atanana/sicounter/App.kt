@@ -1,22 +1,21 @@
 package com.atanana.sicounter
 
 import android.app.Application
-import com.atanana.sicounter.di.AppComponent
-import com.atanana.sicounter.di.AppModule
-import com.atanana.sicounter.di.DaggerAppComponent
+import com.atanana.sicounter.di.mainModule
 import io.reactivex.plugins.RxJavaPlugins
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 class App : Application() {
-    companion object {
-        lateinit var graph: AppComponent
-    }
-
     override fun onCreate() {
         super.onCreate()
 
-        graph = DaggerAppComponent.builder()
-            .appModule(AppModule(this))
-            .build()
+        startKoin {
+            androidLogger()
+            androidContext(this@App)
+            modules(mainModule)
+        }
 
         if (!BuildConfig.DEBUG) {
             RxJavaPlugins.setErrorHandler { }

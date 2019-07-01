@@ -7,9 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.atanana.sicounter.di.LogModule
-import com.atanana.sicounter.di.MainUiModule
-import com.atanana.sicounter.di.ScoresModule
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.presenter.LogsPresenter
@@ -17,30 +14,20 @@ import com.atanana.sicounter.presenter.MainUiPresenter
 import com.atanana.sicounter.presenter.SaveFilePresenter
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import javax.inject.Inject
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
+import org.koin.androidx.scope.currentScope
+import org.koin.core.parameter.parametersOf
 
 open class MainActivity : AppCompatActivity() {
-    @Suppress("unused")
-    @Inject
-    lateinit var logsPresenter: LogsPresenter
+    private val logsPresenter: LogsPresenter by currentScope.inject()
+    private val scoresModel: ScoresModel by currentScope.inject()
+    private val historyModel: HistoryModel by currentScope.inject()
+    private val fabButton: FloatingActionButton by currentScope.inject()
+    private val scoresPresenter: ScoresPresenter by currentScope.inject()
+    private val saveFilePresenter: SaveFilePresenter by currentScope.inject()
 
-    @Inject
-    lateinit var scoresModel: ScoresModel
-
-    @Inject
-    lateinit var historyModel: HistoryModel
-
-    @Inject
-    lateinit var fabButton: FloatingActionButton
-
-    @Suppress("unused")
-    @Inject
-    lateinit var scoresPresenter: ScoresPresenter
-
-    @Inject
-    lateinit var saveFilePresenter: SaveFilePresenter
-
-    private lateinit var mainUiPresenter: MainUiPresenter
+    private val mainUiPresenter: MainUiPresenter by currentScope.inject { parametersOf(this@MainActivity) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +36,12 @@ open class MainActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val mainComponent = App.graph.mainComponent(LogModule(), ScoresModule(), MainUiModule(this))
-        mainComponent.inject(this)
-        mainUiPresenter = MainUiPresenter(mainComponent)
+        add_player.setOnClickListener {
+            mainUiPresenter.showAddPlayerDialog()
+        }
+        add_divider.setOnClickListener {
+            mainUiPresenter.addDivider()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
