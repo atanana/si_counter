@@ -1,10 +1,9 @@
-package com.atanana.sicounter.presenter
+package com.atanana.sicounter.screens.history
 
 import android.widget.TextView
 import androidx.annotation.IdRes
 import com.atanana.sicounter.R
 import com.atanana.sicounter.fs.HistoryPersistence
-import com.atanana.sicounter.router.HistoryRouter
 
 class HistoryPresenter(
     private val historyPersistence: HistoryPersistence,

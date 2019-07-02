@@ -1,4 +1,4 @@
-package com.atanana.sicounter.router
+package com.atanana.sicounter.screens.history
 
 import android.app.Activity
 

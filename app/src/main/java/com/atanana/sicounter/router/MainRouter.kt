@@ -2,7 +2,7 @@ package com.atanana.sicounter.router
 
 import android.app.Activity
 import android.content.Intent
-import com.atanana.sicounter.HistoryActivity
+import com.atanana.sicounter.screens.history.HistoryActivity
 
 class MainRouter(private val activity: Activity) {
     fun showSaveFileDialog(filename: String) {

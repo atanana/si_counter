@@ -1,6 +1,6 @@
 package com.atanana.sicounter.di
 
-import com.atanana.sicounter.HistoryActivity
+import com.atanana.sicounter.screens.history.HistoryActivity
 import com.atanana.sicounter.MainActivity
 import com.atanana.sicounter.fs.HistoryPersistence
 import com.atanana.sicounter.helpers.HistoryReportHelper
@@ -8,8 +8,9 @@ import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.presenter.*
-import com.atanana.sicounter.router.HistoryRouter
+import com.atanana.sicounter.screens.history.HistoryRouter
 import com.atanana.sicounter.router.MainRouter
+import com.atanana.sicounter.screens.history.HistoryPresenter
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.koin.androidContext

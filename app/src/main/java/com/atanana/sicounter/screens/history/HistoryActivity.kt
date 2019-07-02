@@ -1,13 +1,10 @@
-package com.atanana.sicounter
+package com.atanana.sicounter.screens.history
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.atanana.sicounter.presenter.HistoryPresenter
-import com.atanana.sicounter.router.HistoryRouter
-import com.atanana.sicounter.router.MainRouter
+import com.atanana.sicounter.R
 import kotlinx.android.synthetic.main.activity_history.*
 import kotlinx.android.synthetic.main.content_history.*
 import org.koin.androidx.scope.currentScope

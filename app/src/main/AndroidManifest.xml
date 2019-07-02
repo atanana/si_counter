@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".HistoryActivity"
+            android:name=".screens.history.HistoryActivity"
             android:label="@string/history_title"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
