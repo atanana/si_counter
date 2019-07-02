@@ -75,9 +75,6 @@ dependencies {
     implementation "org.koin:koin-core:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
-
-    implementation 'com.google.dagger:dagger:2.23.1'
-    kapt 'com.google.dagger:dagger-compiler:2.23.1'
 }
 repositories {
     mavenCentral()
