@@ -8,6 +8,7 @@ import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.presenter.*
+import com.atanana.sicounter.router.HistoryRouter
 import com.atanana.sicounter.router.MainRouter
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import io.reactivex.subjects.PublishSubject
@@ -19,7 +20,12 @@ val mainModule = module {
     single { HistoryPersistence(androidContext()) }
 
     scope(named<HistoryActivity>()) {
-        scoped { HistoryPresenter(get(), get()) }
+        factory { (activity: HistoryActivity) ->
+            HistoryRouter(activity)
+        }
+        factory { (router: HistoryRouter) ->
+            HistoryPresenter(get(), router)
+        }
     }
 
     scope(named<MainActivity>()) {
