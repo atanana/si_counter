@@ -11,6 +11,7 @@ import com.atanana.sicounter.presenter.*
 import com.atanana.sicounter.screens.history.HistoryRouter
 import com.atanana.sicounter.router.MainRouter
 import com.atanana.sicounter.screens.history.HistoryPresenter
+import com.atanana.sicounter.screens.history.HistoryView
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.koin.androidContext
@@ -24,8 +25,8 @@ val mainModule = module {
         factory { (activity: HistoryActivity) ->
             HistoryRouter(activity)
         }
-        factory { (router: HistoryRouter) ->
-            HistoryPresenter(get(), router)
+        factory { (view: HistoryView, router: HistoryRouter) ->
+            HistoryPresenter(get(), view, router)
         }
     }
 

@@ -1,24 +1,24 @@
 package com.atanana.sicounter.screens.history
 
-import android.widget.TextView
 import androidx.annotation.IdRes
 import com.atanana.sicounter.R
 import com.atanana.sicounter.fs.HistoryPersistence
 
 class HistoryPresenter(
     private val historyPersistence: HistoryPersistence,
+    private val view: HistoryView,
     private val router: HistoryRouter
 ) {
-    fun loadHistory(historyView: TextView) {
+    fun loadHistory() {
         val history = historyPersistence.getAllHistory()
-        historyView.text = history.asReversed().joinToString("\n")
+        view.history.text = history.asReversed().joinToString("\n")
     }
 
-    fun onOptionsItemSelected(@IdRes itemId: Int?, historyView: TextView): Boolean =
+    fun onOptionsItemSelected(@IdRes itemId: Int?): Boolean =
         when (itemId) {
             R.id.mi_clear_history -> {
                 clearHistory()
-                loadHistory(historyView)
+                loadHistory()
                 true
             }
             android.R.id.home -> {
