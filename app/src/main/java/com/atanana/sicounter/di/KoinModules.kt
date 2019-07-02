@@ -12,6 +12,7 @@ import com.atanana.sicounter.screens.history.HistoryRouter
 import com.atanana.sicounter.router.MainRouter
 import com.atanana.sicounter.screens.history.HistoryPresenter
 import com.atanana.sicounter.screens.history.HistoryView
+import com.atanana.sicounter.usecases.SaveLogUseCase
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import io.reactivex.subjects.PublishSubject
 import org.koin.android.ext.koin.androidContext
@@ -35,7 +36,7 @@ val mainModule = module {
         factory { (activity: MainActivity) ->
             MainRouter(activity)
         }
-        scoped { SaveFilePresenter(get(), get()) }
+        scoped { SaveLogUseCase(get(), get()) }
         scoped {
             val historyChanges = get<HistoryModel>().historyChangesObservable
             LogsPresenter(historyChanges)
@@ -55,7 +56,7 @@ val mainModule = module {
             MainUiPresenter(
                 get(named("newPlayers")),
                 get(), get(),
-                router, get()
+                router, get(), get(), get()
             )
         }
     }

@@ -11,7 +11,7 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.MainUiPresenter
-import com.atanana.sicounter.presenter.SaveFilePresenter
+import com.atanana.sicounter.usecases.SaveLogUseCase
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.atanana.sicounter.router.MainRouter
 import io.reactivex.disposables.CompositeDisposable
@@ -26,7 +26,6 @@ open class MainActivity : AppCompatActivity() {
     private val logsPresenter: LogsPresenter by currentScope.inject()
     private val scoresModel: ScoresModel by currentScope.inject()
     private val scoresPresenter: ScoresPresenter by currentScope.inject()
-    private val saveFilePresenter: SaveFilePresenter by currentScope.inject()
     private val logNameModel: LogNameModel by currentScope.inject()
 
     private val mainRouter: MainRouter by currentScope.inject { parametersOf(this) }
@@ -80,7 +79,7 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == MainRouter.REQUEST_CODE_SAVE_FILE && resultCode == Activity.RESULT_OK && data != null) {
-            saveFilePresenter.saveReport(data.data)
+            mainUiPresenter.saveLog(data.data)
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }

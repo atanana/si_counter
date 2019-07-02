@@ -8,6 +8,7 @@ import com.atanana.sicounter.R
 import com.atanana.sicounter.di.MainComponent
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
+import com.atanana.sicounter.usecases.SaveLogUseCase
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -44,7 +45,7 @@ class MainUiPresenterTest {
     lateinit var exitDialog: AlertDialog.Builder
 
     @Mock
-    lateinit var saveLogPresenter: SaveFilePresenter
+    lateinit var saveLogPresenter: SaveLogUseCase
 
     @Mock
     lateinit var scoresModel: ScoresModel

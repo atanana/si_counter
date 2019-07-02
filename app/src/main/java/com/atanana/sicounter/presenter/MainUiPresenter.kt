@@ -1,14 +1,18 @@
 package com.atanana.sicounter.presenter
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import com.atanana.sicounter.R
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.router.MainRouter
+import com.atanana.sicounter.usecases.SaveLogUseCase
 import io.reactivex.subjects.PublishSubject
 
 class MainUiPresenter(
@@ -16,8 +20,20 @@ class MainUiPresenter(
     private val scoresModel: ScoresModel,
     private val historyModel: HistoryModel,
     private val router: MainRouter,
-    private val logNameModel: LogNameModel
+    private val logNameModel: LogNameModel,
+    private val saveLogUseCase: SaveLogUseCase,
+    private val context: Context
 ) {
+    fun saveLog(uri: Uri?) {
+        val result = saveLogUseCase.saveReport(uri)
+        val message = if (result) R.string.file_saved_message else R.string.file_save_error
+        showToast(message)
+    }
+
+    private fun showToast(@StringRes message: Int) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
     fun addDivider() {
         historyModel.addDivider()
     }
