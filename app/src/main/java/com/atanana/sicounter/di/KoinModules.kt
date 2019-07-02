@@ -35,7 +35,7 @@ val mainModule = module {
         factory { (activity: MainActivity) ->
             MainRouter(activity)
         }
-        scoped { SaveFilePresenter(get(), get(), get()) }
+        scoped { SaveFilePresenter(get(), get()) }
         scoped {
             val historyChanges = get<HistoryModel>().historyChangesObservable
             LogsPresenter(historyChanges)
@@ -54,8 +54,8 @@ val mainModule = module {
         factory { (router: MainRouter) ->
             MainUiPresenter(
                 get(named("newPlayers")),
-                get(), get(), get(),
-                router
+                get(), get(),
+                router, get()
             )
         }
     }

@@ -10,12 +10,8 @@ import com.atanana.sicounter.model.log.LogNameModel
 
 open class SaveFilePresenter(
     private val context: Context,
-    private val historyReportHelper: HistoryReportHelper,
-    private val logNameModel: LogNameModel
+    private val historyReportHelper: HistoryReportHelper
 ) {
-    val filename: String
-        get() = logNameModel.fullFilename
-
     fun saveReport(uri: Uri?) {
         val result = trySaveReport(uri)
         val message = if (result) R.string.file_saved_message else R.string.file_save_error

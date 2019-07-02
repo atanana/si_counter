@@ -7,15 +7,16 @@ import androidx.appcompat.app.AlertDialog
 import com.atanana.sicounter.R
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
+import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.router.MainRouter
 import io.reactivex.subjects.PublishSubject
 
 class MainUiPresenter(
     private val newPlayers: PublishSubject<String>,
-    private val saveLogPresenter: SaveFilePresenter,
     private val scoresModel: ScoresModel,
     private val historyModel: HistoryModel,
-    private val router: MainRouter
+    private val router: MainRouter,
+    private val logNameModel: LogNameModel
 ) {
     fun addDivider() {
         historyModel.addDivider()
@@ -40,7 +41,7 @@ class MainUiPresenter(
                 true
             }
             R.id.mi_save -> {
-                router.showSaveFileDialog(saveLogPresenter.filename)
+                router.showSaveFileDialog(logNameModel.fullFilename)
                 true
             }
             R.id.mi_history -> {
