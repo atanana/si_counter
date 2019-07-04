@@ -6,23 +6,51 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import com.atanana.sicounter.R
 import com.atanana.sicounter.helpers.HistoryReportHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.OutputStream
 
 open class SaveLogUseCase(
     private val context: Context,
     private val historyReportHelper: HistoryReportHelper
 ) {
-    fun saveReport(uri: Uri?): Boolean = trySaveReport(uri)
+    suspend fun saveReport(uri: Uri?) {
+        val result = trySaveReport(uri)
+        val message = if (result) R.string.file_saved_message else R.string.file_save_error
+        showToast(message)
+    }
 
-    private fun trySaveReport(uri: Uri?): Boolean {
+    private suspend fun trySaveReport(uri: Uri?): Boolean {
         uri ?: return false
-        val outputStream = context.contentResolver.openOutputStream(uri) ?: return false
+        val outputStream = openStream(uri) ?: return false
         outputStream.use { stream ->
-            val report = historyReportHelper.createReport().joinToString("\n")
+            val report = createReport()
+            writeReport(stream, report)
+        }
+
+        return true
+    }
+
+    private suspend fun writeReport(stream: OutputStream, report: String) {
+        withContext(Dispatchers.IO) {
             val writer = stream.writer()
             writer.write(report)
             writer.flush()
         }
+    }
 
-        return true
+    private suspend fun createReport(): String = withContext(Dispatchers.Default) {
+        historyReportHelper.createReport().joinToString("\n")
+    }
+
+    private suspend fun openStream(uri: Uri) =
+        withContext(Dispatchers.IO) {
+            context.contentResolver.openOutputStream(uri)
+        }
+
+    private suspend fun showToast(@StringRes message: Int) {
+        withContext(Dispatchers.Main) {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
     }
 }

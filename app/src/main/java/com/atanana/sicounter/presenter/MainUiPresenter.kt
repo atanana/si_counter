@@ -4,8 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
-import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import com.atanana.sicounter.R
 import com.atanana.sicounter.model.HistoryModel
@@ -21,17 +19,10 @@ class MainUiPresenter(
     private val historyModel: HistoryModel,
     private val router: MainRouter,
     private val logNameModel: LogNameModel,
-    private val saveLogUseCase: SaveLogUseCase,
-    private val context: Context
+    private val saveLogUseCase: SaveLogUseCase
 ) {
-    fun saveLog(uri: Uri?) {
-        val result = saveLogUseCase.saveReport(uri)
-        val message = if (result) R.string.file_saved_message else R.string.file_save_error
-        showToast(message)
-    }
-
-    private fun showToast(@StringRes message: Int) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    suspend fun saveLog(uri: Uri?) {
+        saveLogUseCase.saveReport(uri)
     }
 
     fun addDivider() {

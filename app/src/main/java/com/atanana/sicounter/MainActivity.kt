@@ -11,14 +11,16 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.MainUiPresenter
-import com.atanana.sicounter.usecases.SaveLogUseCase
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.atanana.sicounter.router.MainRouter
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.koin.androidx.scope.currentScope
 import org.koin.core.parameter.parametersOf
+import kotlin.coroutines.EmptyCoroutineContext
 
 open class MainActivity : AppCompatActivity() {
     private lateinit var disposable: CompositeDisposable
@@ -79,7 +81,9 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == MainRouter.REQUEST_CODE_SAVE_FILE && resultCode == Activity.RESULT_OK && data != null) {
-            mainUiPresenter.saveLog(data.data)
+            CoroutineScope(EmptyCoroutineContext).launch {
+                mainUiPresenter.saveLog(data.data)
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
