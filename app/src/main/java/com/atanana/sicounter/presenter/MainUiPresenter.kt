@@ -26,7 +26,7 @@ class MainUiPresenter(
         saveLogUseCase.saveReport(uri)
     }
 
-    fun addDivider() {
+    suspend fun addDivider() {
         historyModel.addDivider()
     }
 

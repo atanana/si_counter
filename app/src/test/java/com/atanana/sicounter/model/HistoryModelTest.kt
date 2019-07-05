@@ -33,7 +33,7 @@ class HistoryModelTest {
 
     @Test
     fun shouldNotifyAboutNewPlayersHistory() {
-        val subscriber = model.historyChangesObservable.test()
+        val subscriber = model.historyChangesChannel.test()
 
         `when`(formatter.formatNewPlayer("test 1")).thenReturn("player 1")
         `when`(formatter.formatNewPlayer("test 2")).thenReturn("player 2")
@@ -57,7 +57,7 @@ class HistoryModelTest {
 
     @Test
     fun shouldNotifyAboutUpdateScoresHistory() {
-        val subscriber = model.historyChangesObservable.test()
+        val subscriber = model.historyChangesChannel.test()
 
         `when`(formatter.formatScoreAction(anyObject(), anyObject())).thenAnswer {
             val action: ScoreAction = it.arguments[0] as ScoreAction
@@ -89,7 +89,7 @@ class HistoryModelTest {
 
     @Test
     fun shouldNotifyAboutResetScoresHistory() {
-        val subscriber = model.historyChangesObservable.test()
+        val subscriber = model.historyChangesChannel.test()
         `when`(formatter.resetMessage).thenReturn("reset message")
 
         model.reset()
@@ -106,7 +106,7 @@ class HistoryModelTest {
 
     @Test
     fun shouldNotifyAboutDivider() {
-        val subscriber = model.historyChangesObservable.test()
+        val subscriber = model.historyChangesChannel.test()
         model.addDivider()
 
         subscriber.assertValue("——————————")

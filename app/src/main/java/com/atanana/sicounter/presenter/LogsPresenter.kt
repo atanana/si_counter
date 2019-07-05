@@ -1,15 +1,18 @@
 package com.atanana.sicounter.presenter
 
 import com.atanana.sicounter.view.ScoresLog
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.withContext
 
 class LogsPresenter(
-    private val historyChanges: Observable<String>
+    private val historyChanges: ReceiveChannel<String>
 ) {
-    fun connect(logsView: ScoresLog): Disposable =
-        historyChanges
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { change -> logsView.append(change + "\n") }
+    suspend fun connect(logsView: ScoresLog) {
+        for (change in historyChanges) {
+            withContext(Dispatchers.Main) {
+                logsView.append(change + "\n")
+            }
+        }
+    }
 }

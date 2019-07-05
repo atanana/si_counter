@@ -41,7 +41,7 @@ val mainModule = module {
         }
         scoped { SaveLogUseCase(get(), get()) }
         scoped {
-            val historyChanges = get<HistoryModel>().historyChangesObservable
+            val historyChanges = get<HistoryModel>().historyChangesChannel
             LogsPresenter(historyChanges)
         }
         scoped { LogNameModel() }

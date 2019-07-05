@@ -13,7 +13,6 @@ import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.MainUiPresenter
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.atanana.sicounter.router.MainRouter
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +24,6 @@ import org.koin.core.parameter.parametersOf
 import kotlin.coroutines.EmptyCoroutineContext
 
 open class MainActivity : AppCompatActivity() {
-    private lateinit var disposable: CompositeDisposable
     private val uiScope = MainScope()
 
     private val logsPresenter: LogsPresenter by currentScope.inject()
@@ -47,16 +45,14 @@ open class MainActivity : AppCompatActivity() {
             mainUiPresenter.showAddPlayerDialog(this)
         }
         add_divider.setOnClickListener {
-            mainUiPresenter.addDivider()
+            uiScope.launch {
+                mainUiPresenter.addDivider()
+            }
         }
 
         uiScope.launch {
             scoresPresenter.connect(price_selector, scores_container)
-            disposable = CompositeDisposable().apply {
-                addAll(
-                    logsPresenter.connect(log_view)
-                )
-            }
+            logsPresenter.connect(log_view)
         }
     }
 
@@ -94,7 +90,6 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.dispose()
         uiScope.cancel()
     }
 }

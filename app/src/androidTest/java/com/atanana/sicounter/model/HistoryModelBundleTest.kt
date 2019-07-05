@@ -30,7 +30,7 @@ class HistoryModelBundleTest : AndroidTestCase() {
 
     fun testRestoreInformation() {
         val model = HistoryModel(ScoreHistoryFormatter(context))
-        val historySubscriber = model.historyChangesObservable.test()
+        val historySubscriber = model.historyChangesChannel.test()
 
         val bundle = Bundle()
         bundle.putSerializable(KEY_SCORES, hashMapOf(
