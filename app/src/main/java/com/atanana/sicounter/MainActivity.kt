@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.koin.androidx.scope.currentScope
 import org.koin.core.parameter.parametersOf
@@ -84,6 +83,6 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        uiScope.cancel()
+//        uiScope.cancel()
     }
 }

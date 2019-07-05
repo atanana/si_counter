@@ -12,7 +12,10 @@ import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.router.MainRouter
 import com.atanana.sicounter.usecases.SaveLogUseCase
 import com.atanana.sicounter.view.ScoresLog
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainUiPresenter(
     private val scoresModel: ScoresModel,
@@ -89,7 +92,7 @@ class MainUiPresenter(
             .show()
     }
 
-    suspend fun watchLogs(logsView: ScoresLog) = coroutineScope {
+    suspend fun watchLogs(logsView: ScoresLog) = withContext(Dispatchers.Default) {
         launch {
             for (change in historyModel.historyChangesChannel) {
                 withContext(Dispatchers.Main) {
