@@ -13,14 +13,14 @@ import com.atanana.sicounter.router.MainRouter
 import com.atanana.sicounter.usecases.SaveLogUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.coroutines.EmptyCoroutineContext
 
 class MainUiPresenter(
     private val scoresModel: ScoresModel,
     private val historyModel: HistoryModel,
     private val router: MainRouter,
     private val logNameModel: LogNameModel,
-    private val saveLogUseCase: SaveLogUseCase
+    private val saveLogUseCase: SaveLogUseCase,
+    private val uiScope: CoroutineScope
 ) {
     suspend fun saveLog(uri: Uri?) {
         saveLogUseCase.saveReport(uri)
@@ -44,7 +44,7 @@ class MainUiPresenter(
     }
 
     private fun addPlayer(name: String) {
-        CoroutineScope(EmptyCoroutineContext).launch {
+        uiScope.launch {
             scoresModel.addPlayer(name)
             logNameModel.onPlayerAdded(name)
         }
@@ -72,7 +72,9 @@ class MainUiPresenter(
             .setTitle(R.string.reset_title)
             .setCancelable(true)
             .setMessage(R.string.reset_message)
-            .setPositiveButton(R.string.yes) { _, _ -> scoresModel.reset() }
+            .setPositiveButton(R.string.yes) { _, _ ->
+                uiScope.launch { scoresModel.reset() }
+            }
             .setNegativeButton(R.string.no, null)
             .show()
     }

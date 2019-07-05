@@ -16,7 +16,10 @@ import com.atanana.sicounter.router.MainRouter
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import org.koin.androidx.scope.currentScope
 import org.koin.core.parameter.parametersOf
 import kotlin.coroutines.EmptyCoroutineContext
@@ -31,7 +34,7 @@ open class MainActivity : AppCompatActivity() {
     private val logNameModel: LogNameModel by currentScope.inject()
 
     private val mainRouter: MainRouter by currentScope.inject { parametersOf(this) }
-    private val mainUiPresenter: MainUiPresenter by currentScope.inject { parametersOf(mainRouter) }
+    private val mainUiPresenter: MainUiPresenter by currentScope.inject { parametersOf(mainRouter, uiScope) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,10 +51,10 @@ open class MainActivity : AppCompatActivity() {
         }
 
         uiScope.launch {
+            scoresPresenter.connect(price_selector, scores_container)
             disposable = CompositeDisposable().apply {
                 addAll(
-                    logsPresenter.connect(log_view),
-                    scoresPresenter.connect(price_selector, scores_container)
+                    logsPresenter.connect(log_view)
                 )
             }
         }

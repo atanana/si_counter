@@ -15,8 +15,11 @@ import com.atanana.sicounter.utils.UNSPECIFIED
 import com.atanana.sicounter.utils.dpToPx
 import com.atanana.sicounter.utils.pxToDp
 import com.atanana.sicounter.utils.screenSize
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
 
@@ -25,10 +28,10 @@ class PlayerControl(context: Context) : LinearLayout(context, null, 0) {
     private val playerScore: TextView = TextView(context)
     private val addScore: Button = Button(context)
     private val subtractScore: Button = Button(context)
-    private val _scoreActions = PublishSubject.create<ScoreAction>()
+    private val scoreActions = Channel<ScoreAction>()
 
-    val scoreActions: Observable<ScoreAction>
-        get() = _scoreActions
+    private val uiScope = MainScope()
+    val scoreActionsChannel: ReceiveChannel<ScoreAction> = scoreActions
 
     init {
         orientation = VERTICAL
@@ -111,8 +114,13 @@ class PlayerControl(context: Context) : LinearLayout(context, null, 0) {
         playerScore.text = score.score.toString()
 
         if (id != null) {
-            addScore.setOnClickListener { _scoreActions.onNext(ScoreAction(PLUS, id)) }
-            subtractScore.setOnClickListener { _scoreActions.onNext(ScoreAction(MINUS, id)) }
+            addScore.setOnClickListener { uiScope.launch { scoreActions.send(ScoreAction(PLUS, id)) } }
+            subtractScore.setOnClickListener { uiScope.launch { scoreActions.send(ScoreAction(MINUS, id)) } }
         }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        uiScope.cancel()
     }
 }

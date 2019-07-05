@@ -4,9 +4,6 @@ import android.os.Bundle
 import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.exceptions.UnknownId
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import java.util.*
@@ -17,23 +14,22 @@ open class ScoresModel(
     private val historyModel: HistoryModel
 ) {
     private var playerScores: TreeMap<Int, Score> = TreeMap()
-    private val updatedPlayers: Subject<Pair<Score, Int>> = PublishSubject.create()
 
-    open val updatedPlayersObservable: Observable<Pair<Score, Int>> get() = updatedPlayers
+    private val updatedPlayers: Channel<Pair<Score, Int>> = Channel()
+    val updatedPlayersChannel: ReceiveChannel<Pair<Score, Int>> = updatedPlayers
 
     private val newPlayers: Channel<Pair<Score, Int>> = Channel()
-
     val newPlayersChannel: ReceiveChannel<Pair<Score, Int>> = newPlayers
 
     open val scores: List<Score>
         get() = playerScores.values.toList()
 
-    open fun onScoreAction(action: ScoreAction) {
+    open suspend fun onScoreAction(action: ScoreAction) {
         val oldScore = playerScores[action.id] ?: throw UnknownId(action.id)
         val newScore = oldScore.copy(score = oldScore.score + action.absolutePrice)
         playerScores[action.id] = newScore
         historyModel.onScoreAction(action, playerNameById(action.id))
-        updatedPlayers.onNext(Pair(newScore, action.id))
+        updatedPlayers.send(Pair(newScore, action.id))
     }
 
     suspend fun addPlayer(newPlayer: String) {
@@ -41,7 +37,7 @@ open class ScoresModel(
         val newId = playerScores.size
         playerScores[newId] = newScore
         historyModel.onPlayerAdded(newPlayer)
-        this.newPlayers.send(Pair(newScore, newId))
+        newPlayers.send(Pair(newScore, newId))
     }
 
     private fun playerNameById(id: Int): String {
@@ -64,11 +60,11 @@ open class ScoresModel(
         }
     }
 
-    fun reset() {
+    suspend fun reset() {
         for ((id, score) in playerScores) {
             val newScore = score.copy(score = 0)
             playerScores[id] = newScore
-            updatedPlayers.onNext(Pair(newScore, id))
+            updatedPlayers.send(Pair(newScore, id))
         }
         historyModel.reset()
     }

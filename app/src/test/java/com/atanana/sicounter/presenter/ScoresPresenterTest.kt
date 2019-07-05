@@ -77,11 +77,11 @@ class ScoresPresenterTest {
     fun shouldTransferScoreActionsFromPlayerControls() {
         val playerControl1 = mockPlayerControl()
         val scoreActions1 = PublishSubject.create<ScoreAction>()
-        `when`(playerControl1.scoreActions).thenReturn(scoreActions1)
+        `when`(playerControl1.scoreActionsChannel).thenReturn(scoreActions1)
 
         val playerControl2 = mockPlayerControl()
         val scoreActions2 = PublishSubject.create<ScoreAction>()
-        `when`(playerControl2.scoreActions).thenReturn(scoreActions2)
+        `when`(playerControl2.scoreActionsChannel).thenReturn(scoreActions2)
 
         `when`(fabric.build()).thenReturn(playerControl1, playerControl2)
 
@@ -128,7 +128,7 @@ class ScoresPresenterTest {
 
     private fun mockPlayerControl(): PlayerControl {
         val playerControl = mock(PlayerControl::class.java)
-        `when`(playerControl.scoreActions).thenReturn(Observable.empty())
+        `when`(playerControl.scoreActionsChannel).thenReturn(Observable.empty())
         return playerControl
     }
 }
