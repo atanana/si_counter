@@ -21,14 +21,18 @@ open class SaveLogUseCase(
     }
 
     private suspend fun trySaveReport(uri: Uri?): Boolean {
-        uri ?: return false
-        val outputStream = openStream(uri) ?: return false
-        outputStream.use { stream ->
-            val report = createReport()
-            writeReport(stream, report)
-        }
+        return try {
+            uri ?: return false
+            val outputStream = openStream(uri) ?: return false
+            outputStream.use { stream ->
+                val report = createReport()
+                writeReport(stream, report)
+            }
 
-        return true
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     private suspend fun writeReport(stream: OutputStream, report: String) {
