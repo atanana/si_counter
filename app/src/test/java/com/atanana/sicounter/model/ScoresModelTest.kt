@@ -62,7 +62,7 @@ class ScoresModelTest {
 
         val subscriber = model.updatedPlayersObservable.test()
 
-        model.subscribeToScoreActions(just(
+        model.onScoreAction(just(
                 ScoreAction(PLUS, 10, 0),
                 ScoreAction(PLUS, 20, 0),
                 ScoreAction(MINUS, 20, 1)
@@ -79,7 +79,7 @@ class ScoresModelTest {
     fun shouldNotifyAboutUpdateScoresHistory() {
         model = ScoresModel(just("test 1", "test 2"), historyModel)
 
-        model.subscribeToScoreActions(just(
+        model.onScoreAction(just(
                 ScoreAction(PLUS, 10, 0),
                 ScoreAction(PLUS, 20, 0),
                 ScoreAction(MINUS, 20, 1)
@@ -95,7 +95,7 @@ class ScoresModelTest {
         newPlayers.onNext("test 1")
         newPlayers.onNext("test 2")
 
-        model.subscribeToScoreActions(just(
+        model.onScoreAction(just(
                 ScoreAction(PLUS, 10, 0),
                 ScoreAction(PLUS, 20, 0),
                 ScoreAction(MINUS, 20, 1)
@@ -110,7 +110,7 @@ class ScoresModelTest {
 
         val subscriber = model.updatedPlayersObservable.test()
 
-        model.subscribeToScoreActions(just(
+        model.onScoreAction(just(
                 ScoreAction(PLUS, 10, 0),
                 ScoreAction(PLUS, 20, 0),
                 ScoreAction(MINUS, 20, 1)
@@ -131,7 +131,7 @@ class ScoresModelTest {
         newPlayers.onNext("test 1")
         newPlayers.onNext("test 2")
 
-        model.subscribeToScoreActions(just(
+        model.onScoreAction(just(
                 ScoreAction(PLUS, 10, 0),
                 ScoreAction(PLUS, 20, 0),
                 ScoreAction(MINUS, 20, 1)

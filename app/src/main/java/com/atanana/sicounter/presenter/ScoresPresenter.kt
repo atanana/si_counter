@@ -9,19 +9,15 @@ import com.atanana.sicounter.view.player_control.PlayerControl
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.withContext
 
 class ScoresPresenter(
     private val model: ScoresModel,
     private val playerControlFabric: PlayerControlFabric
 ) {
     private val scoreViews: MutableMap<Int, PlayerControl> = hashMapOf()
-    private val scoreActions = PublishSubject.create<ScoreAction>()
-
-    private fun subscribeToScoreActions(priceSelector: PriceSelector): Disposable =
-        model.subscribeToScoreActions(
-            scoreActions.map { action -> action.copy(price = priceSelector.price) }
-        )
 
     private fun subscribeToPlayersUpdates(): Disposable =
         model.updatedPlayersObservable.subscribe { (score, id) ->
@@ -29,23 +25,25 @@ class ScoresPresenter(
             playerControl.update(score)
         }
 
-    private fun subscribeToNewPlayers(scoresContainer: ViewGroup): Disposable =
-        model.newPlayersObservable.subscribe { (score, id) ->
-            val playerControl = playerControlFabric.build()
-            playerControl.update(score, id)
-            playerControl.scoreActions.subscribe { scoreAction ->
-                scoreActions.onNext(scoreAction)
+    private suspend fun subscribeToNewPlayers(scoresContainer: ViewGroup, priceSelector: PriceSelector) =
+        withContext(Dispatchers.Main) {
+            for ((score, id) in model.newPlayersChannel) {
+                val playerControl = playerControlFabric.build()
+                playerControl.update(score, id)
+                playerControl.scoreActions.subscribe { scoreAction ->
+                    model.onScoreAction(scoreAction.copy(price = priceSelector.price))
+                }
+                scoresContainer.addView(playerControl)
+                scoreViews[id] = playerControl
             }
-            scoresContainer.addView(playerControl)
-            scoreViews[id] = playerControl
         }
 
-    fun connect(priceSelector: PriceSelector, scoresContainer: ViewGroup): Disposable =
-        CompositeDisposable().apply {
+    suspend fun connect(priceSelector: PriceSelector, scoresContainer: ViewGroup): Disposable {
+        subscribeToNewPlayers(scoresContainer, priceSelector)
+        return CompositeDisposable().apply {
             addAll(
-                subscribeToNewPlayers(scoresContainer),
-                subscribeToPlayersUpdates(),
-                subscribeToScoreActions(priceSelector)
+                subscribeToPlayersUpdates()
             )
         }
+    }
 }

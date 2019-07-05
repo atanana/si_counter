@@ -16,7 +16,7 @@ import java.util.*
 class ScoresModelBundleTest : AndroidTestCase() {
     fun testSaveInformation() {
         val model = ScoresModel(just("test 1", "test 2"), HistoryModel(ScoreHistoryFormatter(context)))
-        model.subscribeToScoreActions(just(
+        model.onScoreAction(just(
                 ScoreAction(PLUS, 10, 0),
                 ScoreAction(MINUS, 20, 1)
         ))

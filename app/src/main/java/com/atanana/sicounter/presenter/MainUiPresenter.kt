@@ -11,6 +11,9 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.router.MainRouter
 import com.atanana.sicounter.usecases.SaveLogUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlin.coroutines.EmptyCoroutineContext
 
 class MainUiPresenter(
     private val scoresModel: ScoresModel,
@@ -41,8 +44,10 @@ class MainUiPresenter(
     }
 
     private fun addPlayer(name: String) {
-        scoresModel.addPlayer(name)
-        logNameModel.onPlayerAdded(name)
+        CoroutineScope(EmptyCoroutineContext).launch {
+            scoresModel.addPlayer(name)
+            logNameModel.onPlayerAdded(name)
+        }
     }
 
     fun toolbarItemSelected(itemId: Int, context: Context): Boolean =
@@ -87,7 +92,7 @@ class MainUiPresenter(
         historyModel.save(outState)
     }
 
-    fun restoreFromBundle(savedInstanceState: Bundle?) {
+    suspend fun restoreFromBundle(savedInstanceState: Bundle?) {
         scoresModel.restore(savedInstanceState)
         historyModel.restore(savedInstanceState)
     }

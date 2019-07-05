@@ -86,7 +86,7 @@ class ScoresPresenterTest {
         `when`(fabric.build()).thenReturn(playerControl1, playerControl2)
 
         val subscriber = TestObserver<ScoreAction>()
-        `when`(model.subscribeToScoreActions(anyObject())).thenAnswer {
+        `when`(model.onScoreAction(anyObject())).thenAnswer {
             @Suppress("UNCHECKED_CAST")
             val observable = it.arguments[0] as Observable<ScoreAction>
             observable.subscribe(subscriber)

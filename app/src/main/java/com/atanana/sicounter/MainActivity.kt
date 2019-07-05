@@ -16,14 +16,14 @@ import com.atanana.sicounter.router.MainRouter
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.koin.androidx.scope.currentScope
 import org.koin.core.parameter.parametersOf
 import kotlin.coroutines.EmptyCoroutineContext
 
 open class MainActivity : AppCompatActivity() {
     private lateinit var disposable: CompositeDisposable
+    private val uiScope = MainScope()
 
     private val logsPresenter: LogsPresenter by currentScope.inject()
     private val scoresModel: ScoresModel by currentScope.inject()
@@ -47,11 +47,13 @@ open class MainActivity : AppCompatActivity() {
             mainUiPresenter.addDivider()
         }
 
-        disposable = CompositeDisposable().apply {
-            addAll(
-                logsPresenter.connect(log_view),
-                scoresPresenter.connect(price_selector, scores_container)
-            )
+        uiScope.launch {
+            disposable = CompositeDisposable().apply {
+                addAll(
+                    logsPresenter.connect(log_view),
+                    scoresPresenter.connect(price_selector, scores_container)
+                )
+            }
         }
     }
 
@@ -74,7 +76,7 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
-        mainUiPresenter.restoreFromBundle(savedInstanceState)
+        uiScope.launch { mainUiPresenter.restoreFromBundle(savedInstanceState) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -90,5 +92,6 @@ open class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         disposable.dispose()
+        uiScope.cancel()
     }
 }
