@@ -11,8 +11,8 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.router.MainRouter
 import com.atanana.sicounter.usecases.SaveLogUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import com.atanana.sicounter.view.ScoresLog
+import kotlinx.coroutines.*
 
 class MainUiPresenter(
     private val scoresModel: ScoresModel,
@@ -87,6 +87,16 @@ class MainUiPresenter(
             .setPositiveButton(R.string.yes) { _, _ -> router.close() }
             .setNegativeButton(R.string.no, null)
             .show()
+    }
+
+    suspend fun watchLogs(logsView: ScoresLog) = coroutineScope {
+        launch {
+            for (change in historyModel.historyChangesChannel) {
+                withContext(Dispatchers.Main) {
+                    logsView.append(change + "\n")
+                }
+            }
+        }
     }
 
     fun saveToBundle(outState: Bundle) {

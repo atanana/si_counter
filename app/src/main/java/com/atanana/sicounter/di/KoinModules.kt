@@ -6,7 +6,6 @@ import com.atanana.sicounter.helpers.HistoryReportHelper
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogNameModel
-import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.MainUiPresenter
 import com.atanana.sicounter.presenter.ScoreHistoryFormatter
 import com.atanana.sicounter.presenter.ScoresPresenter
@@ -40,10 +39,6 @@ val mainModule = module {
             MainRouter(activity)
         }
         scoped { SaveLogUseCase(get(), get()) }
-        scoped {
-            val historyChanges = get<HistoryModel>().historyChangesChannel
-            LogsPresenter(historyChanges)
-        }
         scoped { LogNameModel() }
         scoped { ScoresModel(get()) }
         scoped { ScoresPresenter(get(), get()) }

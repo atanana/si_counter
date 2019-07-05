@@ -7,6 +7,8 @@ import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.player_control.PlayerControl
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ScoresPresenter(
@@ -14,8 +16,9 @@ class ScoresPresenter(
     private val playerControlFabric: PlayerControlFabric
 ) {
     private val scoreViews: MutableMap<Int, PlayerControl> = hashMapOf()
+    private val uiScope = MainScope()
 
-    private suspend fun subscribeToPlayersUpdates() {
+    private suspend fun subscribeToPlayersUpdates() = uiScope.launch {
         for ((score, id) in model.updatedPlayersChannel) {
             val playerControl = scoreViews[id] ?: throw UnknownId(id)
             playerControl.update(score)
@@ -23,15 +26,19 @@ class ScoresPresenter(
     }
 
     private suspend fun subscribeToNewPlayers(scoresContainer: ViewGroup, priceSelector: PriceSelector) =
-        withContext(Dispatchers.Main) {
+        uiScope.launch {
             for ((score, id) in model.newPlayersChannel) {
-                val playerControl = playerControlFabric.build()
-                playerControl.update(score, id)
-                for (scoreAction in playerControl.scoreActionsChannel) {
-                    model.onScoreAction(scoreAction.copy(price = priceSelector.price))
+                withContext(Dispatchers.Main) {
+                    val playerControl = playerControlFabric.build()
+                    playerControl.update(score, id)
+                    launch {
+                        for (scoreAction in playerControl.scoreActionsChannel) {
+                            model.onScoreAction(scoreAction.copy(price = priceSelector.price))
+                        }
+                    }
+                    scoresContainer.addView(playerControl)
+                    scoreViews[id] = playerControl
                 }
-                scoresContainer.addView(playerControl)
-                scoreViews[id] = playerControl
             }
         }
 

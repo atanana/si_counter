@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.atanana.sicounter.presenter.LogsPresenter
 import com.atanana.sicounter.presenter.MainUiPresenter
 import com.atanana.sicounter.presenter.ScoresPresenter
 import com.atanana.sicounter.router.MainRouter
@@ -24,7 +23,6 @@ import kotlin.coroutines.EmptyCoroutineContext
 open class MainActivity : AppCompatActivity() {
     private val uiScope = MainScope()
 
-    private val logsPresenter: LogsPresenter by currentScope.inject()
     private val scoresPresenter: ScoresPresenter by currentScope.inject()
 
     private val mainRouter: MainRouter by currentScope.inject { parametersOf(this) }
@@ -48,7 +46,7 @@ open class MainActivity : AppCompatActivity() {
 
         uiScope.launch {
             scoresPresenter.connect(price_selector, scores_container)
-            logsPresenter.connect(log_view)
+            mainUiPresenter.watchLogs(log_view)
         }
     }
 
