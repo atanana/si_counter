@@ -13,7 +13,6 @@ import java.util.*
 const val KEY_SCORES: String = "scores_model_scores"
 
 open class ScoresModel(
-    private val newPlayersNames: Observable<String>,
     private val historyModel: HistoryModel
 ) {
     private var playerScores: TreeMap<Int, Score> = TreeMap()
@@ -36,14 +35,13 @@ open class ScoresModel(
             updatedPlayers.onNext(Pair(newScore, action.id))
         }
 
-    fun connect(): Disposable =
-        newPlayersNames.subscribe { newPlayer ->
-            val newScore = Score(newPlayer, 0)
-            val newId = playerScores.size
-            playerScores[newId] = newScore
-            historyModel.onPlayerAdded(newPlayer)
-            newPlayers.onNext(Pair(newScore, newId))
-        }
+    fun addPlayer(newPlayer: String) {
+        val newScore = Score(newPlayer, 0)
+        val newId = playerScores.size
+        playerScores[newId] = newScore
+        historyModel.onPlayerAdded(newPlayer)
+        newPlayers.onNext(Pair(newScore, newId))
+    }
 
     private fun playerNameById(id: Int): String {
         return playerScores[id]?.name ?: throw UnknownId(id)

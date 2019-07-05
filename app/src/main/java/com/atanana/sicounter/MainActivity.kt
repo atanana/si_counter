@@ -50,9 +50,7 @@ open class MainActivity : AppCompatActivity() {
         disposable = CompositeDisposable().apply {
             addAll(
                 logsPresenter.connect(log_view),
-                scoresModel.connect(),
-                scoresPresenter.connect(price_selector, scores_container),
-                logNameModel.connect()
+                scoresPresenter.connect(price_selector, scores_container)
             )
         }
     }

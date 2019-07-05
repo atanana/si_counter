@@ -44,20 +44,14 @@ val mainModule = module {
             val historyChanges = get<HistoryModel>().historyChangesObservable
             LogsPresenter(historyChanges)
         }
-        scoped {
-            val newPlayerNames = get<ScoresModel>().newPlayersObservable.map { it.first.name }
-            LogNameModel(newPlayerNames)
-        }
-        scoped { ScoresModel(get(named("newPlayers")), get()) }
+        scoped { LogNameModel() }
+        scoped { ScoresModel(get()) }
         scoped { ScoresPresenter(get(), get()) }
         scoped { HistoryModel(get(), get()) }
         scoped { PlayerControlFabric(get()) }
         scoped { ScoreHistoryFormatter(get()) }
-        scoped(named("newPlayers")) { PublishSubject.create<String>() }
-
         factory { (router: MainRouter) ->
             MainUiPresenter(
-                get(named("newPlayers")),
                 get(), get(),
                 router, get(), get()
             )

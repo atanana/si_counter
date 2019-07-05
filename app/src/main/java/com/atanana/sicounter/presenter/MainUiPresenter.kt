@@ -11,10 +11,8 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.router.MainRouter
 import com.atanana.sicounter.usecases.SaveLogUseCase
-import io.reactivex.subjects.PublishSubject
 
 class MainUiPresenter(
-    private val newPlayers: PublishSubject<String>,
     private val scoresModel: ScoresModel,
     private val historyModel: HistoryModel,
     private val router: MainRouter,
@@ -36,9 +34,15 @@ class MainUiPresenter(
             .setView(R.layout.dialog_add_player)
             .setPositiveButton(R.string.ok) { dialog, _ ->
                 val playerName = (dialog as AlertDialog).findViewById<TextView>(R.id.name)
-                newPlayers.onNext(playerName!!.text.toString())
+                val name = playerName!!.text.toString()
+                addPlayer(name)
             }
             .show()
+    }
+
+    private fun addPlayer(name: String) {
+        scoresModel.addPlayer(name)
+        logNameModel.onPlayerAdded(name)
     }
 
     fun toolbarItemSelected(itemId: Int, context: Context): Boolean =
