@@ -7,7 +7,6 @@ import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.player_control.PlayerControl
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ScoresPresenter(
@@ -17,7 +16,7 @@ class ScoresPresenter(
     private val scoreViews: MutableMap<Int, PlayerControl> = hashMapOf()
 
     private fun CoroutineScope.subscribeToPlayersUpdates() {
-        launch(Dispatchers.Main) {
+        launch {
             for ((score, id) in model.updatedPlayersChannel) {
                 val playerControl = scoreViews[id] ?: throw UnknownId(id)
                 playerControl.update(score)
@@ -29,7 +28,7 @@ class ScoresPresenter(
         scoresContainer: ViewGroup,
         priceSelector: PriceSelector
     ) {
-        launch(Dispatchers.Main) {
+        launch {
             for ((score, id) in model.newPlayersChannel) {
                 val playerControl = playerControlFabric.build()
                 playerControl.update(score, id)
@@ -44,7 +43,7 @@ class ScoresPresenter(
         playerControl: PlayerControl,
         priceSelector: PriceSelector
     ) {
-        launch(Dispatchers.Main) {
+        launch {
             for (scoreAction in playerControl.scoreActionsChannel) {
                 model.onScoreAction(scoreAction.copy(price = priceSelector.price))
             }
