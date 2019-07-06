@@ -22,7 +22,7 @@ import org.koin.core.parameter.parametersOf
 import kotlin.coroutines.EmptyCoroutineContext
 
 open class MainActivity : AppCompatActivity(), MainView {
-    private val uiScope = MainScope()
+    override val uiScope = MainScope()
 
     private val scoresPresenter: ScoresPresenter by currentScope.inject()
 
@@ -48,10 +48,7 @@ open class MainActivity : AppCompatActivity(), MainView {
         }
 
         scoresPresenter.connect(uiScope, price_selector, scores_container)
-
-        uiScope.launch {
-            presenter.watchLogs(log_view)
-        }
+        presenter.connect(log_view)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
