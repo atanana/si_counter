@@ -10,13 +10,9 @@ import com.atanana.sicounter.screens.history.HistoryActivity
 import com.atanana.sicounter.screens.history.HistoryPresenter
 import com.atanana.sicounter.screens.history.HistoryRouter
 import com.atanana.sicounter.screens.history.HistoryView
-import com.atanana.sicounter.screens.main.MainActivity
-import com.atanana.sicounter.screens.main.MainUiPresenter
-import com.atanana.sicounter.screens.main.ScoreHistoryFormatter
-import com.atanana.sicounter.screens.main.ScoresPresenter
+import com.atanana.sicounter.screens.main.*
 import com.atanana.sicounter.usecases.SaveLogUseCase
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
-import kotlinx.coroutines.CoroutineScope
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -45,10 +41,10 @@ val mainModule = module {
         scoped { HistoryModel(get(), get()) }
         scoped { PlayerControlFabric(get()) }
         scoped { ScoreHistoryFormatter(get()) }
-        factory { (router: MainRouter, uiScope: CoroutineScope) ->
+        factory { (router: MainRouter, view: MainView) ->
             MainUiPresenter(
-                get(), get(),
-                router, get(), get(), uiScope
+                view, router,
+                get(), get(), get(), get()
             )
         }
     }

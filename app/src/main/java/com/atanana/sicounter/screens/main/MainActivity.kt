@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.atanana.sicounter.R
@@ -13,18 +15,21 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.koin.androidx.scope.currentScope
 import org.koin.core.parameter.parametersOf
 import kotlin.coroutines.EmptyCoroutineContext
 
-open class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity(), MainView {
     private val uiScope = MainScope()
 
     private val scoresPresenter: ScoresPresenter by currentScope.inject()
 
     private val mainRouter: MainRouter by currentScope.inject { parametersOf(this) }
-    private val mainUiPresenter: MainUiPresenter by currentScope.inject { parametersOf(mainRouter, uiScope) }
+    private val presenter: MainUiPresenter by currentScope.inject {
+        parametersOf(mainRouter, this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,17 +39,17 @@ open class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         add_player.setOnClickListener {
-            mainUiPresenter.showAddPlayerDialog(this)
+            presenter.onFabClick()
         }
         add_divider.setOnClickListener {
             uiScope.launch {
-                mainUiPresenter.addDivider()
+                presenter.addDivider()
             }
         }
 
         uiScope.launch {
             scoresPresenter.connect(price_selector, scores_container)
-            mainUiPresenter.watchLogs(log_view)
+            presenter.watchLogs(log_view)
         }
     }
 
@@ -54,26 +59,26 @@ open class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        mainUiPresenter.toolbarItemSelected(item.itemId, this) || super.onOptionsItemSelected(item)
+        presenter.toolbarItemSelected(item.itemId) || super.onOptionsItemSelected(item)
 
     override fun onBackPressed() {
-        mainUiPresenter.onBackPressed(this)
+        presenter.onBackPressed()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mainUiPresenter.saveToBundle(outState)
+        presenter.saveToBundle(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
-        uiScope.launch { mainUiPresenter.restoreFromBundle(savedInstanceState) }
+        uiScope.launch { presenter.restoreFromBundle(savedInstanceState) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == MainRouter.REQUEST_CODE_SAVE_FILE && resultCode == Activity.RESULT_OK && data != null) {
             CoroutineScope(EmptyCoroutineContext).launch {
-                mainUiPresenter.saveLog(data.data)
+                presenter.saveLog(data.data)
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -82,6 +87,41 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-//        uiScope.cancel()
+        uiScope.cancel()
+    }
+
+    override fun showAddPlayerDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.player_name_title)
+            .setCancelable(true)
+            .setView(R.layout.dialog_add_player)
+            .setPositiveButton(R.string.ok) { dialog, _ ->
+                val playerName = (dialog as AlertDialog).findViewById<TextView>(R.id.name)
+                val name = playerName!!.text.toString()
+                uiScope.launch { presenter.addPlayer(name) }
+            }
+            .show()
+    }
+
+    override fun showResetDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.reset_title)
+            .setCancelable(true)
+            .setMessage(R.string.reset_message)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                uiScope.launch { presenter.reset() }
+            }
+            .setNegativeButton(R.string.no, null)
+            .show()
+    }
+
+    override fun showQuitDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.close_title)
+            .setCancelable(true)
+            .setMessage(R.string.close_message)
+            .setPositiveButton(R.string.yes) { _, _ -> presenter.quit() }
+            .setNegativeButton(R.string.no, null)
+            .show()
     }
 }
