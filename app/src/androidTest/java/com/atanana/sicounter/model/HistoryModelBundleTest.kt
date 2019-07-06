@@ -6,7 +6,7 @@ import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType.MINUS
 import com.atanana.sicounter.data.action.ScoreActionType.PLUS
-import com.atanana.sicounter.presenter.ScoreHistoryFormatter
+import com.atanana.sicounter.screens.main.ScoreHistoryFormatter
 
 class HistoryModelBundleTest : AndroidTestCase() {
     fun testSaveInformation() {

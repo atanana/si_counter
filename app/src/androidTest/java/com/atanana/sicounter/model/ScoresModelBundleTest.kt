@@ -6,7 +6,7 @@ import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType.MINUS
 import com.atanana.sicounter.data.action.ScoreActionType.PLUS
-import com.atanana.sicounter.presenter.ScoreHistoryFormatter
+import com.atanana.sicounter.screens.main.ScoreHistoryFormatter
 import io.reactivex.Observable.empty
 import io.reactivex.Observable.just
 import org.hamcrest.Matchers
@@ -15,7 +15,13 @@ import java.util.*
 
 class ScoresModelBundleTest : AndroidTestCase() {
     fun testSaveInformation() {
-        val model = ScoresModel(just("test 1", "test 2"), HistoryModel(ScoreHistoryFormatter(context)))
+        val model = ScoresModel(
+            just("test 1", "test 2"), HistoryModel(
+                ScoreHistoryFormatter(
+                    context
+                )
+            )
+        )
         model.onScoreAction(just(
                 ScoreAction(PLUS, 10, 0),
                 ScoreAction(MINUS, 20, 1)
@@ -32,7 +38,13 @@ class ScoresModelBundleTest : AndroidTestCase() {
     }
 
     fun testRestoreInformation() {
-        val model = ScoresModel(empty(), HistoryModel(ScoreHistoryFormatter(context)))
+        val model = ScoresModel(
+            empty(), HistoryModel(
+                ScoreHistoryFormatter(
+                    context
+                )
+            )
+        )
         val playersSubscriber = model.newPlayersObservable.test()
 
         val treeMap = TreeMap<Int, Score>()

@@ -3,7 +3,7 @@ package com.atanana.sicounter.model
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType
 import com.atanana.sicounter.fs.HistoryPersistence
-import com.atanana.sicounter.presenter.ScoreHistoryFormatter
+import com.atanana.sicounter.screens.main.ScoreHistoryFormatter
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test

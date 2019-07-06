@@ -3,7 +3,7 @@ package com.atanana.sicounter.model
 import android.os.Bundle
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.fs.HistoryPersistence
-import com.atanana.sicounter.presenter.ScoreHistoryFormatter
+import com.atanana.sicounter.screens.main.ScoreHistoryFormatter
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import java.util.*

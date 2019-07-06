@@ -5,6 +5,7 @@ import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType
 import com.atanana.sicounter.model.ScoresModel
+import com.atanana.sicounter.screens.main.ScoresPresenter
 import com.atanana.sicounter.view.PriceSelector
 import com.atanana.sicounter.view.player_control.PlayerControl
 import com.atanana.sicounter.view.player_control.PlayerControlFabric

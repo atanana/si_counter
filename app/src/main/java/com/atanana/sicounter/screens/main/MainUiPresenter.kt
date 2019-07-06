@@ -1,4 +1,4 @@
-package com.atanana.sicounter.presenter
+package com.atanana.sicounter.screens.main
 
 import android.content.Context
 import android.net.Uri

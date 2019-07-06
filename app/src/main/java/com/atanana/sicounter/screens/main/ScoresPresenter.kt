@@ -1,4 +1,4 @@
-package com.atanana.sicounter.presenter
+package com.atanana.sicounter.screens.main
 
 import android.view.ViewGroup
 import com.atanana.sicounter.exceptions.UnknownId

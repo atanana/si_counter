@@ -5,6 +5,7 @@ import android.content.res.Resources
 import com.atanana.sicounter.R
 import com.atanana.sicounter.data.action.ScoreAction
 import com.atanana.sicounter.data.action.ScoreActionType
+import com.atanana.sicounter.screens.main.ScoreHistoryFormatter
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test

@@ -1,4 +1,4 @@
-package com.atanana.sicounter
+package com.atanana.sicounter.screens.main
 
 import android.app.Activity
 import android.content.Intent
@@ -7,8 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.atanana.sicounter.presenter.MainUiPresenter
-import com.atanana.sicounter.presenter.ScoresPresenter
+import com.atanana.sicounter.R
 import com.atanana.sicounter.router.MainRouter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*

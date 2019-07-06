@@ -8,6 +8,7 @@ import com.atanana.sicounter.R
 import com.atanana.sicounter.di.MainComponent
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
+import com.atanana.sicounter.screens.main.MainUiPresenter
 import com.atanana.sicounter.usecases.SaveLogUseCase
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.assertj.core.api.Assertions.assertThat
