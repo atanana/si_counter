@@ -16,31 +16,47 @@ class ScoresPresenter(
 ) {
     private val scoreViews: MutableMap<Int, PlayerControl> = hashMapOf()
 
-    private suspend fun subscribeToPlayersUpdates() = CoroutineScope(Dispatchers.Main).launch {
-        for ((score, id) in model.updatedPlayersChannel) {
-            val playerControl = scoreViews[id] ?: throw UnknownId(id)
-            playerControl.update(score)
+    private fun CoroutineScope.subscribeToPlayersUpdates() {
+        launch(Dispatchers.Main) {
+            for ((score, id) in model.updatedPlayersChannel) {
+                val playerControl = scoreViews[id] ?: throw UnknownId(id)
+                playerControl.update(score)
+            }
         }
     }
 
-    private suspend fun subscribeToNewPlayers(scoresContainer: ViewGroup, priceSelector: PriceSelector) {
-        CoroutineScope(Dispatchers.Main).launch {
+    private fun CoroutineScope.subscribeToNewPlayers(
+        scoresContainer: ViewGroup,
+        priceSelector: PriceSelector
+    ) {
+        launch(Dispatchers.Main) {
             for ((score, id) in model.newPlayersChannel) {
                 val playerControl = playerControlFabric.build()
                 playerControl.update(score, id)
-                CoroutineScope(Dispatchers.Main).launch {
-                    for (scoreAction in playerControl.scoreActionsChannel) {
-                        model.onScoreAction(scoreAction.copy(price = priceSelector.price))
-                    }
-                }
+                subscribeToScoreActions(playerControl, priceSelector)
                 scoresContainer.addView(playerControl)
                 scoreViews[id] = playerControl
             }
         }
     }
 
-    suspend fun connect(priceSelector: PriceSelector, scoresContainer: ViewGroup) {
-        subscribeToNewPlayers(scoresContainer, priceSelector)
-        subscribeToPlayersUpdates()
+    private fun CoroutineScope.subscribeToScoreActions(
+        playerControl: PlayerControl,
+        priceSelector: PriceSelector
+    ) {
+        launch(Dispatchers.Main) {
+            for (scoreAction in playerControl.scoreActionsChannel) {
+                model.onScoreAction(scoreAction.copy(price = priceSelector.price))
+            }
+        }
+    }
+
+    fun connect(
+        scope: CoroutineScope,
+        priceSelector: PriceSelector,
+        scoresContainer: ViewGroup
+    ) {
+        scope.subscribeToNewPlayers(scoresContainer, priceSelector)
+        scope.subscribeToPlayersUpdates()
     }
 }

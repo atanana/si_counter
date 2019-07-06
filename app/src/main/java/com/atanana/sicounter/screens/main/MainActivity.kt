@@ -47,8 +47,9 @@ open class MainActivity : AppCompatActivity(), MainView {
             }
         }
 
+        scoresPresenter.connect(uiScope, price_selector, scores_container)
+
         uiScope.launch {
-            scoresPresenter.connect(price_selector, scores_container)
             presenter.watchLogs(log_view)
         }
     }
