@@ -10,4 +10,6 @@ interface MainView {
     fun showResetDialog()
 
     fun showQuitDialog()
+
+    fun appendLogs(line: String)
 }

@@ -8,7 +8,6 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.router.MainRouter
 import com.atanana.sicounter.usecases.SaveLogUseCase
-import com.atanana.sicounter.view.ScoresLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -66,16 +65,16 @@ class MainUiPresenter(
         router.close()
     }
 
-    private fun CoroutineScope.watchLogs(logsView: ScoresLog) {
+    private fun CoroutineScope.watchLogs() {
         launch {
             for (change in historyModel.historyChangesChannel) {
-                logsView.append(change + "\n")
+                view.appendLogs(change + "\n")
             }
         }
     }
 
-    fun connect(logsView: ScoresLog) {
-        view.uiScope.watchLogs(logsView)
+    fun connect() {
+        view.uiScope.watchLogs()
     }
 
     fun saveToBundle(outState: Bundle) {

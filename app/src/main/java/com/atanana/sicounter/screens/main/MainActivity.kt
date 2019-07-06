@@ -48,7 +48,7 @@ open class MainActivity : AppCompatActivity(), MainView {
         }
 
         scoresPresenter.connect(uiScope, price_selector, scores_container)
-        presenter.connect(log_view)
+        presenter.connect()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -121,5 +121,9 @@ open class MainActivity : AppCompatActivity(), MainView {
             .setPositiveButton(R.string.yes) { _, _ -> presenter.quit() }
             .setNegativeButton(R.string.no, null)
             .show()
+    }
+
+    override fun appendLogs(line: String) {
+        log_view.append(line)
     }
 }
