@@ -1,6 +1,6 @@
 package com.atanana.sicounter.data.action
 
-import com.atanana.sicounter.exceptions.SiCounterException
+import com.atanana.sicounter.SiCounterException
 
 data class ScoreAction(val type: ScoreActionType, val price: Int?, val id: Int) {
     constructor(type: ScoreActionType, id: Int) : this(type, null, id)

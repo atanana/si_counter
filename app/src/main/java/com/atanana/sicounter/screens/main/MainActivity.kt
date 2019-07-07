@@ -22,7 +22,7 @@ import org.koin.androidx.scope.currentScope
 import org.koin.core.parameter.parametersOf
 import kotlin.coroutines.EmptyCoroutineContext
 
-open class MainActivity : AppCompatActivity(), MainView {
+class MainActivity : AppCompatActivity(), MainView {
     override val uiScope = MainScope()
 
     private val scoresPresenter: ScoresPresenter by currentScope.inject { parametersOf(this) }

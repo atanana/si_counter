@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.OutputStream
 
-open class SaveLogUseCase(
+class SaveLogUseCase(
     private val context: Context,
     private val historyReportHelper: HistoryReportHelper
 ) {

@@ -11,7 +11,7 @@ import java.util.*
 const val KEY_HISTORY: String = "scores_model_history"
 const val HISTORY_SEPARATOR = "——————————"
 
-open class HistoryModel(
+class HistoryModel(
     private val scoreHistoryFormatter: ScoreHistoryFormatter,
     private val historyPersistence: HistoryPersistence
 ) {
@@ -21,7 +21,7 @@ open class HistoryModel(
 
     val historyChangesChannel: ReceiveChannel<String> = historyChanges
 
-    open val history: List<String>
+    val history: List<String>
         get() {
             return Collections.unmodifiableList(_history)
         }
@@ -32,23 +32,23 @@ open class HistoryModel(
         historyChanges.send(item)
     }
 
-    open suspend fun onPlayerAdded(player: String) {
+    suspend fun onPlayerAdded(player: String) {
         addHistory(scoreHistoryFormatter.formatNewPlayer(player))
     }
 
-    open suspend fun onScoreAction(action: ScoreAction, player: String) {
+    suspend fun onScoreAction(action: ScoreAction, player: String) {
         addHistory(scoreHistoryFormatter.formatScoreAction(action, player))
     }
 
-    open suspend fun addDivider() {
+    suspend fun addDivider() {
         addHistory(HISTORY_SEPARATOR)
     }
 
-    open fun save(bundle: Bundle) {
+    fun save(bundle: Bundle) {
         bundle.putStringArrayList(KEY_HISTORY, _history)
     }
 
-    open suspend fun restore(bundle: Bundle?) {
+    suspend fun restore(bundle: Bundle?) {
         val newHistory = bundle?.getStringArrayList(KEY_HISTORY)
         if (newHistory != null) {
             _history = newHistory
@@ -59,7 +59,7 @@ open class HistoryModel(
         }
     }
 
-    open suspend fun reset() {
+    suspend fun reset() {
         addHistory(scoreHistoryFormatter.resetMessage)
     }
 }

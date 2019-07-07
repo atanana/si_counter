@@ -1,6 +1,6 @@
 package com.atanana.sicounter.screens.main
 
-import com.atanana.sicounter.exceptions.UnknownId
+import com.atanana.sicounter.UnknownId
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.view.player_control.PlayerControl
 import com.atanana.sicounter.view.player_control.PlayerControlFabric

@@ -1,16 +1,16 @@
 package com.atanana.sicounter.model
 
 import android.os.Bundle
+import com.atanana.sicounter.UnknownId
 import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.action.ScoreAction
-import com.atanana.sicounter.exceptions.UnknownId
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import java.util.*
 
 const val KEY_SCORES: String = "scores_model_scores"
 
-open class ScoresModel(
+class ScoresModel(
     private val historyModel: HistoryModel
 ) {
     private var playerScores: TreeMap<Int, Score> = TreeMap()
@@ -21,10 +21,10 @@ open class ScoresModel(
     private val newPlayers: Channel<Pair<Score, Int>> = Channel()
     val newPlayersChannel: ReceiveChannel<Pair<Score, Int>> = newPlayers
 
-    open val scores: List<Score>
+    val scores: List<Score>
         get() = playerScores.values.toList()
 
-    open suspend fun onScoreAction(action: ScoreAction) {
+    suspend fun onScoreAction(action: ScoreAction) {
         val oldScore = playerScores[action.id] ?: throw UnknownId(action.id)
         val newScore = oldScore.copy(score = oldScore.score + action.absolutePrice)
         playerScores[action.id] = newScore
@@ -44,11 +44,11 @@ open class ScoresModel(
         return playerScores[id]?.name ?: throw UnknownId(id)
     }
 
-    open fun save(bundle: Bundle) {
+    fun save(bundle: Bundle) {
         bundle.putSerializable(KEY_SCORES, playerScores)
     }
 
-    open suspend fun restore(bundle: Bundle?) {
+    suspend fun restore(bundle: Bundle?) {
         @Suppress("UNCHECKED_CAST")
         val newScores = bundle?.getSerializable(KEY_SCORES) as? TreeMap<Int, Score>
         if (newScores != null) {
