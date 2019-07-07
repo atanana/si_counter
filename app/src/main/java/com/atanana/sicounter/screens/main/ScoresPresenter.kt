@@ -1,6 +1,7 @@
 package com.atanana.sicounter.screens.main
 
 import com.atanana.sicounter.UnknownId
+import com.atanana.sicounter.data.ScoreAction
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.view.player_control.PlayerControl
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
@@ -38,7 +39,7 @@ class ScoresPresenter(
     private fun CoroutineScope.subscribeToScoreActions(playerControl: PlayerControl) {
         launch {
             for (scoreAction in playerControl.scoreActionsChannel) {
-                model.onScoreAction(scoreAction.copy(price = view.selectedPrice))
+                model.onScoreAction(ScoreAction(scoreAction, view.selectedPrice))
             }
         }
     }

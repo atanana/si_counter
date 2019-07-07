@@ -3,7 +3,7 @@ package com.atanana.sicounter.model
 import android.os.Bundle
 import com.atanana.sicounter.UnknownId
 import com.atanana.sicounter.data.Score
-import com.atanana.sicounter.data.action.ScoreAction
+import com.atanana.sicounter.data.ScoreAction
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import java.util.*

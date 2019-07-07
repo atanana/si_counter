@@ -7,10 +7,10 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.atanana.sicounter.data.PartialScoreAction
 import com.atanana.sicounter.data.Score
-import com.atanana.sicounter.data.action.ScoreAction
-import com.atanana.sicounter.data.action.ScoreActionType.MINUS
-import com.atanana.sicounter.data.action.ScoreActionType.PLUS
+import com.atanana.sicounter.data.ScoreActionType.MINUS
+import com.atanana.sicounter.data.ScoreActionType.PLUS
 import com.atanana.sicounter.utils.UNSPECIFIED
 import com.atanana.sicounter.utils.dpToPx
 import com.atanana.sicounter.utils.pxToDp
@@ -28,10 +28,10 @@ class PlayerControl(context: Context) : LinearLayout(context, null, 0) {
     private val playerScore: TextView = TextView(context)
     private val addScore: Button = Button(context)
     private val subtractScore: Button = Button(context)
-    private val scoreActions = Channel<ScoreAction>()
+    private val scoreActions = Channel<PartialScoreAction>()
 
     private val uiScope = MainScope()
-    val scoreActionsChannel: ReceiveChannel<ScoreAction> = scoreActions
+    val scoreActionsChannel: ReceiveChannel<PartialScoreAction> = scoreActions
 
     init {
         orientation = VERTICAL
@@ -114,8 +114,20 @@ class PlayerControl(context: Context) : LinearLayout(context, null, 0) {
         playerScore.text = score.score.toString()
 
         if (id != null) {
-            addScore.setOnClickListener { uiScope.launch { scoreActions.send(ScoreAction(PLUS, id)) } }
-            subtractScore.setOnClickListener { uiScope.launch { scoreActions.send(ScoreAction(MINUS, id)) } }
+            addScore.setOnClickListener {
+                uiScope.launch {
+                    scoreActions.send(
+                        PartialScoreAction(PLUS, id)
+                    )
+                }
+            }
+            subtractScore.setOnClickListener {
+                uiScope.launch {
+                    scoreActions.send(
+                        PartialScoreAction(MINUS, id)
+                    )
+                }
+            }
         }
     }
 

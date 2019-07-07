@@ -2,8 +2,8 @@ package com.atanana.sicounter.screens.main
 
 import android.content.Context
 import com.atanana.sicounter.R
-import com.atanana.sicounter.data.action.ScoreAction
-import com.atanana.sicounter.data.action.ScoreActionType
+import com.atanana.sicounter.data.ScoreAction
+import com.atanana.sicounter.data.ScoreActionType
 
 class ScoreHistoryFormatter(context: Context) {
     private val newPlayerTemplate by lazy { context.resources.getString(R.string.new_player_log) }
