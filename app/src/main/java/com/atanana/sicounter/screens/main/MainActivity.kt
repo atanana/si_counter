@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.atanana.sicounter.R
 import com.atanana.sicounter.router.MainRouter
+import com.atanana.sicounter.view.player_control.PlayerControl
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -24,12 +25,15 @@ import kotlin.coroutines.EmptyCoroutineContext
 open class MainActivity : AppCompatActivity(), MainView {
     override val uiScope = MainScope()
 
-    private val scoresPresenter: ScoresPresenter by currentScope.inject()
+    private val scoresPresenter: ScoresPresenter by currentScope.inject { parametersOf(this) }
 
     private val mainRouter: MainRouter by currentScope.inject { parametersOf(this) }
     private val presenter: MainUiPresenter by currentScope.inject {
         parametersOf(mainRouter, this)
     }
+
+    override val selectedPrice: Int
+        get() = price_selector.price
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +51,7 @@ open class MainActivity : AppCompatActivity(), MainView {
             }
         }
 
-        scoresPresenter.connect(uiScope, price_selector, scores_container)
+        scoresPresenter.connect(uiScope)
         presenter.connect()
     }
 
@@ -125,5 +129,9 @@ open class MainActivity : AppCompatActivity(), MainView {
 
     override fun appendLogs(line: String) {
         log_view.append(line)
+    }
+
+    override fun addPlayerControl(playerControl: PlayerControl) {
+        scores_container.addView(playerControl)
     }
 }

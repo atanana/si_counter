@@ -37,7 +37,9 @@ val mainModule = module {
         scoped { SaveLogUseCase(get(), get()) }
         scoped { LogNameModel() }
         scoped { ScoresModel(get()) }
-        scoped { ScoresPresenter(get(), get()) }
+        factory { (view: MainView) ->
+            ScoresPresenter(view, get(), get())
+        }
         scoped { HistoryModel(get(), get()) }
         scoped { PlayerControlFabric(get()) }
         scoped { ScoreHistoryFormatter(get()) }
