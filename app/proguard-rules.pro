@@ -16,21 +16,5 @@
 #   public *;
 #}
 
-#logs
--keep class ch.qos.** { *; }
--keep class org.slf4j.** { *; }
--keepattributes *Annotation*
-
-#permission
--keepclassmembers class ** {
-    @com.squareup.otto.Subscribe public *;
-    @com.squareup.otto.Produce public *;
-}
-
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
-
--dontwarn ch.qos.logback.core.net.**
--dontwarn com.google.common.**
--dontwarn com.google.errorprone.**
--dontwarn org.slf4j.**

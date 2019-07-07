@@ -39,10 +39,6 @@ android {
     }
 }
 
-kapt {
-    generateStubs = true
-}
-
 androidExtensions {
     experimental = true
 }
