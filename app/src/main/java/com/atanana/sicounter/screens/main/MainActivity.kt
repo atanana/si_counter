@@ -23,14 +23,13 @@ import org.koin.core.parameter.parametersOf
 import kotlin.coroutines.EmptyCoroutineContext
 
 class MainActivity : AppCompatActivity(), MainView {
-    override val uiScope = MainScope()
-
     private val scoresPresenter: ScoresPresenter by currentScope.inject { parametersOf(this) }
-
     private val mainRouter: MainRouter by currentScope.inject { parametersOf(this) }
     private val presenter: MainUiPresenter by currentScope.inject {
         parametersOf(mainRouter, this)
     }
+
+    private val uiScope = MainScope()
 
     override val selectedPrice: Int
         get() = price_selector.price
@@ -51,8 +50,8 @@ class MainActivity : AppCompatActivity(), MainView {
             }
         }
 
-        scoresPresenter.connect(uiScope)
-        presenter.connect()
+        uiScope.launch { scoresPresenter.connect() }
+        uiScope.launch { presenter.connect() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

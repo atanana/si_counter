@@ -6,6 +6,7 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.view.player_control.PlayerControl
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class ScoresPresenter(
@@ -44,8 +45,8 @@ class ScoresPresenter(
         }
     }
 
-    fun connect(scope: CoroutineScope) {
-        scope.subscribeToNewPlayers()
-        scope.subscribeToPlayersUpdates()
+    suspend fun connect() = coroutineScope {
+        subscribeToNewPlayers()
+        subscribeToPlayersUpdates()
     }
 }

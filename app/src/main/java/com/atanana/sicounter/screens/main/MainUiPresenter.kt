@@ -9,6 +9,7 @@ import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.router.MainRouter
 import com.atanana.sicounter.usecases.SaveLogUseCase
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class MainUiPresenter(
@@ -73,8 +74,8 @@ class MainUiPresenter(
         }
     }
 
-    fun connect() {
-        view.uiScope.watchLogs()
+    suspend fun connect() = coroutineScope {
+        watchLogs()
     }
 
     fun saveToBundle(outState: Bundle) {
