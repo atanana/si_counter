@@ -28,8 +28,11 @@ class MainActivity : AppCompatActivity(), MainView {
         parametersOf(mainRouter, this)
     }
 
-    override val selectedPrice: Int
+    override var selectedPrice: Int
         get() = price_selector.price
+        set(value) {
+            price_selector.price = value
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

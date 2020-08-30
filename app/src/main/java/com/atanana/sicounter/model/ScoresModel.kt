@@ -4,8 +4,7 @@ import android.os.Bundle
 import com.atanana.sicounter.UnknownId
 import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.ScoreAction
-import com.atanana.sicounter.model.ScoreModelAction.NewPlayer
-import com.atanana.sicounter.model.ScoreModelAction.UpdateScore
+import com.atanana.sicounter.model.ScoreModelAction.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import java.util.*
@@ -28,6 +27,10 @@ class ScoresModel(private val historyModel: HistoryModel) {
         playerScores[action.id] = newScore
         historyModel.onScoreAction(action, playerNameById(action.id))
         actions.send(UpdateScore(action.id, newScore))
+        if (action.absolutePrice > 0) {
+            val newPrice = action.price % 50 + 10
+            actions.send(SetPrice(newPrice))
+        }
     }
 
     suspend fun addPlayer(newPlayer: String) {
@@ -71,4 +74,5 @@ class ScoresModel(private val historyModel: HistoryModel) {
 sealed class ScoreModelAction {
     data class UpdateScore(val id: Int, val score: Score) : ScoreModelAction()
     data class NewPlayer(val id: Int, val score: Score) : ScoreModelAction()
+    data class SetPrice(val price: Int) : ScoreModelAction()
 }

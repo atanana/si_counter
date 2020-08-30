@@ -8,7 +8,7 @@ import com.atanana.sicounter.R
 import com.atanana.sicounter.SiCounterException
 
 class PriceSelector(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
-    private val selector: RadioGroup by lazy { findViewById<RadioGroup>(R.id.price_radio_selector) }
+    private val selector: RadioGroup by lazy { findViewById(R.id.price_radio_selector) }
 
     init {
         inflate(context, R.layout.price_selector, this)

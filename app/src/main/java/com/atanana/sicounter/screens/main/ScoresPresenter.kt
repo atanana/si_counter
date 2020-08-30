@@ -3,8 +3,7 @@ package com.atanana.sicounter.screens.main
 import com.atanana.sicounter.UnknownId
 import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.ScoreAction
-import com.atanana.sicounter.model.ScoreModelAction.NewPlayer
-import com.atanana.sicounter.model.ScoreModelAction.UpdateScore
+import com.atanana.sicounter.model.ScoreModelAction.*
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.view.player_control.PlayerControl
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
@@ -24,6 +23,7 @@ class ScoresPresenter(
                 when (action) {
                     is UpdateScore -> handleScoreUpdate(action)
                     is NewPlayer -> handleNewPlayer(action, scope)
+                    is SetPrice -> handleNextPrice(action)
                 }
             }
         }
@@ -51,5 +51,9 @@ class ScoresPresenter(
             }
         }
         return playerControl
+    }
+
+    private fun handleNextPrice(action: SetPrice) {
+        view.selectedPrice = action.price
     }
 }
