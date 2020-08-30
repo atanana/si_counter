@@ -81,6 +81,7 @@ class ScoresModel(private val historyModel: HistoryModel) {
             val newScore = score.copy(score = 0)
             playerScores[id] = newScore
             actions.send(UpdateScore(id, newScore))
+            actions.send(SetPrice(10))
         }
         historyModel.reset()
     }
