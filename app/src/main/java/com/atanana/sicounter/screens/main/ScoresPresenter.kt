@@ -1,12 +1,14 @@
 package com.atanana.sicounter.screens.main
 
 import com.atanana.sicounter.UnknownId
+import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.ScoreAction
+import com.atanana.sicounter.model.ScoreModelAction.NewPlayer
+import com.atanana.sicounter.model.ScoreModelAction.UpdateScore
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.view.player_control.PlayerControl
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 class ScoresPresenter(
@@ -16,37 +18,38 @@ class ScoresPresenter(
 ) {
     private val scoreViews: MutableMap<Int, PlayerControl> = hashMapOf()
 
-    private fun CoroutineScope.subscribeToPlayersUpdates() {
-        launch {
-            for ((score, id) in model.updatedPlayersChannel) {
-                val playerControl = scoreViews[id] ?: throw UnknownId(id)
-                playerControl.update(score)
+    fun connect(scope: CoroutineScope) {
+        scope.launch {
+            for (action in model.actionsChannel) {
+                when (action) {
+                    is UpdateScore -> handleScoreUpdate(action)
+                    is NewPlayer -> handleNewPlayer(action, scope)
+                }
             }
         }
     }
 
-    private fun CoroutineScope.subscribeToNewPlayers() {
-        launch {
-            for ((score, id) in model.newPlayersChannel) {
-                val playerControl = playerControlFabric.build()
-                playerControl.update(score, id)
-                subscribeToScoreActions(playerControl)
-                view.addPlayerControl(playerControl)
-                scoreViews[id] = playerControl
-            }
-        }
+    private fun handleScoreUpdate(action: UpdateScore) {
+        val (id, score) = action
+        val playerControl = scoreViews[id] ?: throw UnknownId(id)
+        playerControl.update(score)
     }
 
-    private fun CoroutineScope.subscribeToScoreActions(playerControl: PlayerControl) {
-        launch {
+    private fun handleNewPlayer(action: NewPlayer, scope: CoroutineScope) {
+        val (id, score) = action
+        val playerControl = createPlayerControl(score, id, scope)
+        view.addPlayerControl(playerControl)
+        scoreViews[id] = playerControl
+    }
+
+    private fun createPlayerControl(score: Score, id: Int, scope: CoroutineScope): PlayerControl {
+        val playerControl = playerControlFabric.build()
+        playerControl.update(score, id)
+        scope.launch {
             for (scoreAction in playerControl.scoreActionsChannel) {
                 model.onScoreAction(ScoreAction(scoreAction, view.selectedPrice))
             }
         }
-    }
-
-    suspend fun connect() = coroutineScope {
-        subscribeToNewPlayers()
-        subscribeToPlayersUpdates()
+        return playerControl
     }
 }

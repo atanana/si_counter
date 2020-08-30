@@ -18,14 +18,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import org.koin.androidx.scope.currentScope
+import org.koin.androidx.scope.lifecycleScope
 import org.koin.core.parameter.parametersOf
 import kotlin.coroutines.EmptyCoroutineContext
 
 class MainActivity : AppCompatActivity(), MainView {
-    private val scoresPresenter: ScoresPresenter by currentScope.inject { parametersOf(this) }
-    private val mainRouter: MainRouter by currentScope.inject { parametersOf(this) }
-    private val presenter: MainUiPresenter by currentScope.inject {
+    private val scoresPresenter: ScoresPresenter by lifecycleScope.inject { parametersOf(this) }
+    private val mainRouter: MainRouter by lifecycleScope.inject { parametersOf(this) }
+    private val presenter: MainUiPresenter by lifecycleScope.inject {
         parametersOf(mainRouter, this)
     }
 
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), MainView {
             }
         }
 
-        uiScope.launch { scoresPresenter.connect() }
+        scoresPresenter.connect(uiScope)
         uiScope.launch { presenter.connect() }
     }
 
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), MainView {
         presenter.saveToBundle(outState)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         uiScope.launch { presenter.restoreFromBundle(savedInstanceState) }
     }
