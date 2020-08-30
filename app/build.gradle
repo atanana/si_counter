@@ -19,8 +19,8 @@ android {
         applicationId "com.atanana.sicounter"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 9
-        versionName "1.2.1"
+        versionCode 10
+        versionName "1.3.0"
     }
     buildTypes {
         release {
