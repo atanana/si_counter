@@ -29,21 +29,21 @@ val mainModule = module {
         }
     }
 
-    scope(named<MainActivity>()) {
+    scope<MainActivity> {
         scoped { HistoryReportHelper(get(), get()) }
-        factory { (activity: MainActivity) ->
+        scoped { (activity: MainActivity) ->
             MainRouter(activity)
         }
         scoped { SaveLogUseCase(get(), get()) }
         scoped { LogNameModel() }
         scoped { ScoresModel(get()) }
-        factory { (view: MainView) ->
+        scoped { (view: MainView) ->
             ScoresPresenter(view, get(), get())
         }
         scoped { HistoryModel(get(), get()) }
         scoped { PlayerControlFabric(get()) }
         scoped { ScoreHistoryFormatter(get()) }
-        factory { (router: MainRouter, view: MainView) ->
+        scoped { (router: MainRouter, view: MainView) ->
             MainUiPresenter(
                 view, router,
                 get(), get(), get(), get()

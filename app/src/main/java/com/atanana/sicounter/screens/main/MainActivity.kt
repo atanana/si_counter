@@ -9,27 +9,24 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
 import com.atanana.sicounter.R
 import com.atanana.sicounter.router.MainRouter
 import com.atanana.sicounter.view.player_control.PlayerControl
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import org.koin.androidx.scope.lifecycleScope
 import org.koin.core.parameter.parametersOf
 import kotlin.coroutines.EmptyCoroutineContext
+import org.koin.androidx.scope.lifecycleScope as koinLifecycleScope
 
 class MainActivity : AppCompatActivity(), MainView {
-    private val scoresPresenter: ScoresPresenter by lifecycleScope.inject { parametersOf(this) }
-    private val mainRouter: MainRouter by lifecycleScope.inject { parametersOf(this) }
-    private val presenter: MainUiPresenter by lifecycleScope.inject {
+    private val scoresPresenter: ScoresPresenter by koinLifecycleScope.inject { parametersOf(this) }
+    private val mainRouter: MainRouter by koinLifecycleScope.inject { parametersOf(this) }
+    private val presenter: MainUiPresenter by koinLifecycleScope.inject {
         parametersOf(mainRouter, this)
     }
-
-    private val uiScope = MainScope()
 
     override val selectedPrice: Int
         get() = price_selector.price
@@ -45,13 +42,13 @@ class MainActivity : AppCompatActivity(), MainView {
             presenter.onFabClick()
         }
         add_divider.setOnClickListener {
-            uiScope.launch {
+            lifecycleScope.launch {
                 presenter.addDivider()
             }
         }
 
-        scoresPresenter.connect(uiScope)
-        uiScope.launch { presenter.connect() }
+        scoresPresenter.connect(lifecycleScope)
+        lifecycleScope.launch { presenter.connect() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -73,7 +70,7 @@ class MainActivity : AppCompatActivity(), MainView {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        uiScope.launch { presenter.restoreFromBundle(savedInstanceState) }
+        lifecycleScope.launch { presenter.restoreFromBundle(savedInstanceState) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -86,11 +83,6 @@ class MainActivity : AppCompatActivity(), MainView {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        uiScope.cancel()
-    }
-
     override fun showAddPlayerDialog() {
         AlertDialog.Builder(this)
             .setTitle(R.string.player_name_title)
@@ -99,7 +91,7 @@ class MainActivity : AppCompatActivity(), MainView {
             .setPositiveButton(R.string.ok) { dialog, _ ->
                 val playerName = (dialog as AlertDialog).findViewById<TextView>(R.id.name)
                 val name = playerName!!.text.toString()
-                uiScope.launch { presenter.addPlayer(name) }
+                lifecycleScope.launch { presenter.addPlayer(name) }
             }
             .show()
     }
@@ -110,7 +102,7 @@ class MainActivity : AppCompatActivity(), MainView {
             .setCancelable(true)
             .setMessage(R.string.reset_message)
             .setPositiveButton(R.string.yes) { _, _ ->
-                uiScope.launch { presenter.reset() }
+                lifecycleScope.launch { presenter.reset() }
             }
             .setNegativeButton(R.string.no, null)
             .show()
