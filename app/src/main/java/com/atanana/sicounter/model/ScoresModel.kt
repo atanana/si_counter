@@ -21,16 +21,31 @@ class ScoresModel(private val historyModel: HistoryModel) {
     val scores: List<Score>
         get() = playerScores.values.toList()
 
+    private var lastPrice: Int? = null
+
     suspend fun onScoreAction(action: ScoreAction) {
+        checkForDivider(action)
         val oldScore = playerScores[action.id] ?: throw UnknownId(action.id)
         val newScore = oldScore.copy(score = oldScore.score + action.absolutePrice)
         playerScores[action.id] = newScore
         historyModel.onScoreAction(action, playerNameById(action.id))
         actions.send(UpdateScore(action.id, newScore))
+        checkForPriceChange(action)
+    }
+
+    private suspend fun checkForPriceChange(action: ScoreAction) {
         if (action.absolutePrice > 0) {
             val newPrice = action.price % 50 + 10
             actions.send(SetPrice(newPrice))
         }
+    }
+
+    private suspend fun checkForDivider(action: ScoreAction) {
+        val lastPrice = lastPrice
+        if (lastPrice != null && action.price < lastPrice) {
+            historyModel.addDivider()
+        }
+        this.lastPrice = action.price
     }
 
     suspend fun addPlayer(newPlayer: String) {
