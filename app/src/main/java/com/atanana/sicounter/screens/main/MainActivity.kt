@@ -17,14 +17,20 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.android.scope.AndroidScopeComponent
+import org.koin.androidx.scope.activityScope
 import org.koin.core.parameter.parametersOf
+import org.koin.core.scope.Scope
 import kotlin.coroutines.EmptyCoroutineContext
-import org.koin.androidx.scope.lifecycleScope as koinLifecycleScope
 
-class MainActivity : AppCompatActivity(), MainView {
-    private val scoresPresenter: ScoresPresenter by koinLifecycleScope.inject { parametersOf(this) }
-    private val mainRouter: MainRouter by koinLifecycleScope.inject { parametersOf(this) }
-    private val presenter: MainUiPresenter by koinLifecycleScope.inject {
+class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
+
+    override val scope: Scope by activityScope()
+
+    private val scoresPresenter: ScoresPresenter by inject { parametersOf(this) }
+    private val mainRouter: MainRouter by inject { parametersOf(this) }
+    private val presenter: MainUiPresenter by inject {
         parametersOf(mainRouter, this)
     }
 

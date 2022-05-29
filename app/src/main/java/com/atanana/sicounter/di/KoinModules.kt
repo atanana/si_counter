@@ -14,13 +14,12 @@ import com.atanana.sicounter.screens.main.*
 import com.atanana.sicounter.usecases.SaveLogUseCase
 import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val mainModule = module {
     single { HistoryPersistence(androidContext()) }
 
-    scope(named<HistoryActivity>()) {
+    scope<HistoryActivity> {
         factory { (activity: HistoryActivity) ->
             HistoryRouter(activity)
         }

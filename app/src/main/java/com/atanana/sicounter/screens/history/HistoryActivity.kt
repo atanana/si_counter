@@ -8,12 +8,18 @@ import androidx.appcompat.app.AppCompatActivity
 import com.atanana.sicounter.R
 import kotlinx.android.synthetic.main.activity_history.*
 import kotlinx.android.synthetic.main.content_history.*
-import org.koin.androidx.scope.currentScope
+import org.koin.android.ext.android.inject
+import org.koin.android.scope.AndroidScopeComponent
+import org.koin.androidx.scope.activityScope
 import org.koin.core.parameter.parametersOf
+import org.koin.core.scope.Scope
 
-class HistoryActivity : AppCompatActivity(), HistoryView {
-    private val router: HistoryRouter by currentScope.inject { parametersOf(this) }
-    private val historyPresenter: HistoryPresenter by currentScope.inject { parametersOf(this, router) }
+class HistoryActivity : AppCompatActivity(), HistoryView, AndroidScopeComponent {
+
+    override val scope: Scope by activityScope()
+
+    private val router: HistoryRouter by inject { parametersOf(this) }
+    private val historyPresenter: HistoryPresenter by inject { parametersOf(this, router) }
 
     override val history: TextView
         get() = history_content
