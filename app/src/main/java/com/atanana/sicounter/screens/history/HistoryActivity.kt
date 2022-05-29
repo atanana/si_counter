@@ -11,15 +11,13 @@ import kotlinx.android.synthetic.main.content_history.*
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.AndroidScopeComponent
 import org.koin.androidx.scope.activityScope
-import org.koin.core.parameter.parametersOf
 import org.koin.core.scope.Scope
 
 class HistoryActivity : AppCompatActivity(), HistoryView, AndroidScopeComponent {
 
     override val scope: Scope by activityScope()
 
-    private val router: HistoryRouter by inject { parametersOf(this) }
-    private val historyPresenter: HistoryPresenter by inject { parametersOf(this, router) }
+    private val historyPresenter: HistoryPresenter by inject()
 
     override val history: TextView
         get() = history_content

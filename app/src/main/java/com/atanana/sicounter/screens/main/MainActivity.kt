@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.AndroidScopeComponent
 import org.koin.androidx.scope.activityScope
-import org.koin.core.parameter.parametersOf
 import org.koin.core.scope.Scope
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -28,11 +27,8 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
 
     override val scope: Scope by activityScope()
 
-    private val scoresPresenter: ScoresPresenter by inject { parametersOf(this) }
-    private val mainRouter: MainRouter by inject { parametersOf(this) }
-    private val presenter: MainUiPresenter by inject {
-        parametersOf(mainRouter, this)
-    }
+    private val scoresPresenter: ScoresPresenter by inject()
+    private val presenter: MainUiPresenter by inject()
 
     override var selectedPrice: Int
         get() = price_selector.price
