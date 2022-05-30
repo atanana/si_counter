@@ -1,7 +1,5 @@
 package com.atanana.sicounter.screens.main
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,17 +9,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import com.atanana.sicounter.R
-import com.atanana.sicounter.router.MainRouter
+import com.atanana.sicounter.router.CreateLogFileContract
 import com.atanana.sicounter.view.player_control.PlayerControl
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.AndroidScopeComponent
 import org.koin.androidx.scope.activityScope
 import org.koin.core.scope.Scope
-import kotlin.coroutines.EmptyCoroutineContext
 
 class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
 
@@ -29,6 +25,12 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
 
     private val scoresPresenter: ScoresPresenter by inject()
     private val presenter: MainUiPresenter by inject()
+
+    val createLogContract = registerForActivityResult(CreateLogFileContract()) { uri ->
+        lifecycleScope.launch {
+            presenter.saveLog(uri)
+        }
+    }
 
     override var selectedPrice: Int
         get() = price_selector.price
@@ -76,16 +78,6 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         lifecycleScope.launch { presenter.restoreFromBundle(savedInstanceState) }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == MainRouter.REQUEST_CODE_SAVE_FILE && resultCode == Activity.RESULT_OK && data != null) {
-            CoroutineScope(EmptyCoroutineContext).launch {
-                presenter.saveLog(data.data)
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
     }
 
     override fun showAddPlayerDialog() {
