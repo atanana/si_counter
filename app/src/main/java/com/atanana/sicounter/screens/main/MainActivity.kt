@@ -6,13 +6,11 @@ import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import com.atanana.sicounter.R
+import com.atanana.sicounter.databinding.ActivityMainBinding
 import com.atanana.sicounter.router.CreateLogFileContract
 import com.atanana.sicounter.view.player_control.PlayerControl
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.AndroidScopeComponent
@@ -26,6 +24,8 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
     private val scoresPresenter: ScoresPresenter by inject()
     private val presenter: MainUiPresenter by inject()
 
+    private lateinit var viewBinding: ActivityMainBinding
+
     val createLogContract = registerForActivityResult(CreateLogFileContract()) { uri ->
         lifecycleScope.launch {
             presenter.saveLog(uri)
@@ -33,22 +33,20 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
     }
 
     override var selectedPrice: Int
-        get() = price_selector.price
+        get() = viewBinding.content.priceSelector.price
         set(value) {
-            price_selector.price = value
+            viewBinding.content.priceSelector.price = value
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        viewBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(viewBinding.root)
+        setSupportActionBar(viewBinding.toolbar)
 
-        add_player.setOnClickListener {
-            presenter.onFabClick()
-        }
-        add_divider.setOnClickListener {
+        viewBinding.addPlayer.setOnClickListener { presenter.onFabClick() }
+        viewBinding.content.addDivider.setOnClickListener {
             lifecycleScope.launch {
                 presenter.addDivider()
             }
@@ -116,10 +114,10 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
     }
 
     override fun appendLogs(line: String) {
-        log_view.append(line)
+        viewBinding.content.logView.append(line)
     }
 
     override fun addPlayerControl(playerControl: PlayerControl) {
-        scores_container.addView(playerControl)
+        viewBinding.content.scoresContainer.addView(playerControl)
     }
 }

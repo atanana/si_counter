@@ -21,6 +21,7 @@
 
     <!--add player-->
     <string name="player_name_title">Введите имя нового игрока</string>
+    <string name="add_player_description">Добавить игрока</string>
 
     <!--logs-->
     <string name="new_player_log"><b>%s</b> присоединился к игре</string>
