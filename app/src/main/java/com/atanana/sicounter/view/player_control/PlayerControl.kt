@@ -1,6 +1,7 @@
 package com.atanana.sicounter.view.player_control
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.graphics.Typeface
 import android.view.View
@@ -95,7 +96,7 @@ class PlayerControl(context: Context) : LinearLayout(context, null, 0) {
 
     @SuppressLint("DrawAllocation")
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val screenHeight = screenSize(context).height
+        val screenHeight = screenSize(context as Activity).height
         val height = min((screenHeight / 2.5).toFloat(), dpToPx(300, resources))
         playerName.measure(UNSPECIFIED, UNSPECIFIED)
         val slotWidth = (height / 3).toInt()

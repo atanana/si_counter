@@ -1,5 +1,6 @@
 package com.atanana.sicounter.view.player_control
 
+import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
@@ -13,7 +14,7 @@ class PlayerControlsLayout(context: Context?, attrs: AttributeSet?) : LinearLayo
     private val margin: Int by lazy { (resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)) }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val screenWidth = screenSize(context).width
+        val screenWidth = screenSize(context as Activity).width
         val width = calculateWidth()
         if (width > screenWidth) {
             gravity = Gravity.START
