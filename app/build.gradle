@@ -28,6 +28,9 @@ android {
             useJUnitPlatform()
         }
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 androidExtensions {
