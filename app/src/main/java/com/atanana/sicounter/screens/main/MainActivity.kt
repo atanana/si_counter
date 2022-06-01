@@ -85,8 +85,10 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
             .setView(R.layout.dialog_add_player)
             .setPositiveButton(R.string.ok) { dialog, _ ->
                 val playerName = (dialog as AlertDialog).findViewById<TextView>(R.id.name)
-                val name = playerName!!.text.toString()
-                lifecycleScope.launch { presenter.addPlayer(name) }
+                val name = playerName?.text?.toString() ?: ""
+                if (name.isNotEmpty()) {
+                    lifecycleScope.launch { presenter.addPlayer(name) }
+                }
             }
             .show()
     }
