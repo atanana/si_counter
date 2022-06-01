@@ -3,12 +3,12 @@ package com.atanana.sicounter.screens.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.atanana.sicounter.R
 import com.atanana.sicounter.databinding.ActivityMainBinding
+import com.atanana.sicounter.databinding.DialogAddPlayerBinding
 import com.atanana.sicounter.router.CreateLogFileContract
 import com.atanana.sicounter.view.player_control.PlayerControl
 import kotlinx.coroutines.launch
@@ -79,18 +79,19 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
     }
 
     override fun showAddPlayerDialog() {
+        val dialogBinding = DialogAddPlayerBinding.inflate(layoutInflater)
         AlertDialog.Builder(this)
             .setTitle(R.string.player_name_title)
             .setCancelable(true)
-            .setView(R.layout.dialog_add_player)
-            .setPositiveButton(R.string.ok) { dialog, _ ->
-                val playerName = (dialog as AlertDialog).findViewById<TextView>(R.id.name)
-                val name = playerName?.text?.toString() ?: ""
+            .setView(dialogBinding.root)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                val name = dialogBinding.name.text?.toString() ?: ""
                 if (name.isNotEmpty()) {
                     lifecycleScope.launch { presenter.addPlayer(name) }
                 }
             }
             .show()
+        dialogBinding.name.requestFocus()
     }
 
     override fun showResetDialog() {
