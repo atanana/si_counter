@@ -1,7 +1,8 @@
 package com.atanana.sicounter.model
 
 import android.os.Bundle
-import com.atanana.sicounter.data.ScoreAction
+import com.atanana.sicounter.data.NoAnswer
+import com.atanana.sicounter.data.ScoreChange
 import com.atanana.sicounter.fs.HistoryPersistence
 import com.atanana.sicounter.screens.main.ScoreHistoryFormatter
 import kotlinx.coroutines.channels.Channel
@@ -12,7 +13,7 @@ const val KEY_HISTORY: String = "scores_model_history"
 const val HISTORY_SEPARATOR = "——————————"
 
 class HistoryModel(
-    private val scoreHistoryFormatter: ScoreHistoryFormatter,
+    private val formatter: ScoreHistoryFormatter,
     private val historyPersistence: HistoryPersistence
 ) {
     private var _history: ArrayList<String> = arrayListOf()
@@ -33,11 +34,15 @@ class HistoryModel(
     }
 
     suspend fun onPlayerAdded(player: String) {
-        addHistory(scoreHistoryFormatter.formatNewPlayer(player))
+        addHistory(formatter.formatNewPlayer(player))
     }
 
-    suspend fun onScoreAction(action: ScoreAction, player: String) {
-        addHistory(scoreHistoryFormatter.formatScoreAction(action, player))
+    suspend fun onScoreChange(action: ScoreChange, player: String) {
+        addHistory(formatter.formatScoreChange(action, player))
+    }
+
+    suspend fun onNoAnswer(action: NoAnswer) {
+        addHistory(formatter.formatNoAnswer(action))
     }
 
     suspend fun addDivider() {
@@ -60,6 +65,6 @@ class HistoryModel(
     }
 
     suspend fun reset() {
-        addHistory(scoreHistoryFormatter.resetMessage)
+        addHistory(formatter.resetMessage)
     }
 }

@@ -28,6 +28,7 @@
     <string name="reset_log">Сброс результатов</string>
     <string name="add_divider">Вставить разделитель</string>
     <string name="no_answer">Нет ответа</string>
+    <string name="no_answer_log">Нет ответа за %d</string>
 
     <!--close-->
     <string name="close_title">Выход</string>

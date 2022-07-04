@@ -1,8 +1,9 @@
 package com.atanana.sicounter.screens.main
 
 import com.atanana.sicounter.UnknownId
+import com.atanana.sicounter.data.NoAnswer
 import com.atanana.sicounter.data.Score
-import com.atanana.sicounter.data.ScoreAction
+import com.atanana.sicounter.data.ScoreChange
 import com.atanana.sicounter.model.ScoreModelAction.*
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.view.player_control.PlayerControl
@@ -47,7 +48,7 @@ class ScoresPresenter(
         playerControl.update(score, id)
         scope.launch {
             for (scoreAction in playerControl.scoreActionsChannel) {
-                model.onScoreAction(ScoreAction(scoreAction, view.selectedPrice))
+                model.onScoreAction(ScoreChange(scoreAction, view.selectedPrice))
             }
         }
         return playerControl
@@ -55,5 +56,9 @@ class ScoresPresenter(
 
     private fun handleNextPrice(action: SetPrice) {
         view.selectedPrice = action.price
+    }
+
+    suspend fun onNoAnswer() {
+        model.onScoreAction(NoAnswer(view.selectedPrice))
     }
 }

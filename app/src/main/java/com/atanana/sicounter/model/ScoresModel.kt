@@ -2,8 +2,10 @@ package com.atanana.sicounter.model
 
 import android.os.Bundle
 import com.atanana.sicounter.UnknownId
+import com.atanana.sicounter.data.NoAnswer
 import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.ScoreAction
+import com.atanana.sicounter.data.ScoreChange
 import com.atanana.sicounter.model.ScoreModelAction.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -25,19 +27,15 @@ class ScoresModel(private val historyModel: HistoryModel) {
 
     suspend fun onScoreAction(action: ScoreAction) {
         checkForDivider(action)
-        val oldScore = playerScores[action.id] ?: throw UnknownId(action.id)
-        val newScore = oldScore.copy(score = oldScore.score + action.absolutePrice)
-        playerScores[action.id] = newScore
-        historyModel.onScoreAction(action, playerNameById(action.id))
-        actions.send(UpdateScore(action.id, newScore))
-        checkForPriceChange(action)
+        when (action) {
+            is NoAnswer -> onNoAnswer(action)
+            is ScoreChange -> onScoreChange(action)
+        }
     }
 
-    private suspend fun checkForPriceChange(action: ScoreAction) {
-        if (action.absolutePrice > 0) {
-            val newPrice = action.price % 50 + 10
-            actions.send(SetPrice(newPrice))
-        }
+    private suspend fun onNoAnswer(action: NoAnswer) {
+        historyModel.onNoAnswer(action)
+        incrementPrice(action)
     }
 
     private suspend fun checkForDivider(action: ScoreAction) {
@@ -46,6 +44,26 @@ class ScoresModel(private val historyModel: HistoryModel) {
             historyModel.addDivider()
         }
         this.lastPrice = action.price
+    }
+
+    private suspend fun onScoreChange(action: ScoreChange) {
+        val oldScore = playerScores[action.id] ?: throw UnknownId(action.id)
+        val newScore = oldScore.copy(score = oldScore.score + action.absolutePrice)
+        playerScores[action.id] = newScore
+        historyModel.onScoreChange(action, playerNameById(action.id))
+        actions.send(UpdateScore(action.id, newScore))
+        checkForPriceChange(action)
+    }
+
+    private suspend fun checkForPriceChange(action: ScoreChange) {
+        if (action.absolutePrice > 0) {
+            incrementPrice(action)
+        }
+    }
+
+    private suspend fun incrementPrice(action: ScoreAction) {
+        val newPrice = action.price % 50 + 10
+        actions.send(SetPrice(newPrice))
     }
 
     suspend fun addPlayer(newPlayer: String) {

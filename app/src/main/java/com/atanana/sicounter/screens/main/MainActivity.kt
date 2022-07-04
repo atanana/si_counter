@@ -51,6 +51,11 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
                 presenter.addDivider()
             }
         }
+        viewBinding.content.noAnswer.setOnClickListener {
+            lifecycleScope.launch {
+                scoresPresenter.onNoAnswer()
+            }
+        }
 
         scoresPresenter.connect(lifecycleScope)
         lifecycleScope.launch { presenter.connect() }
