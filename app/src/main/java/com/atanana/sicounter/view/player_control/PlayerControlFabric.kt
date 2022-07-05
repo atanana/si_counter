@@ -6,7 +6,7 @@ import androidx.appcompat.view.ContextThemeWrapper
 import com.atanana.sicounter.R
 
 class PlayerControlFabric(private val context: Context) {
-    private val margin: Int by lazy { (context.resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin) * 1.5).toInt() }
+    private val margin: Int by lazy { (context.resources.getDimensionPixelSize(R.dimen.default_half_margin)) }
 
     fun build(): PlayerControl {
         val playerControl = PlayerControl(ContextThemeWrapper(context, R.style.AppTheme))
@@ -15,6 +15,7 @@ class PlayerControlFabric(private val context: Context) {
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         layoutParams.marginEnd = margin
+        layoutParams.marginStart = margin
         playerControl.layoutParams = layoutParams
         return playerControl
     }
