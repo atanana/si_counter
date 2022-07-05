@@ -3,7 +3,10 @@ package com.atanana.sicounter.utils
 import android.app.Activity
 import android.content.res.Resources
 import android.os.Build
+import android.view.View
 import android.view.WindowInsets
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 fun pxToDp(pixels: Int, resources: Resources): Float {
@@ -24,10 +27,18 @@ fun screenSize(activity: Activity): ScreenSize {
         val height = metrics.bounds.height() - insets.top - insets.bottom
         ScreenSize(width, height)
     } else {
-        val view = activity.window.decorView
-        val insets = WindowInsetsCompat.toWindowInsetsCompat(view.rootWindowInsets, view).getInsets(WindowInsetsCompat.Type.systemBars())
-        val width = activity.resources.displayMetrics.widthPixels - insets.left - insets.right
-        val height = activity.resources.displayMetrics.heightPixels - insets.top - insets.bottom
+        var width = activity.resources.displayMetrics.widthPixels
+        var height = activity.resources.displayMetrics.heightPixels
+        val insets = getInsetsCompat(activity.window.decorView)
+        if (insets != null) {
+            width = width - insets.left - insets.right
+            height = height - insets.top - insets.bottom
+        }
         ScreenSize(width, height)
     }
+}
+
+private fun getInsetsCompat(decorView: View): Insets? {
+    val rootWindowInsets = ViewCompat.getRootWindowInsets(decorView) ?: return null
+    return rootWindowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
 }
