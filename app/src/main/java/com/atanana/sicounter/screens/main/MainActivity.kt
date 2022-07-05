@@ -10,6 +10,7 @@ import com.atanana.sicounter.R
 import com.atanana.sicounter.databinding.ActivityMainBinding
 import com.atanana.sicounter.databinding.DialogAddPlayerBinding
 import com.atanana.sicounter.router.CreateLogFileContract
+import com.atanana.sicounter.utils.screenSize
 import com.atanana.sicounter.view.player_control.PlayerControl
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
         setSupportActionBar(viewBinding.toolbar)
+        viewBinding.content.scoresContainer.minimumWidth = screenSize(this).width
 
         viewBinding.addPlayer.setOnClickListener { presenter.onFabClick() }
         viewBinding.content.addDivider.setOnClickListener {
