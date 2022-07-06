@@ -6,8 +6,6 @@
     <dimen name="default_margin">16dp</dimen>
     <dimen name="default_half_margin">8dp</dimen>
 
-    <dimen name="price_separator_margin">10dp</dimen>
-
     <!--player control-->
     <dimen name="player_control_padding">10dp</dimen>
 </resources>
