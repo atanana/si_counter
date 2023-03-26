@@ -5,12 +5,12 @@ apply plugin: 'kotlin-parcelize'
 
 android {
     namespace 'com.atanana.sicounter'
-    compileSdkVersion 32
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.atanana.sicounter"
         minSdkVersion 19
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 14
         versionName "1.4.0"
     }
