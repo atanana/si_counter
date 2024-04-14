@@ -5,8 +5,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.atanana.sicounter.R
 import com.atanana.sicounter.databinding.ActivityHistoryBinding
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.AndroidScopeComponent
 import org.koin.androidx.scope.activityScope
@@ -29,7 +31,9 @@ class HistoryActivity : AppCompatActivity(), HistoryView, AndroidScopeComponent 
         setContentView(viewBinding.root)
         setSupportActionBar(viewBinding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        historyPresenter.loadHistory()
+        lifecycleScope.launch {
+            historyPresenter.loadHistory()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -38,5 +42,5 @@ class HistoryActivity : AppCompatActivity(), HistoryView, AndroidScopeComponent 
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        historyPresenter.onOptionsItemSelected(item.itemId) || super.onOptionsItemSelected(item)
+        historyPresenter.onOptionsItemSelected(item.itemId, lifecycleScope) || super.onOptionsItemSelected(item)
 }

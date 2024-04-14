@@ -1,9 +1,14 @@
 package com.atanana.sicounter.fs
 
 import android.content.Context
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+private const val FILENAME = "history.txt"
 
 class HistoryPersistence(private val context: Context) {
-    fun addHistory(item: String) {
+
+    suspend fun addHistory(item: String) = withContext(Dispatchers.IO) {
         context.openFileOutput(FILENAME, Context.MODE_PRIVATE or Context.MODE_APPEND).use {
             val writer = it.bufferedWriter()
             writer.write(item)
@@ -12,7 +17,7 @@ class HistoryPersistence(private val context: Context) {
         }
     }
 
-    fun getAllHistory(): List<String> =
+    suspend fun getAllHistory(): List<String> = withContext(Dispatchers.IO) {
         try {
             context.openFileInput(FILENAME).use {
                 it.bufferedReader().readLines()
@@ -20,12 +25,9 @@ class HistoryPersistence(private val context: Context) {
         } catch (e: Exception) {
             emptyList()
         }
-
-    fun clearHistory() {
-        context.deleteFile(FILENAME)
     }
 
-    companion object {
-        const val FILENAME = "history.txt"
+    suspend fun clearHistory() = withContext(Dispatchers.IO) {
+        context.deleteFile(FILENAME)
     }
 }

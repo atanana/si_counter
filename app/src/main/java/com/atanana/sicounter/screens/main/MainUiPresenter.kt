@@ -8,9 +8,6 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.router.MainRouter
 import com.atanana.sicounter.usecases.SaveLogUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 class MainUiPresenter(
     private val view: MainView,
@@ -43,14 +40,17 @@ class MainUiPresenter(
                 view.showResetDialog()
                 true
             }
+
             R.id.mi_save -> {
                 router.showSaveFileDialog(logNameModel.fullFilename)
                 true
             }
+
             R.id.mi_history -> {
                 router.openHistory()
                 true
             }
+
             else -> false
         }
 
@@ -66,15 +66,13 @@ class MainUiPresenter(
         router.close()
     }
 
-    private fun CoroutineScope.watchLogs() {
-        launch {
-            for (change in historyModel.historyChangesChannel) {
-                view.appendLogs(change + "\n")
-            }
+    private suspend fun watchLogs() {
+        for (change in historyModel.historyChangesChannel) {
+            view.appendLogs(change + "\n")
         }
     }
 
-    suspend fun connect() = coroutineScope {
+    suspend fun connect() {
         watchLogs()
     }
 
