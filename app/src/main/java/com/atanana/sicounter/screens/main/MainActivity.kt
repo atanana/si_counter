@@ -3,6 +3,7 @@ package com.atanana.sicounter.screens.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -61,6 +62,10 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
 
         scoresPresenter.connect(lifecycleScope)
         lifecycleScope.launch { presenter.connect() }
+
+        onBackPressedDispatcher.addCallback {
+            presenter.onBackPressed()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -70,10 +75,6 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         presenter.toolbarItemSelected(item.itemId) || super.onOptionsItemSelected(item)
-
-    override fun onBackPressed() {
-        presenter.onBackPressed()
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
