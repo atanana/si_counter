@@ -45,7 +45,6 @@ kotlin {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    def koin_version = '3.2.0'
     def coroutines_version = '1.8.0'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -55,8 +54,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
 
-    implementation "io.insert-koin:koin-core:$koin_version"
-    implementation "io.insert-koin:koin-android:$koin_version"
+    implementation platform("io.insert-koin:koin-bom:3.5.6")
+    implementation "io.insert-koin:koin-core"
+    implementation "io.insert-koin:koin-android"
 
     testImplementation 'junit:junit:4.13.2'
 
