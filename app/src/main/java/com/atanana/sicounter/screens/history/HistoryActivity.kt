@@ -3,7 +3,6 @@ package com.atanana.sicounter.screens.history
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.atanana.sicounter.R
@@ -16,16 +15,13 @@ import org.koin.androidx.scope.activityScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.scope.Scope
 
-class HistoryActivity : AppCompatActivity(), HistoryView, AndroidScopeComponent {
+class HistoryActivity : AppCompatActivity(), AndroidScopeComponent {
 
     override val scope: Scope by activityScope()
 
     private val historyViewModel: HistoryViewModel by viewModel()
 
     private lateinit var viewBinding: ActivityHistoryBinding
-
-    override val history: TextView
-        get() = viewBinding.content.historyContent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
