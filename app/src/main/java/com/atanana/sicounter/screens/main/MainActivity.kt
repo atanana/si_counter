@@ -1,22 +1,28 @@
 package com.atanana.sicounter.screens.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.atanana.sicounter.R
 import com.atanana.sicounter.databinding.ActivityMainBinding
 import com.atanana.sicounter.databinding.DialogAddPlayerBinding
 import com.atanana.sicounter.router.CreateLogFileContract
+import com.atanana.sicounter.screens.history.HistoryActivity
 import com.atanana.sicounter.utils.screenSize
 import com.atanana.sicounter.view.player_control.PlayerControl
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.AndroidScopeComponent
 import org.koin.androidx.scope.activityScope
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.scope.Scope
 
 class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
@@ -26,11 +32,13 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
     private val scoresPresenter: ScoresPresenter by inject()
     private val presenter: MainUiPresenter by inject()
 
+    private val mainViewModel: MainViewModel by viewModel()
+
     private lateinit var viewBinding: ActivityMainBinding
 
     val createLogContract = registerForActivityResult(CreateLogFileContract()) { uri ->
         lifecycleScope.launch {
-            presenter.saveLog(uri)
+            mainViewModel.saveLog(uri)
         }
     }
 
@@ -48,10 +56,18 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
         setSupportActionBar(viewBinding.toolbar)
         viewBinding.content.scoresContainer.minimumWidth = screenSize(this).width
 
-        viewBinding.addPlayer.setOnClickListener { presenter.onFabClick() }
+        mainViewModel.actions.flowWithLifecycle(lifecycle)
+            .onEach(::handleAction)
+            .launchIn(lifecycleScope)
+
+        mainViewModel.history.flowWithLifecycle(lifecycle)
+            .onEach(::updateHistory)
+            .launchIn(lifecycleScope)
+
+        viewBinding.addPlayer.setOnClickListener { showAddPlayerDialog() }
         viewBinding.content.addDivider.setOnClickListener {
             lifecycleScope.launch {
-                presenter.addDivider()
+                mainViewModel.addDivider()
             }
         }
         viewBinding.content.noAnswer.setOnClickListener {
@@ -61,11 +77,22 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
         }
 
         scoresPresenter.connect(lifecycleScope)
-        lifecycleScope.launch { presenter.connect() }
 
         onBackPressedDispatcher.addCallback {
-            presenter.onBackPressed()
+            showQuitDialog()
         }
+    }
+
+    private fun handleAction(action: MainScreenAction) {
+        when (action) {
+            is MainScreenAction.ShowSaveHistoryDialog -> createLogContract.launch(action.filename)
+            MainScreenAction.Close -> finish()
+        }
+    }
+
+    private fun updateHistory(history: List<String>) {
+        val text = history.joinToString("\n")
+        viewBinding.content.logView.updateText(text)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -74,7 +101,25 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        presenter.toolbarItemSelected(item.itemId) || super.onOptionsItemSelected(item)
+        when (item.itemId) {
+            R.id.mi_new -> {
+                showResetDialog()
+                true
+            }
+
+            R.id.mi_save -> {
+                mainViewModel.saveHistory()
+                true
+            }
+
+            R.id.mi_history -> {
+                val intent = Intent(this, HistoryActivity::class.java)
+                startActivity(intent)
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -95,7 +140,7 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
             .setPositiveButton(R.string.ok) { _, _ ->
                 val name = dialogBinding.name.text?.toString() ?: ""
                 if (name.isNotEmpty()) {
-                    lifecycleScope.launch { presenter.addPlayer(name) }
+                    lifecycleScope.launch { mainViewModel.addPlayer(name) }
                 }
             }
             .show()
@@ -108,7 +153,7 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
             .setCancelable(true)
             .setMessage(R.string.reset_message)
             .setPositiveButton(R.string.yes) { _, _ ->
-                lifecycleScope.launch { presenter.reset() }
+                lifecycleScope.launch { mainViewModel.reset() }
             }
             .setNegativeButton(R.string.no, null)
             .show()
@@ -119,7 +164,7 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
             .setTitle(R.string.close_title)
             .setCancelable(true)
             .setMessage(R.string.close_message)
-            .setPositiveButton(R.string.yes) { _, _ -> presenter.quit() }
+            .setPositiveButton(R.string.yes) { _, _ -> mainViewModel.finish() }
             .setNegativeButton(R.string.no, null)
             .show()
     }

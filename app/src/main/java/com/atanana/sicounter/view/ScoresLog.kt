@@ -18,6 +18,11 @@ class ScoresLog(context: Context, attrs: AttributeSet?) : ScrollView(context, at
         post { scrollToBottom() }
     }
 
+    fun updateText(text: String) {
+        logText.text = text
+        post { scrollToBottom() }
+    }
+
     private fun scrollToBottom() {
         fullScroll(FOCUS_DOWN)
     }
