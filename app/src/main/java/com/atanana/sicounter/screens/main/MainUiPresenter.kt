@@ -14,7 +14,7 @@ class MainUiPresenter(
         historyModel.save(outState)
     }
 
-    suspend fun restoreFromBundle(savedInstanceState: Bundle?) {
+    fun restoreFromBundle(savedInstanceState: Bundle?) {
         scoresModel.restore(savedInstanceState)
         historyModel.restore(savedInstanceState)
     }

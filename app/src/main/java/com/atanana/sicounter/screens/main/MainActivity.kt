@@ -180,7 +180,7 @@ class MainActivity : AppCompatActivity(), AndroidScopeComponent {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        lifecycleScope.launch { presenter.restoreFromBundle(savedInstanceState) }
+        presenter.restoreFromBundle(savedInstanceState)
     }
 
     private fun showAddPlayerDialog() {

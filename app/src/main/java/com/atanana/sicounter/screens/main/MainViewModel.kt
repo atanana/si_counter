@@ -23,7 +23,7 @@ class MainViewModel(
     private val actionsChannel = Channel<MainScreenAction>()
     val actions = actionsChannel.receiveAsFlow()
 
-    val scoreActions = scoresModel.actionsChannel.receiveAsFlow()
+    val scoreActions = scoresModel.actions
 
     val history = historyModel.history
 

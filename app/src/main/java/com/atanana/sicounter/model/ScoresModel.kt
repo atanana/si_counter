@@ -6,10 +6,12 @@ import com.atanana.sicounter.data.NoAnswer
 import com.atanana.sicounter.data.Score
 import com.atanana.sicounter.data.ScoreAction
 import com.atanana.sicounter.data.ScoreChange
-import com.atanana.sicounter.model.ScoreModelAction.*
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
-import java.util.*
+import com.atanana.sicounter.model.ScoreModelAction.NewPlayer
+import com.atanana.sicounter.model.ScoreModelAction.SetPrice
+import com.atanana.sicounter.model.ScoreModelAction.UpdateScore
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import java.util.TreeMap
 
 const val KEY_SCORES: String = "scores_model_scores"
 
@@ -17,8 +19,8 @@ class ScoresModel(private val historyModel: HistoryModel) {
 
     private var playerScores: TreeMap<Int, Score> = TreeMap()
 
-    private val actions = Channel<ScoreModelAction>()
-    val actionsChannel: ReceiveChannel<ScoreModelAction> = actions
+    private val actionsFlow = MutableSharedFlow<ScoreModelAction>(extraBufferCapacity = 1)
+    val actions = actionsFlow.asSharedFlow()
 
     val scores: List<Score>
         get() = playerScores.values.toList()
@@ -51,19 +53,19 @@ class ScoresModel(private val historyModel: HistoryModel) {
         val newScore = oldScore.copy(score = oldScore.score + action.absolutePrice)
         playerScores[action.id] = newScore
         historyModel.onScoreChange(action, playerNameById(action.id))
-        actions.send(UpdateScore(action.id, newScore))
+        actionsFlow.emit(UpdateScore(action.id, newScore))
         checkForPriceChange(action)
     }
 
-    private suspend fun checkForPriceChange(action: ScoreChange) {
+    private fun checkForPriceChange(action: ScoreChange) {
         if (action.absolutePrice > 0) {
             incrementPrice(action)
         }
     }
 
-    private suspend fun incrementPrice(action: ScoreAction) {
+    private fun incrementPrice(action: ScoreAction) {
         val newPrice = action.price % 50 + 10
-        actions.send(SetPrice(newPrice))
+        actionsFlow.tryEmit(SetPrice(newPrice))
     }
 
     suspend fun addPlayer(newPlayer: String) {
@@ -71,7 +73,7 @@ class ScoresModel(private val historyModel: HistoryModel) {
         val newId = playerScores.size
         playerScores[newId] = newScore
         historyModel.onPlayerAdded(newPlayer)
-        actions.send(NewPlayer(newId, newScore))
+        actionsFlow.emit(NewPlayer(newId, newScore))
     }
 
     private fun playerNameById(id: Int): String {
@@ -82,14 +84,14 @@ class ScoresModel(private val historyModel: HistoryModel) {
         bundle.putSerializable(KEY_SCORES, playerScores)
     }
 
-    suspend fun restore(bundle: Bundle?) {
+    fun restore(bundle: Bundle?) {
         @Suppress("UNCHECKED_CAST")
         val newScores = bundle?.getSerializable(KEY_SCORES) as? TreeMap<Int, Score>
         if (newScores != null) {
             playerScores = newScores
 
             for ((id, score) in playerScores) {
-                actions.send(NewPlayer(id, score))
+                actionsFlow.tryEmit(NewPlayer(id, score))
             }
         }
     }
@@ -98,8 +100,8 @@ class ScoresModel(private val historyModel: HistoryModel) {
         for ((id, score) in playerScores) {
             val newScore = score.copy(score = 0)
             playerScores[id] = newScore
-            actions.send(UpdateScore(id, newScore))
-            actions.send(SetPrice(10))
+            actionsFlow.tryEmit(UpdateScore(id, newScore))
+            actionsFlow.tryEmit(SetPrice(10))
         }
         historyModel.reset()
     }
