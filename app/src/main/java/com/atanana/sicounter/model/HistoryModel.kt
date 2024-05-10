@@ -5,9 +5,8 @@ import com.atanana.sicounter.data.NoAnswer
 import com.atanana.sicounter.data.ScoreChange
 import com.atanana.sicounter.fs.HistoryPersistence
 import com.atanana.sicounter.screens.main.ScoreHistoryFormatter
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
-import java.util.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 const val KEY_HISTORY: String = "scores_model_history"
 const val HISTORY_SEPARATOR = "——————————"
@@ -16,21 +15,15 @@ class HistoryModel(
     private val formatter: ScoreHistoryFormatter,
     private val historyPersistence: HistoryPersistence
 ) {
-    private var _history: ArrayList<String> = arrayListOf()
+    private var _history = emptyList<String>()
 
-    private val historyChanges: Channel<String> = Channel()
-
-    val historyChangesChannel: ReceiveChannel<String> = historyChanges
-
-    val history: List<String>
-        get() {
-            return Collections.unmodifiableList(_history)
-        }
+    private val historyFlow = MutableStateFlow(_history)
+    val history = historyFlow.asStateFlow()
 
     private suspend fun addHistory(item: String) {
         historyPersistence.addHistory(item)
-        _history.add(item)
-        historyChanges.send(item)
+        _history += item
+        historyFlow.emit(_history)
     }
 
     suspend fun onPlayerAdded(player: String) {
@@ -50,17 +43,14 @@ class HistoryModel(
     }
 
     fun save(bundle: Bundle) {
-        bundle.putStringArrayList(KEY_HISTORY, _history)
+        bundle.putStringArrayList(KEY_HISTORY, ArrayList(_history))
     }
 
-    suspend fun restore(bundle: Bundle?) {
+    fun restore(bundle: Bundle?) {
         val newHistory = bundle?.getStringArrayList(KEY_HISTORY)
         if (newHistory != null) {
             _history = newHistory
-
-            for (item in _history) {
-                historyChanges.send(item)
-            }
+            historyFlow.tryEmit(_history)
         }
     }
 

@@ -10,10 +10,7 @@ import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogNameModel
 import com.atanana.sicounter.usecases.SaveLogUseCase
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -28,16 +25,7 @@ class MainViewModel(
 
     val scoreActions = scoresModel.actionsChannel.receiveAsFlow()
 
-    private val historyFlow = MutableStateFlow(emptyList<String>())
-    val history = historyFlow.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            for (line in historyModel.historyChangesChannel) {
-                historyFlow.update { it + line }
-            }
-        }
-    }
+    val history = historyModel.history
 
     suspend fun saveLog(uri: Uri?) {
         saveLogUseCase.saveReport(uri)

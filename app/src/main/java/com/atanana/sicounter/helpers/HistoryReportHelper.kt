@@ -9,7 +9,7 @@ class HistoryReportHelper(
     private val scoresModel: ScoresModel
 ) {
     fun createReport(): List<String> {
-        val report = historyModel.history.toMutableList()
+        val report = historyModel.history.value.toMutableList()
         report.add(HISTORY_SEPARATOR)
         report.add(scoresModel.scores.joinToString(", ") { "${it.name} -> ${it.score}" })
         return report
