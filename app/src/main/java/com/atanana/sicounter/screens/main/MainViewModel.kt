@@ -3,6 +3,8 @@ package com.atanana.sicounter.screens.main
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.atanana.sicounter.data.NoAnswer
+import com.atanana.sicounter.data.ScoreAction
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
 import com.atanana.sicounter.model.log.LogNameModel
@@ -23,6 +25,8 @@ class MainViewModel(
 
     private val actionsChannel = Channel<MainScreenAction>()
     val actions = actionsChannel.receiveAsFlow()
+
+    val scoreActions = scoresModel.actionsChannel.receiveAsFlow()
 
     private val historyFlow = MutableStateFlow(emptyList<String>())
     val history = historyFlow.asStateFlow()
@@ -54,6 +58,18 @@ class MainViewModel(
 
     fun saveHistory() {
         actionsChannel.trySend(MainScreenAction.ShowSaveHistoryDialog(logNameModel.fullFilename))
+    }
+
+    fun onNoAnswer(currentPrice: Int) {
+        viewModelScope.launch {
+            scoresModel.onScoreAction(NoAnswer(currentPrice))
+        }
+    }
+
+    fun onScoreAction(action: ScoreAction) {
+        viewModelScope.launch {
+            scoresModel.onScoreAction(action)
+        }
     }
 
     fun finish() {

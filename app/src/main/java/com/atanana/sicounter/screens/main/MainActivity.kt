@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity(), AndroidScopeComponent {
     private val presenter: MainUiPresenter by inject()
 
     private val mainViewModel: MainViewModel by viewModel()
-    private val scoreViewModel: ScoresViewModel by viewModel()
 
     private lateinit var viewBinding: ActivityMainBinding
 
@@ -66,7 +65,7 @@ class MainActivity : AppCompatActivity(), AndroidScopeComponent {
             .onEach(::updateHistory)
             .launchIn(lifecycleScope)
 
-        scoreViewModel.actions.flowWithLifecycle(lifecycle)
+        mainViewModel.scoreActions.flowWithLifecycle(lifecycle)
             .onEach(::handleScoreAction)
             .launchIn(lifecycleScope)
 
@@ -77,7 +76,7 @@ class MainActivity : AppCompatActivity(), AndroidScopeComponent {
             }
         }
         viewBinding.content.noAnswer.setOnClickListener {
-            scoreViewModel.onNoAnswer(selectedPrice)
+            mainViewModel.onNoAnswer(selectedPrice)
         }
 
         onBackPressedDispatcher.addCallback {
@@ -111,7 +110,7 @@ class MainActivity : AppCompatActivity(), AndroidScopeComponent {
         playerControl.update(score, id)
         lifecycleScope.launch {
             for (scoreAction in playerControl.scoreActionsChannel) {
-                scoreViewModel.onScoreAction(ScoreChange(scoreAction, selectedPrice))
+                mainViewModel.onScoreAction(ScoreChange(scoreAction, selectedPrice))
             }
         }
         viewBinding.content.scoresContainer.addView(playerControl)
