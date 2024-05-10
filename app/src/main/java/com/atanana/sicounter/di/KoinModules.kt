@@ -10,9 +10,8 @@ import com.atanana.sicounter.screens.main.MainActivity
 import com.atanana.sicounter.screens.main.MainUiPresenter
 import com.atanana.sicounter.screens.main.MainViewModel
 import com.atanana.sicounter.screens.main.ScoreHistoryFormatter
-import com.atanana.sicounter.screens.main.ScoresPresenter
+import com.atanana.sicounter.screens.main.ScoresViewModel
 import com.atanana.sicounter.usecases.SaveLogUseCase
-import com.atanana.sicounter.view.player_control.PlayerControlFabric
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
@@ -27,12 +26,11 @@ val mainModule = module {
         scoped { SaveLogUseCase(get(), get()) }
         scoped { LogNameModel() }
         scoped { ScoresModel(get()) }
-        scoped { ScoresPresenter(get(), get(), get()) }
         scoped { HistoryModel(get(), get()) }
-        scoped { PlayerControlFabric(get()) }
         scoped { ScoreHistoryFormatter(get()) }
         scoped { MainUiPresenter(get(), get()) }
 
         viewModelOf(::MainViewModel)
+        viewModelOf(::ScoresViewModel)
     }
 }

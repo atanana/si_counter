@@ -4,14 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.LinearLayout
+import android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.atanana.sicounter.BuildConfig
 import com.atanana.sicounter.R
+import com.atanana.sicounter.UnknownId
+import com.atanana.sicounter.data.ScoreChange
 import com.atanana.sicounter.databinding.ActivityMainBinding
 import com.atanana.sicounter.databinding.DialogAddPlayerBinding
+import com.atanana.sicounter.model.ScoreModelAction
 import com.atanana.sicounter.router.CreateLogFileContract
 import com.atanana.sicounter.screens.history.HistoryActivity
 import com.atanana.sicounter.utils.screenSize
@@ -25,28 +31,24 @@ import org.koin.androidx.scope.activityScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.scope.Scope
 
-class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
+class MainActivity : AppCompatActivity(), AndroidScopeComponent {
 
     override val scope: Scope by activityScope()
 
-    private val scoresPresenter: ScoresPresenter by inject()
     private val presenter: MainUiPresenter by inject()
 
     private val mainViewModel: MainViewModel by viewModel()
+    private val scoreViewModel: ScoresViewModel by viewModel()
 
     private lateinit var viewBinding: ActivityMainBinding
 
-    val createLogContract = registerForActivityResult(CreateLogFileContract()) { uri ->
+    private val scoreViews = mutableMapOf<Int, PlayerControl>()
+
+    private val createLogContract = registerForActivityResult(CreateLogFileContract()) { uri ->
         lifecycleScope.launch {
             mainViewModel.saveLog(uri)
         }
     }
-
-    override var selectedPrice: Int
-        get() = viewBinding.content.priceSelector.price
-        set(value) {
-            viewBinding.content.priceSelector.price = value
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +66,10 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
             .onEach(::updateHistory)
             .launchIn(lifecycleScope)
 
+        scoreViewModel.actions.flowWithLifecycle(lifecycle)
+            .onEach(::handleScoreAction)
+            .launchIn(lifecycleScope)
+
         viewBinding.addPlayer.setOnClickListener { showAddPlayerDialog() }
         viewBinding.content.addDivider.setOnClickListener {
             lifecycleScope.launch {
@@ -71,12 +77,8 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
             }
         }
         viewBinding.content.noAnswer.setOnClickListener {
-            lifecycleScope.launch {
-                scoresPresenter.onNoAnswer()
-            }
+            scoreViewModel.onNoAnswer(selectedPrice)
         }
-
-        scoresPresenter.connect(lifecycleScope)
 
         onBackPressedDispatcher.addCallback {
             showQuitDialog()
@@ -94,6 +96,54 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
         val text = history.joinToString("\n")
         viewBinding.content.logView.updateText(text)
     }
+
+    private fun handleScoreAction(action: ScoreModelAction) {
+        when (action) {
+            is ScoreModelAction.NewPlayer -> addNewPlayer(action)
+            is ScoreModelAction.SetPrice -> selectedPrice = action.price
+            is ScoreModelAction.UpdateScore -> updateScore(action)
+        }
+    }
+
+    private fun addNewPlayer(action: ScoreModelAction.NewPlayer) {
+        val playerControl = createPlayerControl()
+        val (id, score) = action
+        playerControl.update(score, id)
+        lifecycleScope.launch {
+            for (scoreAction in playerControl.scoreActionsChannel) {
+                scoreViewModel.onScoreAction(ScoreChange(scoreAction, selectedPrice))
+            }
+        }
+        viewBinding.content.scoresContainer.addView(playerControl)
+        scoreViews[id] = playerControl
+    }
+
+    private fun createPlayerControl(): PlayerControl {
+        val margin = resources.getDimensionPixelSize(R.dimen.default_half_margin)
+        val playerControl = PlayerControl(this).apply {
+            layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
+                marginEnd = margin
+                marginStart = margin
+            }
+        }
+        return playerControl
+    }
+
+    private fun updateScore(action: ScoreModelAction.UpdateScore) {
+        val (id, score) = action
+        val playerControl = scoreViews[id]
+        if (playerControl != null) {
+            playerControl.update(score)
+        } else if (BuildConfig.DEBUG) {
+            throw UnknownId(id)
+        }
+    }
+
+    private var selectedPrice: Int
+        get() = viewBinding.content.priceSelector.price
+        set(value) {
+            viewBinding.content.priceSelector.price = value
+        }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
@@ -131,7 +181,7 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
         lifecycleScope.launch { presenter.restoreFromBundle(savedInstanceState) }
     }
 
-    override fun showAddPlayerDialog() {
+    private fun showAddPlayerDialog() {
         val dialogBinding = DialogAddPlayerBinding.inflate(layoutInflater)
         AlertDialog.Builder(this)
             .setTitle(R.string.player_name_title)
@@ -147,7 +197,7 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
         dialogBinding.name.requestFocus()
     }
 
-    override fun showResetDialog() {
+    private fun showResetDialog() {
         AlertDialog.Builder(this)
             .setTitle(R.string.reset_title)
             .setCancelable(true)
@@ -159,7 +209,7 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
             .show()
     }
 
-    override fun showQuitDialog() {
+    private fun showQuitDialog() {
         AlertDialog.Builder(this)
             .setTitle(R.string.close_title)
             .setCancelable(true)
@@ -167,13 +217,5 @@ class MainActivity : AppCompatActivity(), MainView, AndroidScopeComponent {
             .setPositiveButton(R.string.yes) { _, _ -> mainViewModel.finish() }
             .setNegativeButton(R.string.no, null)
             .show()
-    }
-
-    override fun appendLogs(line: String) {
-        viewBinding.content.logView.append(line)
-    }
-
-    override fun addPlayerControl(playerControl: PlayerControl) {
-        viewBinding.content.scoresContainer.addView(playerControl)
     }
 }
