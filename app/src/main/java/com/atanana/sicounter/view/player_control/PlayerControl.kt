@@ -7,28 +7,43 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.atanana.sicounter.MissingId
 import com.atanana.sicounter.data.PartialScoreAction
 import com.atanana.sicounter.data.Score
+import com.atanana.sicounter.data.ScoreActionType
 import com.atanana.sicounter.data.ScoreActionType.MINUS
 import com.atanana.sicounter.data.ScoreActionType.PLUS
-import com.atanana.sicounter.utils.*
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.launch
+import com.atanana.sicounter.safeThrow
+import com.atanana.sicounter.utils.UNSPECIFIED
+import com.atanana.sicounter.utils.dpToPx
+import com.atanana.sicounter.utils.getActivity
+import com.atanana.sicounter.utils.pxToDp
+import com.atanana.sicounter.utils.screenSize
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlin.math.max
 import kotlin.math.min
 
 class PlayerControl(context: Context) : LinearLayout(context, null, 0) {
     private val playerName: TextView = TextView(context)
     private val playerScore: TextView = TextView(context)
-    private val addScore: Button = Button(context)
-    private val subtractScore: Button = Button(context)
-    private val scoreActions = Channel<PartialScoreAction>()
+    private val addScore: Button = Button(context).apply {
+        setOnClickListener {
+            trySendScoreAction(PLUS)
+        }
+    }
 
-    private val uiScope = MainScope()
-    val scoreActionsChannel: ReceiveChannel<PartialScoreAction> = scoreActions
+    private val subtractScore: Button = Button(context).apply {
+        setOnClickListener {
+            trySendScoreAction(MINUS)
+        }
+    }
+
+    private var playerId: Int? = null
+
+    private val scoreFlow = MutableSharedFlow<PartialScoreAction>(extraBufferCapacity = 1)
+
+    val scoreActions = scoreFlow.asSharedFlow()
 
     init {
         orientation = VERTICAL
@@ -106,30 +121,20 @@ class PlayerControl(context: Context) : LinearLayout(context, null, 0) {
         super.onMeasure(widthSpec, heightSpec)
     }
 
-    fun update(score: Score, id: Int? = null) {
-        playerName.text = score.name
-        playerScore.text = score.score.toString()
-
-        if (id != null) {
-            addScore.setOnClickListener {
-                uiScope.launch {
-                    scoreActions.send(
-                        PartialScoreAction(PLUS, id)
-                    )
-                }
-            }
-            subtractScore.setOnClickListener {
-                uiScope.launch {
-                    scoreActions.send(
-                        PartialScoreAction(MINUS, id)
-                    )
-                }
-            }
+    private fun trySendScoreAction(type: ScoreActionType) {
+        val playerId = playerId
+        if (playerId != null) {
+            scoreFlow.tryEmit(PartialScoreAction(type, playerId))
+        } else {
+            safeThrow { MissingId() }
         }
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        uiScope.cancel()
+    fun update(score: Score, id: Int? = null) {
+        playerName.text = score.name
+        playerScore.text = score.score.toString()
+        if (id != null) {
+            playerId = id
+        }
     }
 }

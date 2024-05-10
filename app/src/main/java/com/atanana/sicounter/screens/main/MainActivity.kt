@@ -11,14 +11,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.atanana.sicounter.BuildConfig
 import com.atanana.sicounter.R
 import com.atanana.sicounter.UnknownId
+import com.atanana.sicounter.data.PartialScoreAction
 import com.atanana.sicounter.data.ScoreChange
 import com.atanana.sicounter.databinding.ActivityMainBinding
 import com.atanana.sicounter.databinding.DialogAddPlayerBinding
 import com.atanana.sicounter.model.ScoreModelAction
 import com.atanana.sicounter.router.CreateLogFileContract
+import com.atanana.sicounter.safeThrow
 import com.atanana.sicounter.screens.history.HistoryActivity
 import com.atanana.sicounter.utils.screenSize
 import com.atanana.sicounter.view.player_control.PlayerControl
@@ -108,11 +109,9 @@ class MainActivity : AppCompatActivity(), AndroidScopeComponent {
         val playerControl = createPlayerControl()
         val (id, score) = action
         playerControl.update(score, id)
-        lifecycleScope.launch {
-            for (scoreAction in playerControl.scoreActionsChannel) {
-                mainViewModel.onScoreAction(ScoreChange(scoreAction, selectedPrice))
-            }
-        }
+        playerControl.scoreActions
+            .onEach(::handlePlayerScoreAction)
+            .launchIn(lifecycleScope)
         viewBinding.content.scoresContainer.addView(playerControl)
         scoreViews[id] = playerControl
     }
@@ -128,13 +127,17 @@ class MainActivity : AppCompatActivity(), AndroidScopeComponent {
         return playerControl
     }
 
+    private fun handlePlayerScoreAction(action: PartialScoreAction) {
+        mainViewModel.onScoreAction(ScoreChange(action, selectedPrice))
+    }
+
     private fun updateScore(action: ScoreModelAction.UpdateScore) {
         val (id, score) = action
         val playerControl = scoreViews[id]
         if (playerControl != null) {
             playerControl.update(score)
-        } else if (BuildConfig.DEBUG) {
-            throw UnknownId(id)
+        } else {
+            safeThrow { UnknownId(id) }
         }
     }
 
