@@ -1,6 +1,7 @@
 package com.atanana.sicounter.model
 
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import com.atanana.sicounter.UnknownId
 import com.atanana.sicounter.data.NoAnswer
 import com.atanana.sicounter.data.Score
@@ -9,6 +10,7 @@ import com.atanana.sicounter.data.ScoreChange
 import com.atanana.sicounter.model.ScoreModelAction.NewPlayer
 import com.atanana.sicounter.model.ScoreModelAction.SetPrice
 import com.atanana.sicounter.model.ScoreModelAction.UpdateScore
+import com.atanana.sicounter.utils.getParcelableSafe
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import java.util.TreeMap
@@ -81,18 +83,18 @@ class ScoresModel(private val historyModel: HistoryModel) {
     }
 
     fun save(bundle: Bundle) {
-        bundle.putSerializable(KEY_SCORES, playerScores)
+        val scoresBundle = bundleOf(*playerScores.mapKeys { it.key.toString() }.toList().toTypedArray())
+        bundle.putBundle(KEY_SCORES, scoresBundle)
     }
 
     fun restore(bundle: Bundle?) {
-        @Suppress("UNCHECKED_CAST")
-        val newScores = bundle?.getSerializable(KEY_SCORES) as? TreeMap<Int, Score>
-        if (newScores != null) {
-            playerScores = newScores
-
-            for ((id, score) in playerScores) {
-                actionsFlow.tryEmit(NewPlayer(id, score))
-            }
+        val scoresBundle = bundle?.getBundle(KEY_SCORES) ?: return
+        playerScores = TreeMap()
+        for (key in scoresBundle.keySet()) {
+            val id = key.toInt()
+            val score = scoresBundle.getParcelableSafe<Score>(key)!!
+            playerScores[id] = score
+            actionsFlow.tryEmit(NewPlayer(id, score))
         }
     }
 
