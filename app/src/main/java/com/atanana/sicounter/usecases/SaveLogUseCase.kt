@@ -6,12 +6,14 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import com.atanana.sicounter.R
 import com.atanana.sicounter.helpers.HistoryReportHelper
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.OutputStream
+import javax.inject.Inject
 
-class SaveLogUseCase(
-    private val context: Context,
+class SaveLogUseCase @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val historyReportHelper: HistoryReportHelper
 ) {
     suspend fun saveReport(uri: Uri?) {

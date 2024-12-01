@@ -3,8 +3,9 @@ package com.atanana.sicounter.screens.main
 import android.os.Bundle
 import com.atanana.sicounter.model.HistoryModel
 import com.atanana.sicounter.model.ScoresModel
+import javax.inject.Inject
 
-class MainUiPresenter(
+class MainUiPresenter @Inject constructor(
     private val scoresModel: ScoresModel,
     private val historyModel: HistoryModel
 ) {

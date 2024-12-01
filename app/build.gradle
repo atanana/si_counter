@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -24,9 +25,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
     testOptions {
         unitTests.returnDefaultValues = true
         unitTests.all {
@@ -43,15 +41,20 @@ kotlin {
     jvmToolchain(17)
 }
 
+kapt {
+    correctErrorTypes true
+}
+
 dependencies {
     implementation(libs.app.compat)
     implementation(libs.android.material)
     implementation(libs.lifecycle.ktx)
+    implementation(libs.activity.ktx)
 
     implementation(libs.bundles.coroutines)
 
-    implementation(platform(libs.koin.bom))
-    implementation(libs.bundles.koin)
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)
 }

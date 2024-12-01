@@ -4,8 +4,10 @@ import android.content.Context
 import com.atanana.sicounter.R
 import com.atanana.sicounter.data.NoAnswer
 import com.atanana.sicounter.data.ScoreChange
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class ScoreHistoryFormatter(context: Context) {
+class ScoreHistoryFormatter @Inject constructor(@ApplicationContext context: Context) {
     private val newPlayerTemplate by lazy { context.resources.getString(R.string.new_player_log) }
     val resetMessage by lazy { context.resources.getText(R.string.reset_log).toString() + "\n" }
     private val noAnswer by lazy { context.resources.getString(R.string.no_answer_log) }

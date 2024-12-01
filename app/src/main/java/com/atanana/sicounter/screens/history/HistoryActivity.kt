@@ -3,23 +3,20 @@ package com.atanana.sicounter.screens.history
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.atanana.sicounter.R
 import com.atanana.sicounter.databinding.ActivityHistoryBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.koin.android.scope.AndroidScopeComponent
-import org.koin.androidx.scope.activityScope
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.scope.Scope
 
-class HistoryActivity : AppCompatActivity(), AndroidScopeComponent {
+@AndroidEntryPoint
+class HistoryActivity : AppCompatActivity() {
 
-    override val scope: Scope by activityScope()
-
-    private val historyViewModel: HistoryViewModel by viewModel()
+    private val historyViewModel: HistoryViewModel by viewModels()
 
     private lateinit var viewBinding: ActivityHistoryBinding
 

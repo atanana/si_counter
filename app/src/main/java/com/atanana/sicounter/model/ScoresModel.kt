@@ -14,10 +14,13 @@ import com.atanana.sicounter.utils.getParcelableSafe
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import java.util.TreeMap
+import javax.inject.Inject
 
 const val KEY_SCORES: String = "scores_model_scores"
 
-class ScoresModel(private val historyModel: HistoryModel) {
+class ScoresModel @Inject constructor(
+    private val historyModel: HistoryModel
+) {
 
     private var playerScores: TreeMap<Int, Score> = TreeMap()
 

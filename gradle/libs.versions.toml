@@ -2,10 +2,11 @@
 androidGradlePlugin = '8.7.2'
 kotlin = '2.0.20'
 coroutines = '1.9.0'
+hilt = '2.52'
 app-compat = '1.7.0'
 android-material = '1.12.0'
 lifecycle-ktx = '2.8.7'
-koin = '3.5.6'
+activity-ktx = '1.9.3'
 
 junit = '4.13.2'
 
@@ -16,10 +17,10 @@ coroutines-android = { group = 'org.jetbrains.kotlinx', name = 'kotlinx-coroutin
 app-compat = { group = 'androidx.appcompat', name = 'appcompat', version.ref = 'app-compat' }
 android-material = { group = 'com.google.android.material', name = 'material', version.ref = 'android-material' }
 lifecycle-ktx = { group = 'androidx.lifecycle', name = 'lifecycle-runtime-ktx', version.ref = 'lifecycle-ktx' }
+activity-ktx = { group = 'androidx.activity', name = 'activity-ktx', version.ref = 'activity-ktx' }
 
-koin-bom = { group = 'io.insert-koin', name = 'koin-bom', version.ref = 'koin' }
-koin-core = { group = 'io.insert-koin', name = 'koin-core' }
-koin-android = { group = 'io.insert-koin', name = 'koin-android' }
+hilt = { group = 'com.google.dagger', name = 'hilt-android', version.ref = 'hilt' }
+hilt-compiler = { group = 'com.google.dagger', name = 'hilt-android-compiler', version.ref = 'hilt' }
 
 junit = { group = 'junit', name = 'junit', version.ref = 'junit' }
 
@@ -28,14 +29,10 @@ android-application = { id = 'com.android.application', version.ref = 'androidGr
 kotlin = { id = 'org.jetbrains.kotlin.android', version.ref = 'kotlin' }
 kotlin-kapt = { id = 'kotlin-kapt' }
 kotlin-parcelize = { id = 'kotlin-parcelize' }
+hilt = { id = 'com.google.dagger.hilt.android', version.ref = 'hilt' }
 
 [bundles]
 coroutines = [
     'coroutines-core',
     'coroutines-android',
-]
-
-koin = [
-    'koin-core',
-    'koin-android',
 ]

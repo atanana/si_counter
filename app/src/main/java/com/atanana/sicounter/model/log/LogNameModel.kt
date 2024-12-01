@@ -1,9 +1,11 @@
 package com.atanana.sicounter.model.log
 
+import javax.inject.Inject
+
 const val DEFAULT_FILE_NAME = "empty"
 const val EXTENSION = ".txt"
 
-class LogNameModel {
+class LogNameModel @Inject constructor() {
     private var _filename = DEFAULT_FILE_NAME
 
     fun onPlayerAdded(name: String) {

@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
 import androidx.activity.addCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
@@ -23,22 +24,19 @@ import com.atanana.sicounter.safeThrow
 import com.atanana.sicounter.screens.history.HistoryActivity
 import com.atanana.sicounter.utils.screenSize
 import com.atanana.sicounter.view.player_control.PlayerControl
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
-import org.koin.android.scope.AndroidScopeComponent
-import org.koin.androidx.scope.activityScope
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.scope.Scope
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), AndroidScopeComponent {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
 
-    override val scope: Scope by activityScope()
+    @Inject
+    lateinit var presenter: MainUiPresenter
 
-    private val presenter: MainUiPresenter by inject()
-
-    private val mainViewModel: MainViewModel by viewModel()
+    private val mainViewModel: MainViewModel by viewModels()
 
     private lateinit var viewBinding: ActivityMainBinding
 

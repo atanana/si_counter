@@ -7,11 +7,12 @@ import com.atanana.sicounter.fs.HistoryPersistence
 import com.atanana.sicounter.screens.main.ScoreHistoryFormatter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
 const val KEY_HISTORY: String = "scores_model_history"
 const val HISTORY_SEPARATOR = "——————————"
 
-class HistoryModel(
+class HistoryModel @Inject constructor(
     private val formatter: ScoreHistoryFormatter,
     private val historyPersistence: HistoryPersistence
 ) {

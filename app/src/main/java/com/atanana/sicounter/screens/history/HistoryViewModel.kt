@@ -3,13 +3,18 @@ package com.atanana.sicounter.screens.history
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.atanana.sicounter.fs.HistoryPersistence
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HistoryViewModel(private val persistence: HistoryPersistence) : ViewModel() {
+@HiltViewModel
+class HistoryViewModel @Inject constructor(
+    private val persistence: HistoryPersistence
+) : ViewModel() {
 
     private val historyStateFlow = MutableStateFlow(emptyList<String>())
     val historyState = historyStateFlow.asStateFlow()
