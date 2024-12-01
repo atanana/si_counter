@@ -1,8 +1,8 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
-    id 'kotlin-parcelize'
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -44,23 +44,14 @@ kotlin {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation(libs.app.compat)
+    implementation(libs.android.material)
+    implementation(libs.lifecycle.ktx)
 
-    def coroutines_version = '1.8.0'
+    implementation(libs.bundles.coroutines)
 
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation(platform(libs.koin.bom))
+    implementation(libs.bundles.koin)
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
-
-    implementation platform("io.insert-koin:koin-bom:3.5.6")
-    implementation "io.insert-koin:koin-core"
-    implementation "io.insert-koin:koin-android"
-
-    testImplementation 'junit:junit:4.13.2'
-
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    testImplementation(libs.junit)
 }
